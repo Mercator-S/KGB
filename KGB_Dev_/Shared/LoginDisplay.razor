@@ -1,12 +1,11 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
+        <a href="Identity/Account/Manage">Zdravo, @context.User.Identity?.Name!.Substring(0,context.User.Identity.Name.IndexOf("."))</a>
+        <form style="margin-left:10px" method="post" action="Identity/Account/LogOut">
+            <button type="submit" class="btn btn-secondary">Logout</button>
         </form>
     </Authorized>
     <NotAuthorized>
-        <a href="Identity/Account/Register">Register</a>
         <a href="Identity/Account/Login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>

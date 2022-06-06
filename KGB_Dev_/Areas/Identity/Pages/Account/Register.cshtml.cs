@@ -138,12 +138,11 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
         }
         private KGB_User CreateKGBUser(KGB_User User, string Ime, string Prezime, string NazivOrgJed, string Email)
         {
-            User.Ime = Ime;
-            User.Prezime = Prezime;
-            User.Email = Email;
+            User.Ime = char.ToUpper(Ime[0]) + Ime.Substring(1);
+            User.Prezime = char.ToUpper(Prezime[0]) + Prezime.Substring(1);
+            User.Email = char.ToUpper(Email[0]) + Email.Substring(1);
             User.Active = true;
             User.D_Upd = DateTime.Now.ToString();
-            User.Email = Email;
             User.Sifra_Oj = _context.KGB_OrgJed.Where(x => x.NazivOj == NazivOrgJed).FirstOrDefault().SifraOj;
             User.K_Ins = 1;
             User.K_Upd = 1;
