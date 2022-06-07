@@ -64,7 +64,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl ??= Url.Content("~/Home");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Input.Lozinka = GeneratePassword(Input.Ime, Input.Prezime);
             Input = CreateKGBUser(Input, Input.Ime, Input.Prezime, Input.Naziv_Oj, Input.Email);

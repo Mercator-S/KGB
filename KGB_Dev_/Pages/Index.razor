@@ -1,9 +1,32 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>KGB List</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<MudGrid Class="d-flex align-center justify-center">
+    <MudItem xs="9">
+        <MudTable Items="@ListOfKGB" Hover="true" Striped="true">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">KGB tabela</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Sifra prijave</MudTh>
+                <MudTh>Sifra organizacione jedinice</MudTh>
+                <MudTh>Naziv prijave</MudTh>
+                <MudTh>Datum unosa</MudTh>
+                <MudTh>Korisnik</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Sifra prijave">@context.Sifra_Prijave</MudTd>
+                <MudTd DataLabel="Sifra organizacione jedinice">@context.Sifra_Oj</MudTd>
+                <MudTd DataLabel="Naziv prijace">@context.Naziv_Prijave</MudTd>
+                <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
+                <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
+            </PagerContent>
+        </MudTable>
+    </MudItem>
+</MudGrid>

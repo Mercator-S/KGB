@@ -22,7 +22,7 @@
     </environment>
 </head>
 <body>
-    <header>
+@*    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" href="~/">KGB_Dev_</a>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header>*@
 
     <div class="container">
         <partial name="_CookieConsentPartial" optional />
@@ -55,18 +55,6 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="footer border-top pl-3 text-muted">
-        <div class="container">
-        &copy; 2022 - KGB_Dev_
-            @{
-                var foundPrivacy = Url.Page("/Privacy", new { area = "" });
-            }
-            @if (foundPrivacy != null)
-            {
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
-            }
-        </div>
-    </footer>
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>
