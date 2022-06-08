@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@inject IDialogService DialogService
+@page "/"
+@using static System.Net.WebRequestMethods
 
 <PageTitle>KGB List</PageTitle>
 
@@ -16,6 +18,7 @@
                 <MudTh>Naziv prijave</MudTh>
                 <MudTh>Datum unosa</MudTh>
                 <MudTh>Korisnik</MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Sifra prijave">@context.Sifra_Prijave</MudTd>
@@ -23,6 +26,7 @@
                 <MudTd DataLabel="Naziv prijace">@context.Naziv_Prijave</MudTd>
                 <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>
+                <MudTd><MudIconButton OnClick="@(() => Show(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton></MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
