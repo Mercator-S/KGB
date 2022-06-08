@@ -66,8 +66,8 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/Home");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            Input.Lozinka = GeneratePassword(Input.Ime, Input.Prezime);
-            Input = CreateKGBUser(Input, Input.Ime, Input.Prezime, Input.Naziv_Oj, Input.Email);
+            
+            Input = CreateKGBUser(Input.Ime, Input.Prezime, Input.Naziv_Oj, Input.Email);
             if (ModelState.IsValid && Input != null)
             {
                 var user = CreateUser();
@@ -134,15 +134,19 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
 
             string Password = Char.ToUpper(Ime[0]) + Prezime + rnd.Next(100, 999) + new string(Enumerable.Repeat(chars, 1)
                 .Select(s => s[rnd.Next(s.Length)]).ToArray());
+            Password = "Admin11.";
             return Password;
         }
-        private KGB_User CreateKGBUser(KGB_User User, string Ime, string Prezime, string NazivOrgJed, string Email)
+        private KGB_User CreateKGBUser(string Ime, string Prezime, string NazivOrgJed, string Email)
         {
+            KGB_User User = new KGB_User();
             User.Ime = char.ToUpper(Ime[0]) + Ime.Substring(1);
             User.Prezime = char.ToUpper(Prezime[0]) + Prezime.Substring(1);
+            User.Lozinka = GeneratePassword(Input.Ime, Input.Prezime);
             User.Email = char.ToUpper(Email[0]) + Email.Substring(1);
             User.Active = true;
             User.D_Upd = DateTime.Now.ToString();
+            User.Naziv_Oj = NazivOrgJed;
             User.Sifra_Oj = _context.KGB_OrgJed.Where(x => x.NazivOj == NazivOrgJed).FirstOrDefault().SifraOj;
             User.K_Ins = 1;
             User.K_Upd = 1;
