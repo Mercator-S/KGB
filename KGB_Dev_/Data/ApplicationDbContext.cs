@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KGB_Dev_.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<KGB_User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -13,5 +13,8 @@ namespace KGB_Dev_.Data
         public DbSet<KGB_User> KGB_Users => Set<KGB_User>();
         public DbSet<KGB_Knowledge> KGB_Knowledge => Set<KGB_Knowledge>();
         public DbSet<KGB_Oj> KGB_OrgJed => Set<KGB_Oj>();
+        public DbSet<KGB_Role> KGB_Role => Set<KGB_Role>();
+
+
     }
 }

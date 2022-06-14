@@ -1,12 +1,20 @@
 ﻿<MudDialog>
     <DialogContent>
-        <div>
-            @Sifra
-        </div>
+        <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>
+        <MudDivider />
+        <MudText Typo="Typo.body2">@Prijava.Opis_Prijave</MudText>
+        <MudDivider />
+        <MudGrid>
+            <MudItem xs="3">
+                <MudDatePicker Label="Datum unosa" @bind-Date="DatumUnosa" ReadOnly="true" DateFormat="dd.MM.yyyy" />
+            </MudItem>
+            <MudItem xs="3">
+                <MudDatePicker Label="Datum izmene" @bind-Date="DatumIzmene" ReadOnly="true" DateFormat="dd.MM.yyyy" />
+            </MudItem>
+        </MudGrid>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
         <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
-

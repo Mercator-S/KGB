@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KGB_Dev_.Data.KGB_Model
 {
     [Table("KGB_UsersDb")]
-    public class KGB_User
+    public class KGB_User : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
         public int Fk_Rola { get; set; }
         public string? Ime { get; set; }
+        public string? Naziv_Role { get; set; }
         public string? Prezime { get; set; }
         public int Sifra_Oj { get; set; }
         public string? Naziv_Oj { get; set; }
@@ -18,8 +18,8 @@ namespace KGB_Dev_.Data.KGB_Model
         public string? Email { get; set; }
         public bool Active { get; set; } = true;
         public int K_Ins { get; set; }
-        public string? D_Ins { get; set; } = DateTime.Now.ToString();
+        public string? D_Ins { get; set; }
         public int K_Upd { get; set; }
-        public string? D_Upd { get; set; }
+        public string? D_Upd { get; set; } = DateTime.Now.ToString();
     }
 }

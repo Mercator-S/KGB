@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@using KGB_Dev_.Data.KGB_Model
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<KGB_User> SignInManager
+@inject UserManager<KGB_User> UserManager
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <ul class="navbar-nav">

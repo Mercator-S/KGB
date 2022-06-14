@@ -33,6 +33,12 @@
                     <option>Please select one</option>
                 </select>
             </div>
+            <div class="form-floating">
+                <select asp-for="Input.Naziv_Role"
+                        asp-items="@(new SelectList(Model.ListOfRola.Values))">
+                    <option>Please select one</option>
+                </select>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>

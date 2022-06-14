@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using KGB_Dev_.Data.KGB_Model;
+using KGB_Dev_.DataRetrieving;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace KGB_Dev_.Pages
@@ -7,9 +9,21 @@ namespace KGB_Dev_.Pages
     {
         [CascadingParameter]
         MudDialogInstance MudDialog { get; set; }
-        [Parameter] 
+        [Parameter]
         public long Sifra { get; set; }
-
+        public KGB_Knowledge Prijava { get; set; }
+        public DateTime? DatumUnosa { get; set; }
+        public DateTime? DatumIzmene { get; set; }
+        public string Title { get; set; }
+        [Inject]
+        public IDataRetrivingServices IServices { get; set; } = default!;
+        protected override async Task OnInitializedAsync()
+        {
+            Prijava= IServices.GetKnowledge(Sifra).Result;
+            DatumUnosa = Prijava.d_ins.Date;
+            DatumIzmene = Prijava.d_upd.Date;
+            MudDialog.SetTitle(Prijava.Naziv_Prijave );
+        }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel() => MudDialog.Cancel();
     }

@@ -16,5 +16,10 @@ namespace KGB_Dev_.Data_Retrieving
             var result = _context.KGB_Knowledge.ToList();
             return await Task.FromResult(result);
         }
+        public async Task<KGB_Knowledge> GetKnowledge(long id)
+        {
+            var result = _context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault();
+            return await Task.FromResult(result);
+        }
     }
 }

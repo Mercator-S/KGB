@@ -12,6 +12,7 @@ namespace KGB_Dev_.Pages
         public IDataRetrivingServices IServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
+        DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position=DialogPosition.Center };
         [Parameter]
         public long Sifra { get; set; }
         protected override async Task OnInitializedAsync()
@@ -25,8 +26,8 @@ namespace KGB_Dev_.Pages
         }
         public async Task HandleValidSubmit()
         {
-            var parameteres=new DialogParameters { { "Sifra", Sifra} };
-            DialogService.Show<Dialog>("Saving Data",parameteres);
+            var parameteres = new DialogParameters { { "Sifra", Sifra } };
+            DialogService.Show<Dialog>("", parameteres, maxWidth);
         }
     }
 }

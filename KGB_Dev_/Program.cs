@@ -1,5 +1,6 @@
 using KGB_Dev_.Areas.Identity;
 using KGB_Dev_.Data;
+using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.Data_Retrieving;
 using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,12 +14,12 @@ builder.Services.AddMudServices();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)); ;
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<KGB_User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<KGB_User>>();
 builder.Services.AddScoped<IDataRetrivingServices, IndexTable>();
 builder.Services.AddSingleton<WeatherForecastService>();
 
