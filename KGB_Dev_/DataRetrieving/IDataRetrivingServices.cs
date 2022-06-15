@@ -6,7 +6,11 @@ namespace KGB_Dev_.DataRetrieving
     {
         Task<List<KGB_Knowledge>> GetListOfKnowledge();
         Task<KGB_Knowledge> GetKnowledge(long id);
-        Task<int> GetCurrentUserRole();
+        Task<Task<KGB_User>> GetCurrentUser();
+        Task<bool> CreateKGB(KGB_Knowledge Model);
+        Task<List<KGB_Category>> GetCategory();
+
+
 
     }
 }

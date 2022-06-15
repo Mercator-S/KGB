@@ -3,9 +3,9 @@ using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace KGB_Dev_.Pages
+namespace KGB_Dev_.Pages.Dialog
 {
-    partial class Dialog
+    partial class IndexDialog
     {
         [CascadingParameter]
         MudDialogInstance MudDialog { get; set; }

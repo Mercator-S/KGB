@@ -60,7 +60,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Home");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             Input = CreateKGBUser(Input.Ime, Input.Prezime, Input.Naziv_Oj, Input.Email, Input.Naziv_Role);
@@ -85,7 +85,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(Input, isPersistent: false);
+                        //await _signInManager.SignInAsync(Input, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }

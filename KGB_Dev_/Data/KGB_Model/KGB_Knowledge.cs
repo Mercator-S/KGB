@@ -12,13 +12,15 @@ namespace KGB_Dev_.Data.KGB_Model
         public int Fk_Category { get; set; }
         public int Fk_Subcategory { get; set; }
         public string? Sifra_Prijave { get; set; }
+        [Required]
         public string? Naziv_Prijave { get; set; }
+        [Required]
         public string? Opis_Prijave { get; set; }
         public string? Putanja_Fajl { get; set; }
-        public bool Active { get; set; }
-        public DateTime d_upd { get; set; }
-        public int k_ins { get; set; }
-        public DateTime d_ins { get; set; } = DateTime.Now;
-        public int k_upd { get; set; }
+        public bool Active { get; set; } = true;
+        public DateTime d_upd { get; set; } = DateTime.Now;
+        public string? k_ins { get; set; }
+        public DateTime d_ins { get; set; }
+        public string? k_upd { get; set; }
     }
 }

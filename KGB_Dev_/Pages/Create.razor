@@ -1,0 +1,71 @@
+﻿@page "/Create"
+
+<PageTitle>Kreiranje KGB-a</PageTitle>
+
+<MudGrid Class="d-flex align-center justify-center">
+    <MudItem xs="6">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Align="Align.Center" Typo="Typo.h4">Kreirajte KGB</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudDivider />
+            <MudForm Model="@Model">
+                <MudCardContent>
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+                    <MudTextField @bind-Value="Model.Naziv_Prijave"
+                                  For="@(() => Model.Naziv_Prijave)"
+                                  Immediate="true"
+                                  Label="Naziv prijave" />
+
+                    <MudTextField @bind-Value="Model.Opis_Prijave"
+                                  For="@(() => Model.Opis_Prijave)"
+                                  Immediate="true"
+                                  Label="Opis prijave"
+                                  Lines="5" />
+                    <MudSelect T="int" Label="Kategorija KGB prijave" @bind-Value="value" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                        @foreach (KeyValuePair<int, string> a in Category)
+                        {
+                            <MudSelectItem Value="@a.Key">@a.Value</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="value" For="@(()=>Model.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                        @foreach (KeyValuePair<int, string> a in Subcategory)
+                        {
+                            <MudSelectItem Value="@a.Key">@a.Value</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudGrid Style="margin-top:20px;">
+                        <MudItem xs="3">
+                            <MudFab HtmlTag="label"
+                                    Color="Color.Info"
+                                    Icon="@Icons.Filled.CloudUpload"
+                                    Label="Upload file"
+                                    for="fileInput" />
+                        </MudItem>
+                        <MudItem xs="9">
+                            @if (files != null)
+                            {
+                                <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                                <MudList>
+                                    @foreach (var file in files)
+                                    {
+                                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                            @file.Name <code>@file.Size bytes</code>
+                                            <MudIconButton OnClick="@(() => Clear(file))" Icon="@Icons.Filled.Cancel" Color="@Color.Error"></MudIconButton>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            }
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudForm>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" Class="ml-auto" OnClick="@(async () => await CreateKGB(Model))">Kreiraj</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
