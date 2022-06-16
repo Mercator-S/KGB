@@ -17,7 +17,7 @@ namespace KGB_Dev_.Pages
         Dictionary<int, string> Subcategory = new Dictionary<int, string>();
         KGB_Knowledge Model = new KGB_Knowledge();
         private bool Clearing = false;
-        string Location = @"Desktop";
+        string Location = @"C:\KGB_Dev";
         IList<IBrowserFile> files = new List<IBrowserFile>();
 
         protected override async Task OnInitializedAsync()
@@ -52,7 +52,7 @@ namespace KGB_Dev_.Pages
                 //        Environment.EnvironmentName, "unsafe_uploads",
                 //        trustedFileNameForFileStorage);
 
-                await using FileStream fs = new(path, FileMode.Create);
+                await using FileStream fs = new(path+"\\\\"+p.Name, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
                 await p.OpenReadStream().CopyToAsync(fs);
             }
             var result = IServices.CreateKGB(Model);
