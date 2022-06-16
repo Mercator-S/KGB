@@ -19,10 +19,10 @@ namespace KGB_Dev_.Pages
         {
             ListOfKGB = await IServices.GetListOfKnowledge();
         }
-        public void Show(long a)
+        public async void Show(long a)
         {
             Sifra = a;
-            HandleValidSubmit();
+           await HandleValidSubmit();
         }
         public async Task HandleValidSubmit()
         {

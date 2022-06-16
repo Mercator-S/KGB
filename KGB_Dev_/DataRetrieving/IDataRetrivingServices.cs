@@ -1,4 +1,5 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace KGB_Dev_.DataRetrieving
 {
@@ -9,8 +10,7 @@ namespace KGB_Dev_.DataRetrieving
         Task<Task<KGB_User>> GetCurrentUser();
         Task<bool> CreateKGB(KGB_Knowledge Model);
         Task<List<KGB_Category>> GetCategory();
-
-
+        public void CheckFolder(string Path);
 
     }
 }

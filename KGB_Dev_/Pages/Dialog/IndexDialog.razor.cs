@@ -22,7 +22,7 @@ namespace KGB_Dev_.Pages.Dialog
             Prijava= IServices.GetKnowledge(Sifra).Result;
             DatumUnosa = Prijava.d_ins.Date;
             DatumIzmene = Prijava.d_upd.Date;
-            MudDialog.SetTitle(Prijava.Naziv_Prijave );
+            MudDialog.SetTitle(Prijava.Naziv_Prijave);
         }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel() => MudDialog.Cancel();

@@ -2,7 +2,9 @@
 using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
 
 namespace KGB_Dev_.Data_Retrieving
 {
@@ -21,7 +23,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge()
         {
-            var result = _context.KGB_Knowledge.ToList();
+            var result = _context.KGB_Knowledge.OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
@@ -52,6 +54,14 @@ namespace KGB_Dev_.Data_Retrieving
         {
             var result = _context.KGB_Category.ToList();
             return await Task.FromResult(result);
+        }
+        public void CheckFolder(string Path)
+        {
+            bool exist = Directory.Exists(Path);
+            if (!exist)
+            {
+                Directory.CreateDirectory(Path);
+            }
         }
     }
 }
