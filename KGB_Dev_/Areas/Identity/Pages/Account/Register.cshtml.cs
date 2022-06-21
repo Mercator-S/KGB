@@ -152,8 +152,6 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             {
                 return null;
             }
-            //_context.KGB_Users.Add(User);
-            //_context.SaveChanges();
             return User;
         }
     }

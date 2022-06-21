@@ -1,16 +1,17 @@
 ﻿@inject IDialogService DialogService
 @page "/"
+@using KGB_Dev_.Data.KGB_Model
 @using static System.Net.WebRequestMethods
 
 <PageTitle>KGB List</PageTitle>
 
 <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="9">
-        <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true">
+        <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_Knowledge,bool>(SearchTable1)">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">KGB tabela</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudTextField @bind-Value="searchString1" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>Sifra prijave</MudTh>

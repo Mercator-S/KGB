@@ -3,14 +3,13 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace KGB_Dev_.DataRetrieving
 {
-    public interface IDataRetrivingServices
+    public interface IKgbServices
     {
         Task<List<KGB_Knowledge>> GetListOfKnowledge();
         Task<KGB_Knowledge> GetKnowledge(long id);
         Task<Task<KGB_User>> GetCurrentUser();
-        Task<bool> CreateKGB(KGB_Knowledge Model);
+        Task<bool> CreateKGB(KGB_Knowledge Model, IList<IBrowserFile> ListOfFile);
         Task<List<KGB_Category>> GetCategory();
-        public void CheckFolder(string Path);
-
+        Task<List<string>> GetFile(string Path);
     }
 }

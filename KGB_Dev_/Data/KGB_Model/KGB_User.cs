@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KGB_Dev_.Data.KGB_Model
 {
-    [Table("KGB_UsersDb")]
     public class KGB_User : IdentityUser
     {
         public int Fk_Rola { get; set; }
@@ -19,8 +18,6 @@ namespace KGB_Dev_.Data.KGB_Model
         [Required]
         public string? Naziv_Oj { get; set; }
         public string? Lozinka { get; set; }
-        [Required]
-        public string? Email { get; set; }
         public bool Active { get; set; } = true;
         public int K_Ins { get; set; }
         public string? D_Ins { get; set; }

@@ -20,7 +20,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<KGB_User>>();
-builder.Services.AddScoped<IDataRetrivingServices, IndexTable>();
+builder.Services.AddScoped<IKgbServices, DataRetriving>();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();

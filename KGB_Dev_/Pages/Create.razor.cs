@@ -8,16 +8,12 @@ namespace KGB_Dev_.Pages
     partial class Create
     {
         [Inject]
-        IWebHostEnvironment Environment { get; set; } = default!;
-        [Inject]
-        public IDataRetrivingServices IServices { get; set; } = default!;
+        public IKgbServices IServices { get; set; } = default!;
         private List<KGB_Category> category;
         Dictionary<int, string> Category = new Dictionary<int, string>();
         public int value = 1;
         Dictionary<int, string> Subcategory = new Dictionary<int, string>();
         KGB_Knowledge Model = new KGB_Knowledge();
-        private bool Clearing = false;
-        string Location = @"C:\KGB_Dev";
         IList<IBrowserFile> files = new List<IBrowserFile>();
 
         protected override async Task OnInitializedAsync()
@@ -42,20 +38,7 @@ namespace KGB_Dev_.Pages
         }
         private async Task CreateKGB(KGB_Knowledge Model)
         {
-            var user = IServices.GetCurrentUser().Result;
-           var path = Path.Combine(Location, user.Result.Naziv_Oj, Model.Naziv_Prijave);
-           IServices.CheckFolder(path);
-            foreach (var p in files)
-            {
-                var trustedFileNameForFileStorage = Path.GetRandomFileName();
-                //var path = Path.Combine(Environment.ContentRootPath,
-                //        Environment.EnvironmentName, "unsafe_uploads",
-                //        trustedFileNameForFileStorage);
-
-                await using FileStream fs = new(path+"\\\\"+p.Name, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-                await p.OpenReadStream().CopyToAsync(fs);
-            }
-            var result = IServices.CreateKGB(Model);
+           await IServices.CreateKGB(Model,files);
         }
         private async Task Clear(IBrowserFile file)
         {

@@ -6,10 +6,23 @@
         <MudDivider />
         <MudGrid>
             <MudItem xs="3">
-                <MudDatePicker Label="Datum unosa" @bind-Date="DatumUnosa" ReadOnly="true" DateFormat="dd.MM.yyyy" />
+                <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
             </MudItem>
             <MudItem xs="3">
-                <MudDatePicker Label="Datum izmene" @bind-Date="DatumIzmene" ReadOnly="true" DateFormat="dd.MM.yyyy" />
+                <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs="9">
+                <MudList Dense="true">
+                    <MudListSubheader>
+                        Lista fajlova
+                    </MudListSubheader>
+                    @foreach (var name in FileNames)
+                    {
+                        <MudListItem Text="@name" Icon="@Icons.Filled.AttachFile" IconColor="Color.Info" />
+                    }
+                </MudList>
             </MudItem>
         </MudGrid>
     </DialogContent>

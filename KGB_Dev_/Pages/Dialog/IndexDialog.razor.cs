@@ -14,14 +14,16 @@ namespace KGB_Dev_.Pages.Dialog
         public KGB_Knowledge Prijava { get; set; }
         public DateTime? DatumUnosa { get; set; }
         public DateTime? DatumIzmene { get; set; }
+        List<string> FileNames = new List<string>();
         public string Title { get; set; }
         [Inject]
-        public IDataRetrivingServices IServices { get; set; } = default!;
+        public IKgbServices IServices { get; set; } = default!;
         protected override async Task OnInitializedAsync()
         {
-            Prijava= IServices.GetKnowledge(Sifra).Result;
+            Prijava = IServices.GetKnowledge(Sifra).Result;
             DatumUnosa = Prijava.d_ins.Date;
             DatumIzmene = Prijava.d_upd.Date;
+            FileNames = IServices.GetFile(Prijava.Putanja_Fajl).Result;
             MudDialog.SetTitle(Prijava.Naziv_Prijave);
         }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
