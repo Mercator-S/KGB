@@ -12,9 +12,9 @@ namespace KGB_Dev_.Pages
         public IKgbServices IServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
-        DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
         [Parameter]
-        public long IdPrijave{ get; set; }
+        public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
             ListOfKGB = await IServices.GetListOfKnowledge();
@@ -26,8 +26,9 @@ namespace KGB_Dev_.Pages
         }
         public async Task HandleValidSubmit()
         {
-            var parameteres = new DialogParameters { { "Sifra", IdPrijave } };
-            DialogService.Show<IndexDialog>("", parameteres, maxWidth);
+            var parameteres = new DialogParameters();
+            parameteres.Add("Sifra", IdPrijave);
+            DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
         }
         private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
 
