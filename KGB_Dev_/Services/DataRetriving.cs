@@ -23,9 +23,9 @@ namespace KGB_Dev_.Data_Retrieving
             _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
         }
-        public async Task<List<KGB_Knowledge>> GetListOfKnowledge()
+        public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            var result = _context.KGB_Knowledge.OrderByDescending(x => x.Id).ToList();
+            var result = _context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
@@ -98,6 +98,12 @@ namespace KGB_Dev_.Data_Retrieving
                 await p.OpenReadStream().CopyToAsync(fs);
             }
             return pathName;
+        }
+        public Stream GetFileStream()
+        {
+            var randomBinaryData = new byte[50 * 1024];
+            var fileStream = new MemoryStream(randomBinaryData);
+            return fileStream;
         }
     }
 }

@@ -15,15 +15,13 @@
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>Sifra prijave</MudTh>
-                <MudTh>Sifra organizacione jedinice</MudTh>
                 <MudTh>Naziv prijave</MudTh>
                 <MudTh>Datum unosa</MudTh>
                 <MudTh>Korisnik</MudTh>
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Sifra prijave">@context.Sifra_Prijave</MudTd>
-                <MudTd DataLabel="Sifra organizacione jedinice">@context.Sifra_Oj</MudTd>
+                <MudTd DataLabel="Sifra prijave">@context.Id</MudTd>
                 <MudTd DataLabel="Naziv prijace">@context.Naziv_Prijave</MudTd>
                 <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>

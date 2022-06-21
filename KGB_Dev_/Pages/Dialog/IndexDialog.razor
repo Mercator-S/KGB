@@ -6,7 +6,7 @@
             </MudItem>
             <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
                 <MudText>
-                    <MudAvatar Size="Size.Small" Style="background-color:#dc3545" >@Prijava.k_ins.Substring(0,1)</MudAvatar>
+                    <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Prijava.k_ins.Substring(0,1)</MudAvatar>
                     @Prijava.k_ins
                 </MudText>
             </MudItem>
@@ -16,17 +16,8 @@
         <MudText Typo="Typo.body2" GutterBottom="true">@Prijava.Opis_Prijave</MudText>
         <MudDivider />
         <MudGrid>
-            <MudItem xs="3">
-                <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
-            </MudItem>
-            <MudItem xs="3">
-                <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
-            </MudItem>
-        </MudGrid>
-        <MudGrid>
-
             <MudItem xs="9">
-                <MudList Dense="true">
+                <MudList Dense="true" DisableGutters="true">
                     @if (FileNames.Count < 1)
                     {
                         <MudListSubheader>
@@ -35,15 +26,29 @@
                     }
                     else
                     {
-                        <MudListSubheader>
+                        <MudListSubheader DisableGutters="true" Style="color:#424242ff">
                             Lista fajlova:
                         </MudListSubheader>
                         @foreach (var name in FileNames)
                         {
-                            <MudListItem Text="@name" Icon="@Icons.Filled.AttachFile" IconColor="Color.Info" />
+                            <MudListItem>
+                                <MudText>
+                                    <MudIcon Icon="@Icons.Filled.AttachFile" Color="Color.Info" />
+                                    @name
+                                    <MudIconButton Icon="@Icons.Filled.Download" OnClick="@(() => DownloadFile(name))" Color="Color.Success" Size="Size.Small" />
+                                </MudText>
+                            </MudListItem>
                         }
                     }
                 </MudList>
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs="3">
+                <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+            </MudItem>
+            <MudItem xs="3">
+                <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
             </MudItem>
         </MudGrid>
     </DialogContent>

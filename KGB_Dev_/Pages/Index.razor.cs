@@ -17,7 +17,8 @@ namespace KGB_Dev_.Pages
         public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            ListOfKGB = await IServices.GetListOfKnowledge();
+            var User = IServices.GetCurrentUser().Result;
+            ListOfKGB = await IServices.GetListOfKnowledge(User.Result.Sifra_Oj);
         }
         public async void Show(long SifraPrijave)
         {
