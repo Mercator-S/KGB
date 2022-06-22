@@ -4,38 +4,79 @@
 
 <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="8">
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Align="Align.Center" Typo="Typo.h4">Kreirajte KGB</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudDivider />
-            <MudForm Model="@Model">
+        <EditForm Model="@Model" OnValidSubmit="(async () => await CreateKGB(Model))">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Align="Align.Center" Typo="Typo.h4">Kreirajte KGB</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudDivider />
                 <MudCardContent>
                     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
                     <MudTextField @bind-Value="Model.Naziv_Prijave"
                                   For="@(() => Model.Naziv_Prijave)"
                                   Immediate="true"
-                                  Label="Naziv prijave" />
+                                  Label="Naziv prijave"
+                                  Required="true" />
 
                     <MudTextField @bind-Value="Model.Opis_Prijave"
                                   For="@(() => Model.Opis_Prijave)"
                                   Immediate="true"
                                   Label="Opis prijave"
-                                  Lines="5" />
-                    <MudSelect T="int" Label="Kategorija KGB prijave" @bind-Value="value" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
-                        @foreach (KeyValuePair<int, string> a in Category)
-                        {
-                            <MudSelectItem Value="@a.Key">@a.Value</MudSelectItem>
-                        }
+                                  Lines="5"
+                                  Required="true" />
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudSelect T="int" Label="Kategorija KGB prijave" Required="true" @bind-Value="Model.Fk_Category" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                                @foreach (KeyValuePair<int, string> a in Category)
+                                {
+                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="5">
+                            <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="Model.Fk_Subcategory" Required="true" For="@(()=>Model.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                                @foreach (KeyValuePair<int, string> a in Subcategory)
+                                {
+                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem Class="align-end " xs="1">
+                            <MudButton StartIcon="@Icons.Filled.Cancel" Size="Size.Medium" Color="Color.Primary" > Dodaj</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                    @*<MudGrid>
+                    <MudItem xs="12">
+                    <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="Model.Fk_Subcategory" Required="true" For="@(()=>Model.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (KeyValuePair<int, string> a in Subcategory)
+                    {
+                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                    }
                     </MudSelect>
-                    <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="value" For="@(()=>Model.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
-                        @foreach (KeyValuePair<int, string> a in Subcategory)
-                        {
-                            <MudSelectItem Value="@a.Key">@a.Value</MudSelectItem>
-                        }
-                    </MudSelect>
+                    </MudItem>
+                    </MudGrid>*@
+                    <MudGrid>
+                        <MudItem>
+                            <MudText Typo="@Typo.body2">Vidljivost prijave: </MudText>
+                            <MudCheckBox For="@(() => Model.Visibility)" @bind-Checked=Model.Visibility Label="Javna prijava" Dense="true" Color="Color.Success" UnCheckedColor="Color.Default">
+                                <MudTooltip Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                                    <ChildContent>
+                                        <MudIcon Icon="@Icons.Outlined.Info" Style="margin-left:10px" Size="Size.Small" Color="Color.Warning" />
+                                    </ChildContent>
+                                    <TooltipContent>
+                                        <MudText Typo="Typo.body1">Javna prijava</MudText>
+                                        <MudText Typo="Typo.body2">
+                                            Selektovanjem "Javna prijava" omogucavate pristup prijavi svim korisnicima u drugim sektorima.
+                                            <br /> Takodje prijava je vidljiva i u internoj listi prijava.
+                                        </MudText>
+                                    </TooltipContent>
+                                </MudTooltip>
+                            </MudCheckBox>
+                        </MudItem>
+                    </MudGrid>
                     <MudGrid Style="margin-top:20px;">
                         <MudItem xs="3">
                             <MudFab HtmlTag="label"
@@ -61,11 +102,12 @@
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>
-            </MudForm>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" Class="ml-auto" OnClick="@(async () => await CreateKGB(Model))">Kreiraj</MudButton>
-            </MudCardActions>
-        </MudCard>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" ButtonType="ButtonType.Submit" Class="ml-auto">Kreiraj</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
     </MudItem>
 </MudGrid>
+@*OnClick="@(async () => await CreateKGB(Model))"*@
 

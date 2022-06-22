@@ -23,14 +23,19 @@ namespace KGB_Dev_.Data_Retrieving
             _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
         }
+        public async Task<List<KGB_Knowledge>> GetPublicListOfKnowledge()
+        {
+            List<KGB_Knowledge> result = _context.KGB_Knowledge.Where(x => x.Visibility == true).OrderByDescending(x => x.Id).ToList();
+            return await Task.FromResult(result);
+        }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            var result = _context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
+            List<KGB_Knowledge> result = _context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
-            var result = _context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault();
+            KGB_Knowledge? result = _context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault();
             return await Task.FromResult(result);
         }
         public async Task<Task<KGB_User>> GetCurrentUser()
@@ -42,11 +47,12 @@ namespace KGB_Dev_.Data_Retrieving
         public async Task<bool> CreateKGB(KGB_Knowledge Model, IList<IBrowserFile> ListOfFile)
         {
             var User = GetCurrentUser().Result;
+            Model.Naziv_Oj = User.Result.Naziv_Oj;
             Model.Sifra_Oj = User.Result.Sifra_Oj;
             Model.k_ins = User.Result.Ime + " " + User.Result.Prezime;
             Model.k_upd = User.Result.Id;
             Model.d_ins = DateTime.Now;
-            Model.Sifra_Prijave = "Nepoznato";
+            Model.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
             Model.Putanja_Fajl = await UploadFile(Model.Naziv_Prijave, ListOfFile);
             if (Model != null)
             {
@@ -59,7 +65,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Category>> GetCategory()
         {
-            var result = _context.KGB_Category.ToList();
+            var result = _context.KGB_Category.OrderBy(x => x.Sifra_Kategorije).ToList();
             return await Task.FromResult(result);
         }
         public void CheckFolder(string Path)
@@ -104,6 +110,10 @@ namespace KGB_Dev_.Data_Retrieving
             var randomBinaryData = new byte[50 * 1024];
             var fileStream = new MemoryStream(randomBinaryData);
             return fileStream;
+        }
+        public async Task NavigationManager(string nav)
+        {
+            await Task.Run(() => { _navigationManager.NavigateTo(nav); });
         }
     }
 }

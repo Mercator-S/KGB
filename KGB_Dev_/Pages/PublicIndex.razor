@@ -1,5 +1,5 @@
 ﻿@inject IDialogService DialogService
-@page "/"
+@page "/PublicIndex"
 @using KGB_Dev_.Data.KGB_Model
 @using static System.Net.WebRequestMethods
 
@@ -15,6 +15,7 @@
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>Sifra prijave</MudTh>
+                <MudTh>Naziv org jedinice</MudTh>
                 <MudTh>Naziv prijave</MudTh>
                 <MudTh>Datum unosa</MudTh>
                 <MudTh>Korisnik</MudTh>
@@ -22,6 +23,18 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Sifra prijave">@context.Id</MudTd>
+                <MudTd DataLabel="Naziv org jedinice">
+                    @if (context.Naziv_Oj.Length >= 20)
+                    {
+                        <MudTooltip Text="@context.Naziv_Oj" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                            @context.Naziv_Oj.Substring(0,20)
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        @context.Naziv_Oj
+                    }
+                </MudTd>
                 <MudTd DataLabel="Naziv prijave">
                     @if (context.Naziv_Prijave.Length >= 20)
                     {
@@ -34,10 +47,7 @@
                         @context.Naziv_Prijave
                     }
                 </MudTd>
-                <MudTd DataLabel="Datum unosa">
-
-                    @context.d_ins.ToString("dd/MM/yyyy")
-                </MudTd>
+                <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>
                 <MudTd>
                     <MudTooltip Text="Detalji prijave" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">

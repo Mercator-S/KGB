@@ -10,12 +10,13 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <MudNavLink Href="" Icon="@Icons.Filled.ViewList" IconColor="Color.Inherit">Lista</MudNavLink>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Filled.ViewList" IconColor="Color.Inherit">Interna lista</MudNavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Create">
-                <span class="oi oi-plus" aria-hidden="true"></span> Kreiranje
-            </NavLink>
+            <MudNavLink Href="/PublicIndex" Match="NavLinkMatch.All" Icon="@Icons.Filled.ListAlt" IconColor="Color.Inherit">Javna lista</MudNavLink>
+        </div>
+        <div class="nav-item px-3">
+            <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
         </div>
         <AuthorizeView>
             <Authorized>
@@ -25,6 +26,12 @@
                         <MudNavLink Href="register" Icon="@Icons.Filled.PersonAdd" IconColor="Color.Inherit">Register</MudNavLink>
                     </div>
                 }
+                @* @if (Role == 1)
+                {
+                <div class="nav-item px-3">
+                <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
+                </div>
+                }*@
             </Authorized>
         </AuthorizeView>
     </nav>

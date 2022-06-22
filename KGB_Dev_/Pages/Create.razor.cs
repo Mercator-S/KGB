@@ -2,6 +2,7 @@
 using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
 
 namespace KGB_Dev_.Pages
 {
@@ -10,12 +11,10 @@ namespace KGB_Dev_.Pages
         [Inject]
         public IKgbServices IServices { get; set; } = default!;
         private List<KGB_Category> category;
-        Dictionary<int, string> Category = new Dictionary<int, string>();
-        public int value = 1;
-        Dictionary<int, string> Subcategory = new Dictionary<int, string>();
+        private Dictionary<int, string> Category = new Dictionary<int, string>();
+        private Dictionary<int, string> Subcategory = new Dictionary<int, string>();
         KGB_Knowledge Model = new KGB_Knowledge();
         IList<IBrowserFile> files = new List<IBrowserFile>();
-
         protected override async Task OnInitializedAsync()
         {
             category = await IServices.GetCategory();
@@ -34,11 +33,10 @@ namespace KGB_Dev_.Pages
             {
                 files.Add(file);
             }
-            //TODO upload the files to the server
         }
         private async Task CreateKGB(KGB_Knowledge Model)
         {
-           await IServices.CreateKGB(Model,files);
+            await IServices.CreateKGB(Model, files);
         }
         private async Task Clear(IBrowserFile file)
         {

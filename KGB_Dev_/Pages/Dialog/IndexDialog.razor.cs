@@ -18,7 +18,6 @@ namespace KGB_Dev_.Pages.Dialog
         public string Korisnik { get; set; }
         List<string> FileNames = new List<string>();
         public string FilePath { get; set; }
-        public string Title { get; set; }
         [Inject]
         public IKgbServices IServices { get; set; } = default!;
         [Inject]

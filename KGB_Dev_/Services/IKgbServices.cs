@@ -6,11 +6,13 @@ namespace KGB_Dev_.DataRetrieving
     public interface IKgbServices
     {
         Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed);
+        Task<List<KGB_Knowledge>> GetPublicListOfKnowledge();
         Task<KGB_Knowledge> GetKnowledge(long id);
         Task<Task<KGB_User>> GetCurrentUser();
         Task<bool> CreateKGB(KGB_Knowledge Model, IList<IBrowserFile> ListOfFile);
         Task<List<KGB_Category>> GetCategory();
         Task<List<string>> GetFile(string Path);
         Stream GetFileStream();
+        Task NavigationManager(string nav);
     }
 }
