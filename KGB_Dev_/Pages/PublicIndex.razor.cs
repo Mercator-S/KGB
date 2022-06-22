@@ -6,7 +6,7 @@ using KGB_Dev_.Pages.Dialog;
 
 namespace KGB_Dev_.Pages
 {
-    partial class Index
+    partial class PublicIndex
     {
         [Inject]
         public IKgbServices IServices { get; set; } = default!;
@@ -17,8 +17,7 @@ namespace KGB_Dev_.Pages
         public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            var User = IServices.GetCurrentUser().Result;
-            ListOfKGB = await IServices.GetListOfKnowledge(User.Result.Sifra_Oj);
+            ListOfKGB = await IServices.GetPublicListOfKnowledge();
         }
         public async void Show(long SifraPrijave)
         {

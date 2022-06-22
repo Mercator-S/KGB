@@ -1,6 +1,6 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <a href="Identity/Account/Manage">Zdravo, @context.User.Identity?.Name!.Substring(0,context.User.Identity.Name.IndexOf("."))</a>
+        <a>Zdravo, @context.User.Identity?.Name!.Substring(0,context.User.Identity.Name.IndexOf("."))</a>
         <form style="margin-left:10px" method="post" action="Identity/Account/LogOut">
             <button type="submit" class="btn btn-secondary">Logout</button>
         </form>

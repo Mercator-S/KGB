@@ -14,15 +14,16 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using KGB_Dev_.Data.KGB_Model;
 
 namespace KGB_Dev_.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
+        private readonly SignInManager<KGB_User> _signInManager;
+        private readonly ILogger<KGB_User> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<KGB_User> signInManager, ILogger<KGB_User> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

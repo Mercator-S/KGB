@@ -4,6 +4,7 @@ using KGB_Dev_.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KGB_Dev_.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220609103350_ChangeIdenitiyKGB_User")]
+    partial class ChangeIdenitiyKGB_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,26 +107,6 @@ namespace KGB_Dev_.Data.Migrations
                     b.ToTable("KGB_Oj");
                 });
 
-            modelBuilder.Entity("KGB_Dev_.Data.KGB_Model.KGB_Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Naziv_Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sifra_Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KGB_Role");
-                });
-
             modelBuilder.Entity("KGB_Dev_.Data.KGB_Model.KGB_User", b =>
                 {
                     b.Property<string>("Id")
@@ -175,9 +157,6 @@ namespace KGB_Dev_.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Naziv_Oj")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Naziv_Role")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
