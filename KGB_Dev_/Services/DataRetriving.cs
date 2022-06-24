@@ -65,7 +65,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Category>> GetCategory()
         {
-            var result = _context.KGB_Category.OrderBy(x => x.Sifra_Kategorije).ToList();
+            var result = _context.KGB_Category.OrderBy(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
         public void CheckFolder(string Path)
@@ -114,6 +114,16 @@ namespace KGB_Dev_.Data_Retrieving
         public async Task NavigationManager(string nav)
         {
             await Task.Run(() => { _navigationManager.NavigateTo(nav); });
+        }
+        public async Task<List<KGB_Category>> GetCategory(int OrgJed)
+        {
+            List<KGB_Category> result = _context.KGB_Category.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
+            return await Task.FromResult(result);
+        }
+        public async Task<List<KGB_Subcategory>> GetSubcategory(int category_id)
+        {
+            List<KGB_Subcategory> result = _context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList();
+            return await Task.FromResult(result);
         }
     }
 }

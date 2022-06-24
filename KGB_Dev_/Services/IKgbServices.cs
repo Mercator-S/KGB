@@ -14,5 +14,7 @@ namespace KGB_Dev_.DataRetrieving
         Task<List<string>> GetFile(string Path);
         Stream GetFileStream();
         Task NavigationManager(string nav);
+        Task<List<KGB_Category>> GetCategory(int OrgJed);
+        Task<List<KGB_Subcategory>> GetSubcategory(int category_id);
     }
 }

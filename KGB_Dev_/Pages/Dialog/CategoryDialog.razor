@@ -1,0 +1,26 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem Class="py-8 d-flex flex-1">
+                <MudText Typo="Typo.h5">Dodavanje kategorije</MudText>
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="4">
+                <MudAutocomplete Disabled="VisibilityCat" T="string" Label="Kategorije" @bind-Value="SearchCategory" SearchFunc="@SearchCategories" />
+                <MudButton Variant="Variant.Text" Disabled="VisibilityCatBtn" OnClick="AddCategory" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" Style="margin-top:20px;" IconColor="Color.Success">Dodaj kategoriju</MudButton>
+            </MudItem>
+            @if (VisibilityCat == true)
+            {
+                <MudItem xs="12" sm="6" md="4">
+                    <MudAutocomplete T="string" Label="Potkategorije" @bind-Value="SearchSubcategory" SearchFunc="@SearchSubCategories" />
+                    <MudButton Disabled="VisibilitySubCatBtn" Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" Style="margin-top:20px;" IconColor="Color.Success">Dodaj Potkategoriju</MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

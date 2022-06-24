@@ -10,10 +10,10 @@ namespace KGB_Dev_.Data.KGB_Model
         public long Id { get; set; }
         public string? Naziv_Oj { get; set; }
         public int Sifra_Oj { get; set; }
-        [Range(1, 100000, ErrorMessage = "Izaberite kategoriju prijave!")]
-        public int Fk_Category { get; set; }
-        [Range(1, 100000, ErrorMessage = "Izaberite potkategoriju prijave!")]
-        public int Fk_Subcategory { get; set; }
+        [Range(2, 100000, ErrorMessage = "Izaberite kategoriju prijave!")]
+        public int Fk_Category { get; set; } = 1;
+        [Range(2, 100000, ErrorMessage = "Izaberite potkategoriju prijave!")]
+        public int Fk_Subcategory { get; set; } = 1;
         public string? Sifra_Prijave { get; set; }
         [Required(ErrorMessage = "Unesite naziv prijave!")]
         public string? Naziv_Prijave { get; set; }
