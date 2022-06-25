@@ -36,7 +36,7 @@
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="6" sm="6">
-                            <MudSelect ValueChanged="@((int s) => Change(s))" Value="1" T="int" Label="Kategorija KGB prijave"  Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                            <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Label="Kategorija KGB prijave" Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                                 @foreach (KeyValuePair<int, string> a in Category)
                                 {
                                     <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>

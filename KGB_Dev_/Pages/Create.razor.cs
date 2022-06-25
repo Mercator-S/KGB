@@ -21,15 +21,14 @@ namespace KGB_Dev_.Pages
         protected override async Task OnInitializedAsync()
         {
             category = await IServices.GetCategory();
-            subcategory = await IServices.GetSubcategory(category.Select(x=>x.Id).First());
+            subcategory = await IServices.GetSubcategory(category.Select(x => x.Id).First());
+            Category.Add(0, "Izaberite kategoriju");
+            Subcategory.Add(0, "Izaberite potkategoriju");
             foreach (var p in category)
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
             }
-            foreach (var k in subcategory)
-            {
-                Subcategory.Add(k.Id, k.Naziv_Potkategorije);
-            }
+           
         }
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {
@@ -52,11 +51,25 @@ namespace KGB_Dev_.Pages
         }
         public async Task HandleValidSubmit()
         {
-             DialogService.Show<CategoryDialog>("", dialogOptions);
+            DialogService.Show<CategoryDialog>("", dialogOptions);
         }
-        void Change(int e)
+        public async Task GetSubcategory(int Id)
         {
-            var a = e;
+            subcategory = await IServices.GetSubcategory(Id);
+            if (subcategory.Count == 0)
+            {
+                Subcategory = new();
+                Subcategory.Add(0, "Izaberite potkategoriju");
+            }
+            else
+            {
+                foreach (var k in subcategory)
+                {
+                    Subcategory.Add(k.Id, k.Naziv_Potkategorije);
+                }
+            }
+            Model.Fk_Category = Id;
+
         }
     }
 }
