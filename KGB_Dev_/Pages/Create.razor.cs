@@ -69,6 +69,7 @@ namespace KGB_Dev_.Pages
                 }
             }
             Model.Fk_Category = Id;
+            Model.Fk_Subcategory = 0;
 
         }
     }
