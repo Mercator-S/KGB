@@ -15,8 +15,9 @@ namespace KGB_Dev_.Pages
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
         KGB_Knowledge Model = new KGB_Knowledge();
+        public bool ShowSubcategory { get; set; }
         IList<IBrowserFile> files = new List<IBrowserFile>();
         protected override async Task OnInitializedAsync()
         {
@@ -28,7 +29,7 @@ namespace KGB_Dev_.Pages
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
             }
-           
+
         }
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {

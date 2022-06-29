@@ -68,6 +68,11 @@ namespace KGB_Dev_.Data_Retrieving
             var result = _context.KGB_Category.OrderBy(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
+        public async Task<List<KGB_Subcategory>> GetSubcategory()
+        {
+            var result = _context.KGB_Subcategory.OrderBy(x => x.Id).ToList();
+            return await Task.FromResult(result);
+        }
         public void CheckFolder(string Path)
         {
             bool exist = Directory.Exists(Path);
