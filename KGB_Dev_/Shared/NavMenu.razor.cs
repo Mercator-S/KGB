@@ -12,12 +12,12 @@ namespace KGB_Dev_.Shared
     public partial class NavMenu
     {
         [Inject]
-        public IKgbServices IServices { get; set; } = default!;
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Parameter]
         public int Role { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            var a = IServices.GetCurrentUser().Result;
+            var a = IGetServices.GetCurrentUser().Result;
             Role = a.Result.Fk_Rola;
         }
 

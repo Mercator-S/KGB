@@ -9,7 +9,7 @@ namespace KGB_Dev_.Pages
     partial class PublicIndex
     {
         [Inject]
-        public IKgbServices IServices { get; set; } = default!;
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
@@ -17,7 +17,7 @@ namespace KGB_Dev_.Pages
         public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            ListOfKGB = await IServices.GetPublicListOfKnowledge();
+            ListOfKGB = await IGetServices.GetPublicListOfKnowledge();
         }
         public async void Show(long SifraPrijave)
         {

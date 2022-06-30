@@ -9,7 +9,7 @@ namespace KGB_Dev_.Pages
     partial class Index
     {
         [Inject]
-        public IKgbServices IServices { get; set; } = default!;
+        public IDataRetrivingServices IServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };

@@ -1,156 +1,99 @@
-﻿<MudDialog>
+﻿@inject IDialogService DialogService
+
+<MudDialog>
     <DialogContent>
         <MudGrid>
             <MudItem Class="py-8 d-flex flex-1">
                 <MudText Typo="Typo.h5">Dodavanje KGB kategorije i potkategorije</MudText>
             </MudItem>
-        </MudGrid>
-        <MudTable Items="_CategoryViewModels" Context="Category" FixedHeader="true" Hover="true" Height="700px" Breakpoint="Breakpoint.Sm">
-            <ColGroup>
-                <col />
-                <col />
-            </ColGroup>
-            <HeaderContent>
-                <MudTh>Sifra kategorije</MudTh>
-                <MudTh>Naziv kategorije</MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd Style="background-color:#f6f6f6" DataLabel="Sifra kategorije">@Category.Id</MudTd>
-                <MudTd DataLabel="Naziv kategorije" Style="background-color:#f6f6f6">
-                    @if (Category.Naziv_Kategorije.Length >= 20)
-                    {
-                        <MudTooltip Text="@Category.Naziv_Kategorije" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
-                            @Category.Naziv_Kategorije.Substring(0,20)
-                        </MudTooltip>
-                    }
-                    else
-                    {
-                        @Category.Naziv_Kategorije
-                    }
-                </MudTd>
-                <MudTd Style="background-color:#f6f6f6"><MudIconButton Icon="@Icons.Filled.ExpandMore" Size="Size.Small" OnClick="@(() => ShowBtnPress(Category.Id))"></MudIconButton></MudTd>
-            </RowTemplate>
-            <ChildRowContent>
-                @if (@Category.ShowSubcategory == true)
-                {
-                    <MudTr>
-                        <td colspan="4">
-                            <MudCard Elevation="1">
-                                <MudCardHeader>
-                                    <CardHeaderContent>
-                                        <MudGrid>
-                                            <MudItem Class="py-8 d-flex flex-1">
-                                                <MudText Typo="Typo.body1">
-                                                    Potkategorije kategorije: <strong>@Category.Naziv_Kategorije</strong>
-                                                </MudText>
-                                            </MudItem>
-                                            <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
-                                                <MudButton StartIcon="@Icons.Filled.AddCircleOutline" OnClick="@(() => ShowForm())" IconColor="Color.Success" Size="Size.Small" Style="align-items:flex-end">Dodaj potkategoriju</MudButton>
-                                            </MudItem>
-                                        </MudGrid>
-                                    </CardHeaderContent>
-                                </MudCardHeader>
-                                <MudDivider></MudDivider>
-                                @if (Category.Subcategory.Count() == 0)
-                                {
-                                    <MudCardContent>
-                                        <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema potkategorija za kategoriju @Category.Naziv_Kategorije</MudAlert>
-                                    </MudCardContent>
-
-                                }
-                                else
-                                {
-                                    <MudCardContent>
-                                        <MudTable Items="Category.Subcategory" Context="Potkategorija" Hover="true" Elevation="0">
-                                            <ColGroup>
-                                                <col />
-                                                <col />
-                                            </ColGroup>
-                                            <HeaderContent>
-                                                <MudTh>Sifra potkategorije</MudTh>
-                                                <MudTh>Naziv potkategorije</MudTh>
-                                            </HeaderContent>
-                                            <RowTemplate>
-                                                <MudTd DataLabel="Sifra potkategorije">@Potkategorija.Id</MudTd>
-                                                <MudTd DataLabel="Naziv potkategorije">@Potkategorija.Naziv_Potkategorije</MudTd>
-                                            </RowTemplate>
-                                        </MudTable>
-                                    </MudCardContent>
-                                }
-                                @if (Form == true)
-                                {
-                                    <EditForm Model="@SubcategoryModel" OnValidSubmit="(async () => await CreateSubcategory(SubcategoryModel))">
-                                        <DataAnnotationsValidator />
-                                        <MudCardContent>
-                                            <MudTextField @bind-Value="SubcategoryModel.Naziv_Potkategorije"
-                                                  For="@(() =>SubcategoryModel.Naziv_Potkategorije)"
-                                                  Label="Naziv potkategorije"
-                                                  Immediate="true"
-                                                  Required="true" />
-                                        </MudCardContent>
-                                        <MudCardActions>
-                                            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" ButtonType="ButtonType.Submit" Class="ml-auto">Kreiraj</MudButton>
-                                        </MudCardActions>
-                                    </EditForm>
-                                }
-                            </MudCard>
-                        </td>
-                    </MudTr>
-                }
-            </ChildRowContent>
-        </MudTable>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
-</MudDialog>
-@*
-<MudGrid>
-            <MudItem Class="py-8 d-flex flex-1">
-                <MudText Typo="Typo.h5">Dodavanje kategorije</MudText>
+            <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
+                <MudButton StartIcon="@Icons.Filled.AddCircleOutline" OnClick="@(async () => await OpenDialogForCategory())" IconColor="Color.Success" Size="Size.Small">Dodaj kategoriju</MudButton>
             </MudItem>
         </MudGrid>
-        <MudGrid>
-            <MudItem xs="12" sm="6" md="4">
-                <MudAutocomplete Disabled="DisableCat" T="string" Label="Kategorije"
-                    @bind-Value="SearchCategory" SearchFunc="@SearchCategories"
-                    AdornmentIcon="@Icons.Material.Filled.Search"
-                    CoerceValue="true"/>
-                <MudButton Variant="Variant.Text" Disabled="VisibilityCatBtn" OnClick="AddCategory" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" Style="margin-top:20px;" IconColor="Color.Success">Dodaj kategoriju</MudButton>
-            </MudItem>
-            @if (VisibilitySubcat == true)
-            {
-                <MudItem xs="12" sm="6" md="4">
-                    <MudAutocomplete T="string" Label="Potkategorije" @bind-Value="SearchSubcategory" SearchFunc="@SearchSubCategories" />
-                    <MudButton Disabled="VisibilitySubCatBtn" Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" Style="margin-top:20px;" IconColor="Color.Success">Dodaj Potkategoriju</MudButton>
-                </MudItem>
-            }
-        </MudGrid>
-                @if (Form == true)
+        <MudGrid Class="d-flex justify-center flex-grow-1 gap-4">
+            <MudItem xs="12">
+                <MudTable Items="_CategoryViewModels" Context="Category" FixedHeader="true" Hover="true" Height="400px">
+                    <ColGroup>
+                        <col />
+                        <col />
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh>Naziv kategorije</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Naziv kategorije" Style="background-color:#f6f6f6">
+                            @if (Category.Naziv_Kategorije.Length >= 20)
                             {
-                            <EditForm Model="@SubcategoryModel" OnValidSubmit="(async () => await CreateSubcategory(SubcategoryModel))">
-                            <DataAnnotationsValidator />
-                            <MudCardContent>
-                            <MudTextField @bind-Value="SubcategoryModel.Naziv_Potkategorije"
-                            For="@(() =>SubcategoryModel.Naziv_Potkategorije)"
-                            Label="Naziv potkategorije"
-                            Immediate="true"
-                            Required="true" />
-                            </MudCardContent>
-                            <MudCardActions>
-                            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" ButtonType="ButtonType.Submit" Class="ml-auto">Kreiraj</MudButton>
-                            </MudCardActions>
-                            </EditForm>
-                            }
-
-                            if (_subCategory.Count() == 0)
-                            {
-                            <MudCardContent>
-                            <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema potkategorija za kategoriju @Category.Naziv_Kategorije</MudAlert>
-                            </MudCardContent>
-
+                                <MudTooltip Text="@Category.Naziv_Kategorije" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                                    @Category.Naziv_Kategorije.Substring(0,20)
+                                </MudTooltip>
                             }
                             else
-                            {*@
+                            {
+                                @Category.Naziv_Kategorije
+                            }
+                        </MudTd>
+                        <MudTd Style="background-color:#f6f6f6">
+                            <MudIconButton Icon="@Icons.Filled.ExpandMore" Size="Size.Small" OnClick="@(() => ShowBtnPress(Category.Id))"></MudIconButton>
+                        </MudTd>
+                    </RowTemplate>
+                    <ChildRowContent>
+                        @if (@Category.ShowSubcategory == true)
+                        {
+                            <MudTr>
+                                <td colspan="4">
+                                    <MudCard Elevation="2">
+                                        <MudCardHeader>
+                                            <CardHeaderContent>
+                                                <MudGrid>
+                                                    <MudItem Class="py-8 d-flex flex-1">
+                                                        <MudText Typo="Typo.body1">
+                                                            Potkategorije kategorije: <strong>@Category.Naziv_Kategorije</strong>
+                                                        </MudText>
+                                                    </MudItem>
+                                                    <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
+                                                        <MudButton StartIcon="@Icons.Filled.AddCircleOutline" OnClick="@((e) => OpenDialogForSubcategory(Category))" IconColor="Color.Success" Size="Size.Small">Dodaj potkategoriju</MudButton>
+                                                    </MudItem>
+                                                </MudGrid>
+                                            </CardHeaderContent>
+                                        </MudCardHeader>
+                                        <MudDivider></MudDivider>
+                                        @if (Category.Subcategory.Count() == 0)
+                                        {
+                                            <MudCardContent>
+                                                <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema potkategorija za kategoriju @Category.Naziv_Kategorije</MudAlert>
+                                            </MudCardContent>
+                                        }
+                                        else
+                                        {
+                                            <MudCardContent>
+                                                <MudTable Items="Category.Subcategory" Context="Potkategorija" Hover="true" Elevation="2">
+                                                    <ColGroup>
+                                                        <col />
+                                                        <col />
+                                                    </ColGroup>
+                                                    <HeaderContent>
+                                                        <MudTh>Naziv potkategorije</MudTh>
+                                                    </HeaderContent>
+                                                    <RowTemplate>
+                                                        <MudTd DataLabel="Naziv potkategorije">@Potkategorija.Naziv_Potkategorije</MudTd>
+                                                    </RowTemplate>
+                                                </MudTable>
+                                            </MudCardContent>
+                                        }
+                                    </MudCard>
+                                </td>
+                            </MudTr>
+                        }
+                    </ChildRowContent>
+                </MudTable>
+            </MudItem>
+        </MudGrid>
+        <MudGrid Class="d-flex justify-end flex-grow-1 gap-4">
+            <MudItem>
+                <MudButton Color="Color.Primary" OnClick="Submit">Zatvori</MudButton>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>

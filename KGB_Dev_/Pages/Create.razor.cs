@@ -1,6 +1,7 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.DataRetrieving;
 using KGB_Dev_.Pages.Dialog;
+using KGB_Dev_.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
@@ -10,19 +11,24 @@ namespace KGB_Dev_.Pages
     partial class Create
     {
         [Inject]
-        public IKgbServices IServices { get; set; } = default!;
+        public ICreateServices ICreateServices { get; set; } = default!;
+        [Inject]
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
+
+        [Inject]
+        ISnackbar Snackbar { get; set; } = default!;
         private List<KGB_Category> category;
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
         KGB_Knowledge Model = new KGB_Knowledge();
         public bool ShowSubcategory { get; set; }
         IList<IBrowserFile> files = new List<IBrowserFile>();
         protected override async Task OnInitializedAsync()
         {
-            category = await IServices.GetCategory();
-            subcategory = await IServices.GetSubcategory(category.Select(x => x.Id).First());
+            category = await IGetServices.GetCategory();
+            subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());
             Category.Add(0, "Izaberite kategoriju");
             Subcategory.Add(0, "Izaberite potkategoriju");
             foreach (var p in category)
@@ -40,38 +46,43 @@ namespace KGB_Dev_.Pages
         }
         private async Task CreateKGB(KGB_Knowledge Model)
         {
-            await IServices.CreateKGB(Model, files);
+            await ICreateServices.CreateKGB(Model, files);
+            Snackbar.Add($"Uspešno dodata KGB prijava pod nazivom {Model.Naziv_Prijave}", Severity.Success);
         }
         private async Task Clear(IBrowserFile file)
         {
             files.Remove(file);
         }
-        public async void OpenDialog()
-        {
-            await HandleValidSubmit();
-        }
-        public async Task HandleValidSubmit()
+        public async Task OpenCategoryDialog()
         {
             DialogService.Show<CategoryDialog>("", dialogOptions);
         }
         public async Task GetSubcategory(int Id)
         {
-            subcategory = await IServices.GetSubcategory(Id);
-            if (subcategory.Count == 0)
+            if (Id == 0)
             {
                 Subcategory = new();
                 Subcategory.Add(0, "Izaberite potkategoriju");
+                Model.Fk_Subcategory = 0;
             }
             else
             {
-                foreach (var k in subcategory)
+                subcategory = await IGetServices.GetSubcategory(Id);
+                if (subcategory.Count == 0)
                 {
-                    Subcategory.Add(k.Id, k.Naziv_Potkategorije);
+                    Subcategory = new();
+                    Subcategory.Add(0, "Izaberite potkategoriju");
                 }
+                else
+                {
+                    foreach (var k in subcategory)
+                    {
+                        Subcategory.Add(k.Id, k.Naziv_Potkategorije);
+                    }
+                }
+                Model.Fk_Category = Id;
+                Model.Fk_Subcategory = 0;
             }
-            Model.Fk_Category = Id;
-            Model.Fk_Subcategory = 0;
-
         }
     }
 }

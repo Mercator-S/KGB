@@ -53,7 +53,7 @@
                         </MudItem>
                         <MudGrid>
                             <MudItem xs="12" sm="12">
-                                <MudButton Style="float:right" Variant="Variant.Text" OnClick="@(() => OpenDialog())" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" IconColor="Color.Info"> Dodaj Kategoriju</MudButton>
+                                <MudButton Style="float:right" Variant="Variant.Text" OnClick="@(async() => await OpenCategoryDialog())" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" IconColor="Color.Info"> Dodaj Kategoriju</MudButton>
                             </MudItem>
                         </MudGrid>
                     </MudGrid>

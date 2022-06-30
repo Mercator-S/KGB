@@ -1,0 +1,38 @@
+﻿@inject IDialogService DialogService
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="Model" OnValidSubmit="(async () => await CreateSubcategory(Model,Category))">
+            <DataAnnotationsValidator />
+            <MudCard Elevation="0">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudGrid>
+                            <MudItem Class="py-8 d-flex flex-1">
+                                <MudText Typo="Typo.body1">
+                                    Dodavanje potkategorije za kategoriju: <strong>@Category.Naziv_Kategorije</strong>
+                                </MudText>
+                            </MudItem>
+                        </MudGrid>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField @bind-Value="@Category.Naziv_Kategorije"
+                                  Label="Naziv Kategorije"
+                                  Immediate="true"
+                                  Required="true"
+                                  Variant="Variant.Filled"
+                                  ReadOnly="true" />
+                    <MudTextField @bind-Value="@Model.Naziv_Potkategorije"
+                                  Label="Naziv Potkategorije"
+                                  For="@(() => Model.Naziv_Potkategorije)"
+                                  Immediate="true"
+                                  Required="true" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Cancel" Size="Size.Small">Nazad</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" ButtonType="ButtonType.Submit" Class="ml-auto">Kreiraj</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
+</MudDialog>

@@ -19,22 +19,22 @@ namespace KGB_Dev_.Pages.Dialog
         List<string> FileNames = new List<string>();
         public string FilePath { get; set; }
         [Inject]
-        public IKgbServices IServices { get; set; } = default!;
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Inject]
         IJSRuntime JS { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            Prijava = IServices.GetKnowledge(Sifra).Result;
+            Prijava = IGetServices.GetKnowledge(Sifra).Result;
             DatumUnosa = Prijava.d_ins.Date;
             DatumIzmene = Prijava.d_upd.Date;
-            FileNames = IServices.GetFile(Prijava.Putanja_Fajl).Result;
+            FileNames = IGetServices.GetFile(Prijava.Putanja_Fajl).Result;
             FilePath = Prijava.Putanja_Fajl;
             Korisnik = Prijava.k_ins;
         }
 
         private async Task DownloadFile(string fileName)
         {
-            var fileStream = IServices.GetFileStream();
+            var fileStream = IGetServices.GetFileStream();
             using var streamRef = new DotNetStreamReference(stream: fileStream);
             await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
