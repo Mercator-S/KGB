@@ -21,7 +21,9 @@
                     @if (FileNames.Count < 1)
                     {
                         <MudListSubheader DisableGutters="true">
-                            Trenutno nema file-ova za ovu prijavu
+                             <MudItem xs="6">
+                                <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema file-ova za ovu prijavu!</MudAlert>
+                            </MudItem>
                         </MudListSubheader>
                     }
                     else

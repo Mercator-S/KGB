@@ -45,10 +45,10 @@ namespace KGB_Dev_.Data_Retrieving
             var user = authState.User;
             return _UserManager.GetUserAsync(user);
         }
-        
+
         public async Task<List<KGB_Category>> GetCategory()
         {
-            var result = _context.KGB_Category.OrderBy(x => x.Id).ToList();
+            var result = _context.KGB_Category.OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
         public async Task<List<KGB_Subcategory>> GetSubcategory()
@@ -113,7 +113,7 @@ namespace KGB_Dev_.Data_Retrieving
             List<KGB_Subcategory> result = _context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
-       
-        
+
+
     }
 }
