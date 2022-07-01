@@ -58,7 +58,7 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(Model);
                 await _context.SaveChangesAsync();
-                await Task.Run(() => { _navigationManager.NavigateTo("/"); });
+                await Task.Run(() => { _navigationManager.NavigateTo(""); });
                 return true;
             }
             return false;

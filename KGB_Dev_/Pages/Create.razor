@@ -62,7 +62,9 @@
                                   For="@(() => Model.Naziv_Prijave)"
                                   Immediate="true"
                                   Label="Naziv prijave"
-                                  Required="true" />
+                                  Required="true" 
+                                  Counter="55"
+                                  MaxLength="55"/>
 
                     <MudTextField @bind-Value="Model.Opis_Prijave"
                                   For="@(() => Model.Opis_Prijave)"

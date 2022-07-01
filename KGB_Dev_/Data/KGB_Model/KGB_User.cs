@@ -8,11 +8,11 @@ namespace KGB_Dev_.Data.KGB_Model
     public class KGB_User : IdentityUser
     {
         public int Fk_Rola { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Unesite ime!")]
         public string? Ime { get; set; }
         [Required]
         public string? Naziv_Role { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Unesite prezime!")]
         public string? Prezime { get; set; }
         public int Sifra_Oj { get; set; }
         [Required]

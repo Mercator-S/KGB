@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 using System.Text;
+using System.Text.RegularExpressions;
 using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
 using Microsoft.AspNetCore.Authentication;
@@ -123,11 +124,12 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<KGB_User>)_userStore;
         }
-        private string GeneratePassword(string Ime, string Prezime)
+        private string GeneratePassword(string Email)
         {
             Random rnd = new Random();
             const string chars = "#!#$%&?";
-
+            string Ime= Email!.Substring(0, Email.IndexOf("."));
+            string Prezime = Email!.Substring(Ime.Length+1, (Email.IndexOf("@")-1 - Ime.Length));
             string Password = Char.ToUpper(Ime[0]) + Prezime + rnd.Next(100, 999) + new string(Enumerable.Repeat(chars, 1)
                 .Select(s => s[rnd.Next(s.Length)]).ToArray());
             return Password;
@@ -137,7 +139,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             KGB_User User = new KGB_User();
             User.Ime = char.ToUpper(Ime[0]) + Ime.Substring(1);
             User.Prezime = char.ToUpper(Prezime[0]) + Prezime.Substring(1);
-            User.Lozinka = GeneratePassword(Input.Ime, Input.Prezime);
+            User.Lozinka = GeneratePassword(Input.Email);
             User.Email = char.ToUpper(Email[0]) + Email.Substring(1);
             User.Active = true;
             User.D_Upd = DateTime.Now.ToString();

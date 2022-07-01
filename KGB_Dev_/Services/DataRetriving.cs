@@ -67,20 +67,21 @@ namespace KGB_Dev_.Data_Retrieving
         public async Task<Dictionary<string, string>> GetFile(string path)
         {
             bool exist = Directory.Exists(path);
-            Dictionary<string,string> FileNames = new Dictionary<string, string>();
+            Dictionary<string, string> FileNames = new Dictionary<string, string>();
             if (exist)
             {
                 string[] FileName = Directory.GetFiles(path);
                 foreach (string name in FileName)
                 {
-                    FileNames.Add(name,Path.GetFileName(name));
+                    FileNames.Add(name, Path.GetFileName(name));
                 }
             }
             return await Task.FromResult(FileNames);
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            string Location = @"C:\KGB_Dev";
+            //string Location = @"C:\KGB_Dev"; 
+            string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
             var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
             CheckFolder(path);

@@ -55,12 +55,12 @@ namespace KGB_Dev_.Pages.Dialog
         }
         void Submit()
         {
-            IGetServices.NavigationManager("/Create");
+            IGetServices.NavigationManager("Create");
             MudDialog.Close(DialogResult.Ok(true));
         }
         void Cancel()
         {
-            IGetServices.NavigationManager("/Create");
+            IGetServices.NavigationManager("Create");
             MudDialog.Cancel();
         }
     }

@@ -28,7 +28,10 @@ namespace KGB_Dev_.Pages
         protected override async Task OnInitializedAsync()
         {
             category = await IGetServices.GetCategory();
-            subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());
+            if (category.Count>0)
+            {
+                subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());
+            }
             Category.Add(0, "Izaberite kategoriju");
             Subcategory.Add(0, "Izaberite potkategoriju");
             foreach (var p in category)

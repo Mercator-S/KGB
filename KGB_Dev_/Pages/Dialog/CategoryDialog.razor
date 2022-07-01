@@ -15,27 +15,22 @@
                 <MudTable Items="_CategoryViewModels" Context="Category" FixedHeader="true" Hover="true" Height="400px">
                     <ColGroup>
                         <col />
-                        <col />
                     </ColGroup>
                     <HeaderContent>
-                        <MudTh>Naziv kategorije</MudTh>
-                        <MudTh></MudTh>
+                        <MudTh Style="color:white;background-color:#dc3545">Naziv kategorije</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Naziv kategorije" Style="background-color:#f6f6f6">
-                            @if (Category.Naziv_Kategorije.Length >= 20)
+                        <MudTd @onclick="@(() => ShowBtnPress(Category.Id))" DataLabel="Naziv kategorije" Style="cursor:pointer">
+                            @if (Category.Naziv_Kategorije.Length > 55)
                             {
                                 <MudTooltip Text="@Category.Naziv_Kategorije" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
-                                    @Category.Naziv_Kategorije.Substring(0,20)
+                                    <strong>@Category.Naziv_Kategorije.Substring(0,20)</strong>
                                 </MudTooltip>
                             }
                             else
                             {
-                                @Category.Naziv_Kategorije
+                                <strong>@Category.Naziv_Kategorije</strong>
                             }
-                        </MudTd>
-                        <MudTd Style="background-color:#f6f6f6">
-                            <MudIconButton Icon="@Icons.Filled.ExpandMore" Size="Size.Small" OnClick="@(() => ShowBtnPress(Category.Id))"></MudIconButton>
                         </MudTd>
                     </RowTemplate>
                     <ChildRowContent>
