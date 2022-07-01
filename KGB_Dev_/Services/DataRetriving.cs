@@ -64,16 +64,16 @@ namespace KGB_Dev_.Data_Retrieving
                 Directory.CreateDirectory(Path);
             }
         }
-        public async Task<List<string>> GetFile(string path)
+        public async Task<Dictionary<string, string>> GetFile(string path)
         {
             bool exist = Directory.Exists(path);
-            List<string> FileNames = new List<string>();
+            Dictionary<string,string> FileNames = new Dictionary<string, string>();
             if (exist)
             {
                 string[] FileName = Directory.GetFiles(path);
                 foreach (string name in FileName)
                 {
-                    FileNames.Add(Path.GetFileName(name));
+                    FileNames.Add(name,Path.GetFileName(name));
                 }
             }
             return await Task.FromResult(FileNames);

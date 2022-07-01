@@ -3,6 +3,7 @@ using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using System.Diagnostics;
 
 namespace KGB_Dev_.Pages.Dialog
 {
@@ -16,7 +17,7 @@ namespace KGB_Dev_.Pages.Dialog
         public DateTime? DatumUnosa { get; set; }
         public DateTime? DatumIzmene { get; set; }
         public string Korisnik { get; set; }
-        List<string> FileNames = new List<string>();
+        Dictionary<string, string> FileNames = new Dictionary<string, string>();
         public string FilePath { get; set; }
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
@@ -37,6 +38,10 @@ namespace KGB_Dev_.Pages.Dialog
             var fileStream = IGetServices.GetFileStream();
             using var streamRef = new DotNetStreamReference(stream: fileStream);
             await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+        void Open(string path)
+        {
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
         }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel() => MudDialog.Cancel();

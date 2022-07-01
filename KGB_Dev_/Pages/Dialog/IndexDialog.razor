@@ -21,7 +21,7 @@
                     @if (FileNames.Count < 1)
                     {
                         <MudListSubheader DisableGutters="true">
-                             <MudItem xs="6">
+                            <MudItem xs="6">
                                 <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema file-ova za ovu prijavu!</MudAlert>
                             </MudItem>
                         </MudListSubheader>
@@ -31,13 +31,15 @@
                         <MudListSubheader DisableGutters="true" Style="color:#424242ff">
                             Lista fajlova:
                         </MudListSubheader>
-                        @foreach (var name in FileNames)
+                        @foreach (KeyValuePair<string, string> name in FileNames)
                         {
                             <MudListItem>
                                 <MudText>
                                     <MudIcon Icon="@Icons.Filled.AttachFile" Color="Color.Info" />
-                                    @name
-                                    <MudIconButton Icon="@Icons.Filled.Download" OnClick="@(() => DownloadFile(name))" Color="Color.Success" Size="Size.Small" />
+                                    <MudLink Color="Color.Inherit" Href="" @onclick="@(() => Open(name.Key))">
+                                        @name.Value
+                                    </MudLink>
+                                    <MudIconButton Icon="@Icons.Filled.Download" OnClick="@(() => DownloadFile(name.Value))" Color="Color.Success" Size="Size.Small" />
                                 </MudText>
                             </MudListItem>
                         }

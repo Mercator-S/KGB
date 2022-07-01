@@ -11,7 +11,7 @@ namespace KGB_Dev_.DataRetrieving
         Task<KGB_Knowledge> GetKnowledge(long id);
         Task<Task<KGB_User>> GetCurrentUser();
         Task<List<KGB_Category>> GetCategory();
-        Task<List<string>> GetFile(string Path);
+        Task<Dictionary<string,string>> GetFile(string Path);
         Stream GetFileStream();
         Task NavigationManager(string nav);
         Task<List<KGB_Category>> GetCategory(int OrgJed);
