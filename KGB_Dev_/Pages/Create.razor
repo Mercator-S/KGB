@@ -1,0 +1,108 @@
+﻿@inject IDialogService DialogService
+@page "/Create"
+
+<PageTitle>Kreiranje KGB-a</PageTitle>
+
+<MudGrid Class="d-flex align-center justify-center">
+    <MudItem xs="8">
+        <EditForm Model="@Model" OnValidSubmit="(async () => await CreateKGB(Model))">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Align="Align.Center" Typo="Typo.h4">Kreirajte KGB</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudDivider />
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="6" sm="6">
+                            <MudText Typo="@Typo.body2" Style="margin-left:10px;">Vidljivost prijave: </MudText>
+                            <MudCheckBox For="@(() => Model.Visibility)" @bind-Checked=Model.Visibility Label="Javna prijava" Color="Color.Success" UnCheckedColor="Color.Default">
+                                <MudTooltip Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                                    <ChildContent>
+                                        <MudIcon Icon="@Icons.Outlined.Info" Style="margin-left:10px" Size="Size.Small" Color="Color.Warning" />
+                                    </ChildContent>
+                                    <TooltipContent>
+                                        <MudText Typo="Typo.body1">Javna prijava</MudText>
+                                        <MudText Typo="Typo.body2">
+                                            Selektovanjem "Javna prijava" omogucavate pristup prijavi svim korisnicima u drugim sektorima.
+                                            <br /> Takodje prijava je vidljiva i u internoj listi prijava.
+                                        </MudText>
+                                    </TooltipContent>
+                                </MudTooltip>
+                            </MudCheckBox>
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="6" sm="6">
+                            <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Label="Kategorija KGB prijave" Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                                @foreach (KeyValuePair<int, string> a in Category)
+                                {
+                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6" sm="6">
+                            <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="Model.Fk_Subcategory" Required="true" For="@(()=>Model.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                                @foreach (KeyValuePair<int, string> a in Subcategory)
+                                {
+                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudGrid>
+                            <MudItem xs="12" sm="12">
+                                <MudButton Style="float:right" Variant="Variant.Text" OnClick="@(async() => await OpenCategoryDialog())" Size="Size.Small" StartIcon="@Icons.Filled.AddCircleOutline" IconColor="Color.Info"> Dodaj Kategoriju</MudButton>
+                            </MudItem>
+                        </MudGrid>
+                    </MudGrid>
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+                    <MudTextField @bind-Value="Model.Naziv_Prijave"
+                                  For="@(() => Model.Naziv_Prijave)"
+                                  Immediate="true"
+                                  Label="Naziv prijave"
+                                  Required="true" 
+                                  Counter="55"
+                                  MaxLength="55"/>
+
+                    <MudTextField @bind-Value="Model.Opis_Prijave"
+                                  For="@(() => Model.Opis_Prijave)"
+                                  Immediate="true"
+                                  Label="Opis prijave"
+                                  Lines="12"
+                                  Required="true"
+                                  Counter="500"
+                                  MaxLength="500" />
+                    <MudGrid Style="margin-top:20px;">
+                        <MudItem xs="3">
+                            <MudFab HtmlTag="label"
+                                    Color="Color.Info"
+                                    Icon="@Icons.Filled.CloudUpload"
+                                    Label="Upload file"
+                                    for="fileInput" />
+                        </MudItem>
+                        <MudItem xs="9">
+                            @if (files != null)
+                            {
+                                <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+                                <MudList>
+                                    @foreach (var file in files)
+                                    {
+                                        <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                                            @file.Name <code>@file.Size bytes</code>
+                                            <MudIconButton OnClick="@(() => Clear(file))" Icon="@Icons.Filled.Cancel" Color="@Color.Error"></MudIconButton>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            }
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" ButtonType="ButtonType.Submit" Class="ml-auto">Kreiraj</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </MudItem>
+</MudGrid>

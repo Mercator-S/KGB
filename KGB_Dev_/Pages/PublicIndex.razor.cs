@@ -6,10 +6,10 @@ using KGB_Dev_.Pages.Dialog;
 
 namespace KGB_Dev_.Pages
 {
-    partial class Index
+    partial class PublicIndex
     {
         [Inject]
-        public IDataRetrivingServices IServices { get; set; } = default!;
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
@@ -17,8 +17,7 @@ namespace KGB_Dev_.Pages
         public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            var User = IServices.GetCurrentUser().Result;
-            ListOfKGB = await IServices.GetListOfKnowledge(User.Result.Sifra_Oj);
+            ListOfKGB = await IGetServices.GetPublicListOfKnowledge();
         }
         public async void Show(long SifraPrijave)
         {
