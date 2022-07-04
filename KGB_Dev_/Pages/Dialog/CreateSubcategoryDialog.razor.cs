@@ -1,5 +1,4 @@
 ﻿using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.DataRetrieving;
 using KGB_Dev_.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -17,11 +16,6 @@ namespace KGB_Dev_.Pages.Dialog
         public ICreateServices ICreateServices { get; set; } = default!;
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
-
-        protected override async Task OnInitializedAsync()
-        {
-
-        }
         private async Task CreateSubcategory(KGB_SubcategoryViewModel Model, KGB_CategoryViewModel Category)
         {
             Model.Fk_Kategorija = Category.Id;

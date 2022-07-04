@@ -1,6 +1,8 @@
+using AutoMapper;
 using KGB_Dev_.Areas.Identity;
 using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
+using KGB_Dev_.Data.Profiles;
 using KGB_Dev_.Data_Retrieving;
 using KGB_Dev_.DataRetrieving;
 using KGB_Dev_.Services;
@@ -36,7 +38,16 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<KGB_User>>();
 builder.Services.AddScoped<IDataRetrivingServices, DataRetriving>();
 builder.Services.AddScoped<ICreateServices, Create>();
+var mapperConfiguration = new MapperConfiguration(configuration =>
+{
+    configuration.AddProfile(new KGB_CategoryProfile());
+    configuration.AddProfile(new KGB_SubCategoryProfile());
+    configuration.AddProfile(new KGB_KnowledgeProfile());
+});
 
+var mapper = mapperConfiguration.CreateMapper();
+
+builder.Services.AddSingleton(mapper);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

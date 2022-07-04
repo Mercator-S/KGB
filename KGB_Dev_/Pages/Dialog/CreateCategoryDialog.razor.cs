@@ -1,8 +1,8 @@
 ﻿using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.DataRetrieving;
 using KGB_Dev_.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+
 namespace KGB_Dev_.Pages.Dialog
 {
     partial class CreateCategoryDialog
@@ -16,11 +16,6 @@ namespace KGB_Dev_.Pages.Dialog
         public ICreateServices ICreateServices { get; set; } = default!;
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
-
-        protected override async Task OnInitializedAsync()
-        {
-
-        }
         private async Task CreateCategory(KGB_CategoryViewModel Category)
         {
             var result = await ICreateServices.CreateCategory(Category);
