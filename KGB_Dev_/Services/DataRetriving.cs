@@ -1,12 +1,10 @@
 ﻿using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.Data.KGB_ViewModel;
 using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
 
 namespace KGB_Dev_.Data_Retrieving
 {
@@ -64,24 +62,24 @@ namespace KGB_Dev_.Data_Retrieving
                 Directory.CreateDirectory(Path);
             }
         }
-        public async Task<Dictionary<string, string>> GetFile(string path)
+        public async Task<List<string>> GetFile(string path)
         {
             bool exist = Directory.Exists(path);
-            Dictionary<string, string> FileNames = new Dictionary<string, string>();
+            List<string> FileNames = new List<string>();
             if (exist)
             {
                 string[] FileName = Directory.GetFiles(path);
                 foreach (string name in FileName)
                 {
-                    FileNames.Add(name, Path.GetFileName(name));
+                    FileNames.Add(Path.GetFileName(name));
                 }
             }
             return await Task.FromResult(FileNames);
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            //string Location = @"C:\KGB_Dev"; 
-            string Location = @"F:\KGB";
+            string Location = @"C:\KGB_Dev"; 
+            //string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
             var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
@@ -94,16 +92,6 @@ namespace KGB_Dev_.Data_Retrieving
             }
             return pathName;
         }
-        public Stream GetFileStream()
-        {
-            var randomBinaryData = new byte[50 * 1024];
-            var fileStream = new MemoryStream(randomBinaryData);
-            return fileStream;
-        }
-        public async Task NavigationManager(string nav)
-        {
-            await Task.Run(() => { _navigationManager.NavigateTo(nav, forceLoad: true); });
-        }
         public async Task<List<KGB_Category>> GetCategory(int OrgJed)
         {
             List<KGB_Category> result = _context.KGB_Category.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
@@ -114,7 +102,6 @@ namespace KGB_Dev_.Data_Retrieving
             List<KGB_Subcategory> result = _context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList();
             return await Task.FromResult(result);
         }
-
-
+        public async Task NavigationManager(string nav) => await Task.Run(() => { _navigationManager.NavigateTo(nav, forceLoad: true); });
     }
 }

@@ -58,7 +58,6 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
 
             }
         }
-
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -79,16 +78,8 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(Input);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(Input);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        //await _signInManager.SignInAsync(Input, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    //await _signInManager.SignInAsync(Input, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {
@@ -97,7 +88,18 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "User vec postoji");
+                ModelState.AddModelError(string.Empty, "Neispravna ili vec korišćena email adresa!");
+                ListOfOrg = new Dictionary<int, string>();
+                ListOfRola = new Dictionary<int, string>();
+                foreach (var a in _context.KGB_OrgJed)
+                {
+                    ListOfOrg.Add(a.SifraOj, a.NazivOj);
+                }
+                foreach (var role in _context.KGB_Role)
+                {
+                    ListOfRola.Add(role.Sifra_Role, role.Naziv_Role);
+
+                }
                 return Page();
             }
             return Page();
@@ -127,34 +129,46 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
         private string GeneratePassword(string Email)
         {
             Random rnd = new Random();
-            const string chars = "#!#$%&?";
-            string Ime= Email!.Substring(0, Email.IndexOf("."));
-            string Prezime = Email!.Substring(Ime.Length+1, (Email.IndexOf("@")-1 - Ime.Length));
-            string Password = Char.ToUpper(Ime[0]) + Prezime + rnd.Next(100, 999) + new string(Enumerable.Repeat(chars, 1)
-                .Select(s => s[rnd.Next(s.Length)]).ToArray());
-            return Password;
-        }
-        private KGB_User CreateKGBUser(string Ime, string Prezime, string NazivOrgJed, string Email, string Rola)
-        {
-            KGB_User User = new KGB_User();
-            User.Ime = char.ToUpper(Ime[0]) + Ime.Substring(1);
-            User.Prezime = char.ToUpper(Prezime[0]) + Prezime.Substring(1);
-            User.Lozinka = GeneratePassword(Input.Email);
-            User.Email = char.ToUpper(Email[0]) + Email.Substring(1);
-            User.Active = true;
-            User.D_Upd = DateTime.Now.ToString();
-            User.Naziv_Oj = NazivOrgJed;
-            User.Sifra_Oj = _context.KGB_OrgJed.Where(x => x.NazivOj == NazivOrgJed).FirstOrDefault().SifraOj;
-            User.K_Ins = 1;
-            User.K_Upd = 1;
-            User.Fk_Rola = _context.KGB_Role.Where(x => x.Naziv_Role == Rola).FirstOrDefault().Sifra_Role;
-            User.Naziv_Role = Rola;
-            var result = _context.KGB_Users.Where(x => x.Email == User.Email).FirstOrDefault();
-            if (result != null)
+            const string chars = ".!";
+            if (Email.Count(x => x == '.') > 1)
+            {
+                string Ime = Email!.Substring(0, Email.IndexOf("."));
+                string Prezime = Email!.Substring(Ime.Length + 1, (Email.IndexOf("@") - 1 - Ime.Length));
+                string Password = Char.ToUpper(Ime[0]) + Prezime.Substring(0, 3) + rnd.Next(1000, 9999) + new string(Enumerable.Repeat(chars, 1)
+                    .Select(s => s[rnd.Next(s.Length)]).ToArray());
+                return Password;
+            }
+            else
             {
                 return null;
             }
-            return User;
+
         }
+    private KGB_User CreateKGBUser(string Ime, string Prezime, string NazivOrgJed, string Email, string Rola)
+    {
+        KGB_User User = new KGB_User();
+        User.Ime = char.ToUpper(Ime[0]) + Ime.Substring(1);
+        User.Prezime = char.ToUpper(Prezime[0]) + Prezime.Substring(1);
+        User.Lozinka = GeneratePassword(Input.Email);
+        if (User.Lozinka == null)
+        {
+            return null;
+        }
+        User.Email = char.ToUpper(Email[0]) + Email.Substring(1);
+        User.Active = true;
+        User.D_Upd = DateTime.Now.ToString();
+        User.Naziv_Oj = NazivOrgJed;
+        User.Sifra_Oj = _context.KGB_OrgJed.Where(x => x.NazivOj == NazivOrgJed).FirstOrDefault().SifraOj;
+        User.K_Ins = 1;
+        User.K_Upd = 1;
+        User.Fk_Rola = _context.KGB_Role.Where(x => x.Naziv_Role == Rola).FirstOrDefault().Sifra_Role;
+        User.Naziv_Role = Rola;
+        var result = _context.KGB_Users.Where(x => x.Email == User.Email).FirstOrDefault();
+        if (result != null)
+        {
+            return null;
+        }
+        return User;
     }
+}
 }

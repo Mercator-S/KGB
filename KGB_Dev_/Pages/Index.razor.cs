@@ -43,9 +43,11 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.k_ins.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_ins}".Contains(searchString))
+             if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_ins} {element.Putanja_Fajl}".Contains(searchString))
                 return true;
             return false;
-        }
+        }      
     }
 }

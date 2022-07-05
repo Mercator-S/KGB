@@ -17,7 +17,7 @@ namespace KGB_Dev_.Pages.Dialog
         public DateTime? DatumUnosa { get; set; }
         public DateTime? DatumIzmene { get; set; }
         public string Korisnik { get; set; }
-        Dictionary<string, string> FileNames = new Dictionary<string, string>();
+        List<string> FileNames = new List<string>();
         public string FilePath { get; set; }
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
@@ -35,12 +35,14 @@ namespace KGB_Dev_.Pages.Dialog
 
         private async Task DownloadFile(string fileName)
         {
-            var fileStream = IGetServices.GetFileStream();
-            using var streamRef = new DotNetStreamReference(stream: fileStream);
+            string path = FilePath + fileName;
+            using FileStream fs = File.OpenRead(path);
+            using var streamRef = new DotNetStreamReference(stream: fs);
             await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
         void Open(string path)
         {
+            path = Prijava.Putanja_Fajl + path;
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
         }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));

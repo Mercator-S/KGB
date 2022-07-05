@@ -1,4 +1,5 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
+using KGB_Dev_.Data.KGB_ViewModel;
 using KGB_Dev_.DataRetrieving;
 using KGB_Dev_.Pages.Dialog;
 using KGB_Dev_.Services;
@@ -22,13 +23,12 @@ namespace KGB_Dev_.Pages
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
-        KGB_Knowledge Model = new KGB_Knowledge();
-        public bool ShowSubcategory { get; set; }
+        KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         IList<IBrowserFile> files = new List<IBrowserFile>();
         protected override async Task OnInitializedAsync()
         {
             category = await IGetServices.GetCategory();
-            if (category.Count>0)
+            if (category.Count > 0)
             {
                 subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());
             }
@@ -38,23 +38,12 @@ namespace KGB_Dev_.Pages
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
             }
+        }
 
-        }
-        private async Task UploadFiles(InputFileChangeEventArgs e)
-        {
-            foreach (var file in e.GetMultipleFiles())
-            {
-                files.Add(file);
-            }
-        }
-        private async Task CreateKGB(KGB_Knowledge Model)
+        private async Task CreateKGB(KGB_KnowledgeViewModel Model)
         {
             await ICreateServices.CreateKGB(Model, files);
             Snackbar.Add($"Uspešno dodata KGB prijava pod nazivom {Model.Naziv_Prijave}", Severity.Success);
-        }
-        private async Task Clear(IBrowserFile file)
-        {
-            files.Remove(file);
         }
         public async Task OpenCategoryDialog()
         {
@@ -87,5 +76,13 @@ namespace KGB_Dev_.Pages
                 Model.Fk_Subcategory = 0;
             }
         }
+        private async Task UploadFiles(InputFileChangeEventArgs e)
+        {
+            foreach (var file in e.GetMultipleFiles())
+            {
+                files.Add(file);
+            }
+        }
+        private async Task RemoveUploadFile(IBrowserFile file) => files.Remove(file);
     }
 }
