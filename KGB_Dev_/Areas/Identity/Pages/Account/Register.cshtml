@@ -32,17 +32,19 @@
                     </div>
                     <br />
                     <div class="form-group">
-                        <select asp-for="Input.Naziv_Oj"
-                                asp-items="@(new SelectList(Model.ListOfOrg.Values))">
-                            <option>Izaberite naziv org. jedinice</option>
+                        <select class="form-control" asp-for="Input.Naziv_Oj"
+                                asp-items="@(new SelectList(Model.ListOfOrg.Values))" aria-required="true">
+                            <option value="">Izaberite naziv org. jedinice</option>
                         </select>
+                        <span asp-validation-for="Input.Naziv_Oj" class="text-danger"></span>
                     </div>
                     <br />
                     <div class="form-group">
-                        <select asp-for="Input.Naziv_Role"
-                                asp-items="@(new SelectList(Model.ListOfRola.Values))">
-                            <option>Izaberite tip naloga</option>
+                        <select class="form-control" asp-for="Input.Naziv_Role"
+                                asp-items="@(new SelectList(Model.ListOfRola.Values))" aria-required="true">
+                            <option value="">Izaberite tip naloga</option>
                         </select>
+                        <span asp-validation-for="Input.Naziv_Role" class="text-danger"></span>
                     </div>
                     <hr />
                     <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>

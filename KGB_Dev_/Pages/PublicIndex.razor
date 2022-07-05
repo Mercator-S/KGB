@@ -3,7 +3,7 @@
 @using KGB_Dev_.Data.KGB_Model
 @using static System.Net.WebRequestMethods
 
-<PageTitle>KGB List</PageTitle>
+<PageTitle>KGB Javna lista</PageTitle>
 
 <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="9">
@@ -14,27 +14,13 @@
                 <MudTextField @bind-Value="searchString1" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <HeaderContent>
-                <MudTh Style="color:white;background-color:#dc3545">Sifra prijave</MudTh>
-                <MudTh Style="color:white;background-color:#dc3545">Naziv org jedinice</MudTh>
                 <MudTh Style="color:white;background-color:#dc3545">Naziv prijave</MudTh>
-                <MudTh Style="color:white;background-color:#dc3545">Datum unosa</MudTh>
+                <MudTh Style="color:white;background-color:#dc3545">Naziv org jedinice</MudTh>
+                <MudTh Style="color:white;background-color:#dc3545"><MudTableSortLabel SortBy="new Func<KGB_Knowledge, object>(x=>x.d_ins)">Datum unosa</MudTableSortLabel></MudTh>
                 <MudTh Style="color:white;background-color:#dc3545">Korisnik</MudTh>
                 <MudTh Style="color:white;background-color:#dc3545"></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Sifra prijave">@context.Id</MudTd>
-                <MudTd DataLabel="Naziv org jedinice">
-                    @if (context.Naziv_Oj.Length >= 20)
-                    {
-                        <MudTooltip Text="@context.Naziv_Oj" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
-                            @context.Naziv_Oj.Substring(0,20)
-                        </MudTooltip>
-                    }
-                    else
-                    {
-                        @context.Naziv_Oj
-                    }
-                </MudTd>
                 <MudTd DataLabel="Naziv prijave">
                     @if (context.Naziv_Prijave.Length >= 20)
                     {
@@ -45,6 +31,18 @@
                     else
                     {
                         @context.Naziv_Prijave
+                    }
+                </MudTd>
+                <MudTd DataLabel="Naziv org jedinice">
+                    @if (context.Naziv_Oj.Length >= 20)
+                    {
+                        <MudTooltip Text="@context.Naziv_Oj" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                            @context.Naziv_Oj.Substring(0,20)
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        @context.Naziv_Oj
                     }
                 </MudTd>
                 <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>

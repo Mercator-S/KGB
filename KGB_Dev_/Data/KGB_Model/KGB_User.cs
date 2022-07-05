@@ -10,12 +10,14 @@ namespace KGB_Dev_.Data.KGB_Model
         public int Fk_Rola { get; set; }
         [Required(ErrorMessage = "Unesite ime!")]
         public string? Ime { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Unesite email!")]
+        public string? Email { get; set; }
+        [Required(ErrorMessage = "Izaberite tip naloga!")]
         public string? Naziv_Role { get; set; }
         [Required(ErrorMessage = "Unesite prezime!")]
         public string? Prezime { get; set; }
         public int Sifra_Oj { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Izaberite naziv organizacione jedinice!")]
         public string? Naziv_Oj { get; set; }
         public string? Lozinka { get; set; }
         public bool Active { get; set; } = true;

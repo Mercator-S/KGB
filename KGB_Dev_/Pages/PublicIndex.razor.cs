@@ -42,7 +42,9 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.k_ins.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_ins}".Contains(searchString))
+            if (element.Naziv_Oj.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_ins} {element.Naziv_Oj}".Contains(searchString))
                 return true;
             return false;
         }
