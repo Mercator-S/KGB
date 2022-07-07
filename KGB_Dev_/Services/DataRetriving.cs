@@ -80,8 +80,8 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            //string Location = @"C:\KGB_Dev"; 
-            string Location = @"F:\KGB";
+            string Location = @"C:\KGB_Dev"; 
+            //string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
             var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
             CheckFolder(path);

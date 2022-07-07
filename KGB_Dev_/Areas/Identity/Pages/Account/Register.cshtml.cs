@@ -6,10 +6,12 @@ using System.Text.RegularExpressions;
 using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using MudBlazor;
 
 namespace KGB_Dev_.Areas.Identity.Pages.Account
 {
