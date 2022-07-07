@@ -81,7 +81,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(Input);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(Input);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    SlanjeMaila(Input.Email, Input.Lozinka);
+                    //SentEmail(Input.Email, Input.Lozinka);
                     //await _signInManager.SignInAsync(Input, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
@@ -174,7 +174,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             }
             return User;
         }
-        public void SlanjeMaila(string Email, string Password)
+        public void SentEmail(string Email, string Password)
         {
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.agrokor.hr", 25);

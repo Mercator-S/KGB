@@ -27,7 +27,8 @@ namespace KGB_Dev_.Pages
         IList<IBrowserFile> files = new List<IBrowserFile>();
         protected override async Task OnInitializedAsync()
         {
-            category = await IGetServices.GetCategory();
+            var User = IGetServices.GetCurrentUser().Result;
+            category = await IGetServices.GetCategory(User.Result.Sifra_Oj);
             if (category.Count > 0)
             {
                 subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());

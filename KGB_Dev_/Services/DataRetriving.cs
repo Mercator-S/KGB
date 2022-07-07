@@ -24,40 +24,33 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge>> GetPublicListOfKnowledge()
         {
-            List<KGB_Knowledge> result = _context.KGB_Knowledge.Where(x => x.Visibility == true).OrderByDescending(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            List<KGB_Knowledge> result = _context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
-            KGB_Knowledge? result = _context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault());
         }
         public async Task<Task<KGB_User>> GetCurrentUser()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            return _UserManager.GetUserAsync(user);
+            return _UserManager.GetUserAsync(authState.User);
         }
 
         public async Task<List<KGB_Category>> GetCategory()
         {
-            var result = _context.KGB_Category.OrderByDescending(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Category.OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Subcategory>> GetSubcategory()
         {
-            var result = _context.KGB_Subcategory.OrderBy(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Subcategory.OrderBy(x => x.Id).ToList());
         }
         public void CheckFolder(string Path)
         {
-            bool exist = Directory.Exists(Path);
-            if (!exist)
+            if (!Directory.Exists(Path))
             {
                 Directory.CreateDirectory(Path);
             }
@@ -78,10 +71,11 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            string Location = @"C:\KGB_Dev"; 
+            string LocationDev = @"C:\KGB_Dev";
             //string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
-            var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
+            var path = Path.Combine(LocationDev, user.Result.Naziv_Oj, NazivPrijave);
+            // var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
             foreach (var p in ListOfFile.ToList())
@@ -94,13 +88,11 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Category>> GetCategory(int OrgJed)
         {
-            List<KGB_Category> result = _context.KGB_Category.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Category.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Subcategory>> GetSubcategory(int category_id)
         {
-            List<KGB_Subcategory> result = _context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList();
-            return await Task.FromResult(result);
+            return await Task.FromResult(_context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList());
         }
         public async Task NavigationManager(string nav) => await Task.Run(() => { _navigationManager.NavigateTo(nav, forceLoad: true); });
     }

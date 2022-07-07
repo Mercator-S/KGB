@@ -5,6 +5,18 @@
 
 <PageTitle>KGB List</PageTitle>
 
+
+<MudGrid>
+    @*<MudItem xs="6" sm="6">
+        <MudSelect @bind-Value="Model.Fk_Category" Label="Kategorija KGB prijave" Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+            @foreach (KeyValuePair<int, string> a in Category)
+            {
+                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton OnClick="@(()=>ChangeList(Model.Fk_Category))">Button</MudButton>
+    </MudItem>*@
+</MudGrid>
 <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="9">
         <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_Knowledge,bool>(SearchTable1)">
@@ -47,5 +59,6 @@
                 <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
             </PagerContent>
         </MudTable>
+
     </MudItem>
 </MudGrid>
