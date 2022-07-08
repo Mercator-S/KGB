@@ -7,23 +7,18 @@
 
 
 <MudGrid>
-    @*<MudItem xs="6" sm="6">
-        <MudSelect @bind-Value="Model.Fk_Category" Label="Kategorija KGB prijave" Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
-            @foreach (KeyValuePair<int, string> a in Category)
-            {
-                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
-            }
-        </MudSelect>
-        <MudButton OnClick="@(()=>ChangeList(Model.Fk_Category))">Button</MudButton>
-    </MudItem>*@
 </MudGrid>
 <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="9">
         <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_Knowledge,bool>(SearchTable1)">
             <ToolBarContent>
-                <MudText Typo="Typo.h6">KGB tabela</MudText>
+                <MudText Typo="Typo.h6">Interna lista</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="searchString1" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudItem Class="justify-center" xs="7">
+                    <MudTextField @bind-Value="searchString1" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </MudItem>
+                <MudSpacer />
+                <MudButton OnClick="@(async () => await FilterDialog())" Class="align-self-center" Variant="Variant.Text" IconColor="Color.Info" Size="Size.Small" StartIcon="@Icons.Filled.FilterAlt">Filter</MudButton>
             </ToolBarContent>
             <HeaderContent>
                 <MudTh Style="color:white;background-color:#dc3545">Naziv prijave</MudTh>
@@ -51,7 +46,7 @@
                 <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>
                 <MudTd>
                     <MudTooltip Text="Detalji prijave" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
-                        <MudIconButton OnClick="@(() => Show(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
+                        <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                     </MudTooltip>
                 </MudTd>
             </RowTemplate>

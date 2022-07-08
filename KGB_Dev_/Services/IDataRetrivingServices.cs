@@ -11,8 +11,9 @@ namespace KGB_Dev_.DataRetrieving
         Task<List<KGB_Category>> GetCategory();
         Task<List<string>> GetFile(string Path);
         Task NavigationManager(string nav);
-        Task<List<KGB_Category>> GetCategory(int OrgJed);
-        Task<List<KGB_Subcategory>> GetSubcategory();
         Task<List<KGB_Subcategory>> GetSubcategory(int category_id);
+        Task<List<KGB_Subcategory>> GetSubcategory();
+        Task<Dictionary<string, string>> GetUsersFromOj(int SifraOj);
+
     }
 }

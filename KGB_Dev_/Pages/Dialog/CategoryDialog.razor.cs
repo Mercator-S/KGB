@@ -25,7 +25,7 @@ namespace KGB_Dev_.Pages.Dialog
             var User = IGetServices.GetCurrentUser().Result;
             _CategoryViewModels = new List<KGB_CategoryViewModel>();
             _SubcategoryViewModels = new List<KGB_SubcategoryViewModel>();
-            _categories = await IGetServices.GetCategory(User.Result.Sifra_Oj);
+            _categories = await IGetServices.GetCategory();
             _subCategory = await IGetServices.GetSubcategory();
             foreach (var l in _subCategory)
             {

@@ -16,29 +16,33 @@ namespace KGB_Dev_.Pages
         private List<KGB_Category> category;
         KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         private string searchString1 = "";
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
         [Parameter]
         public long IdPrijave { get; set; }
         protected override async Task OnInitializedAsync()
         {
             var User = IServices.GetCurrentUser().Result;
-            category = await IServices.GetCategory(User.Result.Sifra_Oj);
+            category = await IServices.GetCategory();
             foreach (var p in category)
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
             }
             ListOfKGB = await IServices.GetListOfKnowledge(User.Result.Sifra_Oj);
         }
-        public async void Show(long SifraPrijave)
+        public async void ShowTableDetailsDialog(long SifraPrijave)
         {
             IdPrijave = SifraPrijave;
-            await HandleValidSubmit();
+            await TableDetailsDialog();
         }
-        public async Task HandleValidSubmit()
+        public async Task TableDetailsDialog()
         {
             var parameteres = new DialogParameters();
             parameteres.Add("Sifra", IdPrijave);
             DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
+        }
+        public async Task FilterDialog()
+        {
+            DialogService.Show<FilterDialog>("", dialogOptions);
         }
         private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
 

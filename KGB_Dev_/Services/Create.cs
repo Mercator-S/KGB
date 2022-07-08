@@ -46,6 +46,11 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
+            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == Category.Naziv_Kategorije).FirstOrDefault();
+            if (Contains != null)
+            {
+                return await Task.FromResult(true);
+            }
             result.Sifra_Oj = User.Result.Sifra_Oj;
             result.k_ins = User.Result.Id;
             result.k_upd = User.Result.Id;
@@ -57,6 +62,11 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory)
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
+            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == SubCategory.Naziv_Potkategorije && x.Fk_Kategorija == SubCategory.Fk_Kategorija).FirstOrDefault();
+            if (Contains != null)
+            {
+                return await Task.FromResult(true);
+            }
             result.k_ins = User.Result.Id;
             result.k_upd = User.Result.Id;
             _context.Add(result);
