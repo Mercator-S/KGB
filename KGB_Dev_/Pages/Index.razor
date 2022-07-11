@@ -5,10 +5,7 @@
 
 <PageTitle>KGB List</PageTitle>
 
-
-<MudGrid>
-</MudGrid>
-<MudGrid Class="d-flex align-center justify-center">
+<MudGrid Class="d-flex justify-center">
     <MudItem xs="9">
         <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_Knowledge,bool>(SearchTable1)">
             <ToolBarContent>
@@ -43,9 +40,9 @@
 
                     @context.d_ins.ToString("dd/MM/yyyy")
                 </MudTd>
-                <MudTd DataLabel="Korisnik">@context.k_ins</MudTd>
+                <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudTooltip Text="Detalji prijave" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                    <MudTooltip Text="Detalji prijave" Placement="Placement.Bottom" Arrow="true">
                         <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                     </MudTooltip>
                 </MudTd>
@@ -54,6 +51,70 @@
                 <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
             </PagerContent>
         </MudTable>
+    </MudItem>
 
+    <MudItem xs="3" hidden="@HideFilter">
+        <MudCard>
+            <MudCardHeader>
+                <MudItem Class="d-flex flex-1">
+                    <MudText Typo="Typo.h5">Filter</MudText>
+                </MudItem>
+                <MudItem Class="d-flex" Style="align-items:flex-end">
+                    <MudTooltip Text="Resetuj Filter">
+                        <MudIconButton Class="ml-auto" OnClick="@(async ()=> await ResetFilter())" Icon="@Icons.Filled.RestartAlt" Color="Color.Warning"></MudIconButton>
+                    </MudTooltip>
+                </MudItem>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Value="FilterModel.Fk_Category" Label="Kategorija KGB prijave" For="@(()=>FilterModel.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                            @foreach (KeyValuePair<int, string> a in DictionaryCategory)
+                            {
+                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                            @foreach (KeyValuePair<int, string> a in DictionarySubcategory)
+                            {
+                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudDateRangePicker Elevation="12" Label="Datum unosa prijave" @bind-DateRange="DateIns" />
+                    </MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudDateRangePicker Elevation="12" Label="Datum izmene prijave" @bind-DateRange="DateUpd" />
+                    </MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudSelect T="string" @bind-Value="FilterModel.User" Label="Korisnik" For="@(()=>FilterModel.User)" AnchorOrigin="Origin.BottomCenter">
+                            @foreach (KeyValuePair<string, string> a in FilterUsers)
+                            {
+                                <MudSelectItem T="string" Value="a.Key">
+                                    <MudAvatar Style="background-color:#dc3545" Size="Size.Small">@a.Value.Substring(0,1)</MudAvatar>
+                                    @a.Value
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" OnClick="@(async () => await Filter(FilterModel))" Color="Color.Info" Size="Size.Small">Primeni filter</MudButton>
+                <MudButton Variant="Variant.Filled" Class="ml-auto" OnClick="@(async ()=> await CloseFilter())" ButtonType="ButtonType.Submit" StartIcon="@Icons.Filled.Close" Color="Color.Error" Size="Size.Small">Zatvori</MudButton>
+            </MudCardActions>
+        </MudCard>
     </MudItem>
 </MudGrid>
+

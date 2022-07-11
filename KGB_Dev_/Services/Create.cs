@@ -30,7 +30,8 @@ namespace KGB_Dev_.Services
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
             result.Naziv_Oj = User.Result.Naziv_Oj;
             result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Ime + " " + User.Result.Prezime;
+            result.k_ins = User.Result.Id;
+            result.k_name = User.Result.Ime + " " + User.Result.Prezime;
             result.k_upd = User.Result.Id;
             result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
             result.Putanja_Fajl = await UploadFile(result.Naziv_Prijave, ListOfFile);

@@ -12,27 +12,34 @@ namespace KGB_Dev_.Pages
         [Inject]
         public IDataRetrivingServices IServices { get; set; } = default!;
         private IEnumerable<KGB_Knowledge> ListOfKGB;
-        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private List<KGB_Category> category;
-        KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         private string searchString1 = "";
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        private int UserSifraOj = 0;
+        private KGB_TableFilter FilterModel = new KGB_TableFilter();
+        private Dictionary<string, string?> FilterUsers = new Dictionary<string, string?>();
+        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
+        private Dictionary<int, string?> DictionaryCategory = new Dictionary<int, string?>();
+        private Dictionary<int, string?> DictionarySubcategory = new Dictionary<int, string?>();
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
         [Parameter]
         public long IdPrijave { get; set; }
+        private bool HideFilter { get; set; } = true;
+        DateRange DateIns = new DateRange(null, null);
+        DateRange DateUpd = new DateRange(null, null);
+
         protected override async Task OnInitializedAsync()
         {
-            var User = IServices.GetCurrentUser().Result;
+            UserSifraOj = IServices.GetCurrentUser().Result.Result.Sifra_Oj;
+            FilterUsers = IServices.GetUsersFromOj(UserSifraOj).Result;
             category = await IServices.GetCategory();
+            DictionaryCategory.Add(0, "Izaberite kategoriju");
+            DictionarySubcategory.Add(0, "Izaberite potkategoriju");
             foreach (var p in category)
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
+                DictionaryCategory.Add(p.Id, p.Naziv_Kategorije);
             }
-            ListOfKGB = await IServices.GetListOfKnowledge(User.Result.Sifra_Oj);
-        }
-        public async void ShowTableDetailsDialog(long SifraPrijave)
-        {
-            IdPrijave = SifraPrijave;
-            await TableDetailsDialog();
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
         }
         public async Task TableDetailsDialog()
         {
@@ -40,9 +47,14 @@ namespace KGB_Dev_.Pages
             parameteres.Add("Sifra", IdPrijave);
             DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
         }
+        public async void ShowTableDetailsDialog(long SifraPrijave)
+        {
+            IdPrijave = SifraPrijave;
+            await TableDetailsDialog();
+        }
         public async Task FilterDialog()
         {
-            DialogService.Show<FilterDialog>("", dialogOptions);
+            HideFilter = !HideFilter;
         }
         private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
 
@@ -54,18 +66,81 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.Opis_Prijave.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (element.k_ins.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-             if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            if (element.k_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_ins} {element.Putanja_Fajl}".Contains(searchString))
+            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.Putanja_Fajl} {element.k_name}".Contains(searchString))
                 return true;
             return false;
         }
-        //public async Task ChangeList(int Kategorija)
-        //{
-        //    string a = null;
-        //    ListOfKGB = ListOfKGB.Where(x => x.Naziv_Prijave.Contains("")|| x.Opis_Prijave.Contains("")).ToList();
-        //}
+
+        public async Task GetSubcategory(int Id)
+        {
+            if (Id == 0)
+            {
+                DictionarySubcategory = new();
+                DictionarySubcategory.Add(0, "Izaberite potkategoriju");
+            }
+            else
+            {
+                List<KGB_Subcategory> subcategory = IServices.GetSubcategory(Id).Result;
+                if (subcategory.Count == 0)
+                {
+                    DictionarySubcategory = new();
+                    DictionarySubcategory.Add(0, "Izaberite potkategoriju");
+                }
+                else
+                {
+                    DictionarySubcategory = new();
+                    DictionarySubcategory.Add(0, "Izaberite potkategoriju");
+                    foreach (var k in subcategory)
+                    {
+                        DictionarySubcategory.Add(k.Id, k.Naziv_Potkategorije);
+                    }
+                }
+                FilterModel.Fk_Category = Id;
+                FilterModel.Fk_Subcategory = 0;
+            }
+        }
+        public async Task Filter(KGB_TableFilter Filter)
+        {
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            if (Filter.Fk_Category != 0 && Filter.Fk_Subcategory != 0 && Filter.User != null && DateIns.Start != null && DateUpd.Start != null)
+            {
+                ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category && x.Fk_Subcategory == Filter.Fk_Subcategory && x.k_upd == Filter.User &&
+                (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) && (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+            }
+            else if (Filter.Fk_Category != 0)
+            {
+                ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category).ToList();
+
+            }
+            else if (Filter.Fk_Category != 0 && Filter.Fk_Subcategory != 0)
+            {
+                ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category && x.Fk_Subcategory == Filter.Fk_Subcategory).ToList();
+            }
+            else if (Filter.Fk_Category == 0 && Filter.Fk_Subcategory == 0 && Filter.User == null && DateIns.Start == null && DateUpd.Start == null) { }
+            else
+            {
+                ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category || x.Fk_Subcategory == Filter.Fk_Subcategory || x.k_upd == Filter.User ||
+              (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) || (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+            }
+        }
+        public async Task CloseFilter()
+        {
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            FilterModel = new KGB_TableFilter();
+            DateIns = new DateRange(null, null);
+            DateUpd = new DateRange(null, null);
+            HideFilter = !HideFilter;
+        }
+        public async Task ResetFilter()
+        {
+            //ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            FilterModel = new KGB_TableFilter();
+            DateIns = new DateRange(null, null);
+            DateUpd = new DateRange(null, null);
+        }
     }
 }

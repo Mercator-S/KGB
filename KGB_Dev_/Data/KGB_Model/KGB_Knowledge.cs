@@ -23,6 +23,7 @@ namespace KGB_Dev_.Data.KGB_Model
         public bool Active { get; set; } = true;
         public DateTime d_upd { get; set; } = DateTime.Now;
         public string? k_ins { get; set; }
+        public string? k_name { get; set; }
         public DateTime d_ins { get; set; }
         public string? k_upd { get; set; }
         public bool Visibility { get; set; } = false;

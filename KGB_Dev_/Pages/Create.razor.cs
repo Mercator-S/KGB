@@ -63,6 +63,8 @@ namespace KGB_Dev_.Pages
                 }
                 else
                 {
+                    Subcategory = new();
+                    Subcategory.Add(0, "Izaberite potkategoriju");
                     foreach (var k in subcategory)
                     {
                         Subcategory.Add(k.Id, k.Naziv_Potkategorije);

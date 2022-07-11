@@ -28,7 +28,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
@@ -39,7 +39,7 @@ namespace KGB_Dev_.Data_Retrieving
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             return _UserManager.GetUserAsync(authState.User);
         }
-       
+
         public void CheckFolder(string Path)
         {
             if (!Directory.Exists(Path))
@@ -91,13 +91,13 @@ namespace KGB_Dev_.Data_Retrieving
         {
             return await Task.FromResult(_context.KGB_Subcategory.OrderBy(x => x.Id).ToList());
         }
-        public async Task<Dictionary<string,string>> GetUsersFromOj(int SifraOj)
+        public async Task<Dictionary<string, string>> GetUsersFromOj(int SifraOj)
         {
-            Dictionary<string,string> users = new Dictionary<string,string>();
-            var result = await Task.FromResult(_context.KGB_Users.Where(x => x.Sifra_Oj == SifraOj).ToList());
+            Dictionary<string, string> users = new Dictionary<string, string>();
+            var result = await Task.FromResult(_context.KGB_Users.Where(x => x.Sifra_Oj == SifraOj).OrderBy(x => x.Ime).ToList());
             foreach (var k in result)
             {
-                users.Add(k.Id, k.Ime +" "+ k.Prezime);
+                users.Add(k.Id, k.Ime + " " + k.Prezime);
             }
             return users;
         }

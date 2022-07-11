@@ -30,7 +30,6 @@ namespace KGB_Dev_.Pages.Dialog
             ValidationMessage = "Potkategorija sa ovim nazivom vec postoji!";
 
         }
-        void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel()
         {
             MudDialog.Cancel();
