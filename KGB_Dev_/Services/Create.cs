@@ -83,6 +83,7 @@ namespace KGB_Dev_.Services
                 try
                 {
                     KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Naziv_Prijave, ListOfFile);
+                    KGB_Knowledge.d_upd = DateTime.Now;
                     _context.Update(KGB_Knowledge);
                     await _context.SaveChangesAsync();
                     if (KGB_Knowledge.Visibility==true)

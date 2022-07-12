@@ -23,20 +23,19 @@ namespace KGB_Dev_.Pages.Dialog
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
+        [Inject]
+        public IDataRetrivingServices IGetServices { get; set; } = default!;
+        [Inject]
+        public ICreateServices ICreateServices { get; set; } = default!;
+        [Inject]
+        IJSRuntime JS { get; set; }
         public DateTime? DatumUnosa { get; set; }
         public DateTime? DatumIzmene { get; set; }
         public string Korisnik { get; set; }
         List<string> FileNames = new List<string>();
         public string FilePath { get; set; }
-        [Inject]
-        public IDataRetrivingServices IGetServices { get; set; } = default!;
-        [Inject]
-        public ICreateServices ICreateServices { get; set; } = default!;
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         IList<IBrowserFile> files = new List<IBrowserFile>();
-
-        [Inject]
-        IJSRuntime JS { get; set; }
         protected override async Task OnInitializedAsync()
         {
             Model = IGetServices.GetKnowledge(Sifra).Result;
@@ -67,11 +66,10 @@ namespace KGB_Dev_.Pages.Dialog
             {
                 Snackbar.Add($"Greska prilikom izmene prijave!", Severity.Error);
             }
-
         }
         public async Task OpenCategoryDialog()
         {
-            var dialogResult=await DialogService.Show<CategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
+            var dialogResult = await DialogService.Show<CategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
             if (dialogResult == true)
             {
                 category = await IGetServices.GetCategory();
