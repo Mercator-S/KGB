@@ -17,7 +17,7 @@ namespace KGB_Dev_.Pages.Dialog
         private IEnumerable<KGB_Subcategory> _subCategory;
         private IList<KGB_CategoryViewModel> _CategoryViewModels;
         private IList<KGB_SubcategoryViewModel> _SubcategoryViewModels;
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         public bool ShowSubcategory { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -45,23 +45,27 @@ namespace KGB_Dev_.Pages.Dialog
         public async Task OpenDialogForSubcategory(KGB_CategoryViewModel model)
         {
             var parameter = new DialogParameters { ["Category"] = model };
-            MudDialog.Cancel();
-            DialogService.Show<CreateSubcategoryDialog>("", parameter, dialogOptions);
+            bool result = await DialogService.Show<CreateSubcategoryDialog>("", parameter, dialogOptions).GetReturnValueAsync<bool>();
+            if (result)
+            {
+                await OnInitializedAsync();
+            }
         }
         public async Task OpenDialogForCategory()
         {
-            MudDialog.Cancel();
-            DialogService.Show<CreateCategoryDialog>("", dialogOptions);
+            bool result = await DialogService.Show<CreateCategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
+            if (result)
+            {
+                await OnInitializedAsync();
+            }
         }
-        void Submit()
+        public async Task Submit()
         {
-            IGetServices.NavigationManager("Create");
             MudDialog.Close(DialogResult.Ok(true));
         }
         void Cancel()
         {
-            IGetServices.NavigationManager("Create");
-            MudDialog.Cancel();
+            MudDialog.Close(DialogResult.Ok(false));
         }
     }
 }

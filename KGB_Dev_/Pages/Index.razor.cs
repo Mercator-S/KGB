@@ -20,7 +20,7 @@ namespace KGB_Dev_.Pages
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionaryCategory = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionarySubcategory = new Dictionary<int, string?>();
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         [Parameter]
         public long IdPrijave { get; set; }
         private bool HideFilter { get; set; } = true;

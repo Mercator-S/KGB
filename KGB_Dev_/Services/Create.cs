@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using KGB_Dev_.Data_Retrieving;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace KGB_Dev_.Services
 {
@@ -75,5 +76,44 @@ namespace KGB_Dev_.Services
             await _context.SaveChangesAsync();
             return await Task.FromResult(false);
         }
+        public async Task<bool> EditKGBKnowledge(KGB_Knowledge KGB_Knowledge, IList<IBrowserFile> ListOfFile)
+        {
+            if (KGB_Knowledge != null)
+            {
+                try
+                {
+                    KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Naziv_Prijave, ListOfFile);
+                    _context.Update(KGB_Knowledge);
+                    await _context.SaveChangesAsync();
+                    if (KGB_Knowledge.Visibility==true)
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
+                        return await Task.FromResult(true);
+                    }
+                    else
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo(""); });
+                        return await Task.FromResult(true);
+                    }
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ModelExist(KGB_Knowledge.Id))
+                    {
+                        return await Task.FromResult(false);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return await Task.FromResult(false);
+        }
+        private bool ModelExist(long id)
+        {
+            return _context.KGB_Knowledge.Any(e => e.Id == id);
+        }
+
     }
 }
