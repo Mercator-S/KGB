@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using KGB_Dev_.Data_Retrieving;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace KGB_Dev_.Services
 {
@@ -30,7 +31,8 @@ namespace KGB_Dev_.Services
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
             result.Naziv_Oj = User.Result.Naziv_Oj;
             result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Ime + " " + User.Result.Prezime;
+            result.k_ins = User.Result.Id;
+            result.k_name = User.Result.Ime + " " + User.Result.Prezime;
             result.k_upd = User.Result.Id;
             result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
             result.Putanja_Fajl = await UploadFile(result.Naziv_Prijave, ListOfFile);
@@ -46,6 +48,11 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
+            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == Category.Naziv_Kategorije).FirstOrDefault();
+            if (Contains != null)
+            {
+                return await Task.FromResult(true);
+            }
             result.Sifra_Oj = User.Result.Sifra_Oj;
             result.k_ins = User.Result.Id;
             result.k_upd = User.Result.Id;
@@ -57,6 +64,11 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory)
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
+            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == SubCategory.Naziv_Potkategorije && x.Fk_Kategorija == SubCategory.Fk_Kategorija).FirstOrDefault();
+            if (Contains != null)
+            {
+                return await Task.FromResult(true);
+            }
             result.k_ins = User.Result.Id;
             result.k_upd = User.Result.Id;
             _context.Add(result);
@@ -64,5 +76,45 @@ namespace KGB_Dev_.Services
             await _context.SaveChangesAsync();
             return await Task.FromResult(false);
         }
+        public async Task<bool> EditKGBKnowledge(KGB_Knowledge KGB_Knowledge, IList<IBrowserFile> ListOfFile)
+        {
+            if (KGB_Knowledge != null)
+            {
+                try
+                {
+                    KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Naziv_Prijave, ListOfFile);
+                    KGB_Knowledge.d_upd = DateTime.Now;
+                    _context.Update(KGB_Knowledge);
+                    await _context.SaveChangesAsync();
+                    if (KGB_Knowledge.Visibility==true)
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
+                        return await Task.FromResult(true);
+                    }
+                    else
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo(""); });
+                        return await Task.FromResult(true);
+                    }
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ModelExist(KGB_Knowledge.Id))
+                    {
+                        return await Task.FromResult(false);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return await Task.FromResult(false);
+        }
+        private bool ModelExist(long id)
+        {
+            return _context.KGB_Knowledge.Any(e => e.Id == id);
+        }
+
     }
 }

@@ -11,7 +11,8 @@ namespace KGB_Dev_.Pages.Dialog
         MudDialogInstance MudDialog { get; set; }
         [Parameter]
         public KGB_CategoryViewModel Category { get; set; } = new KGB_CategoryViewModel();
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        public string ValidationMessage { get; set; }
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         [Inject]
         public ICreateServices ICreateServices { get; set; } = default!;
         [Inject]
@@ -22,15 +23,11 @@ namespace KGB_Dev_.Pages.Dialog
             if (!result)
             {
                 Snackbar.Add($"Uspešno dodata potkategorija {Category.Naziv_Kategorije}", Severity.Success);
-                MudDialog.Cancel();
-                DialogService.Show<CategoryDialog>("", dialogOptions);
+                MudDialog.Close(DialogResult.Ok(true));
             }
+            ValidationMessage = "Kategorija sa ovim nazivom vec postoji!";
         }
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
-        void Cancel()
-        {
-            MudDialog.Cancel();
-            DialogService.Show<CategoryDialog>("", dialogOptions);
-        }
+        void Cancel() => MudDialog.Close(DialogResult.Ok(false));
     }
 }

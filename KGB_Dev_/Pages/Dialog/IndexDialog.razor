@@ -1,4 +1,5 @@
-﻿<MudDialog>
+﻿@inject IDialogService DialogService
+<MudDialog>
     <DialogContent>
         <MudGrid>
             <MudItem Class="py-8 d-flex flex-1">
@@ -6,13 +7,14 @@
             </MudItem>
             <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
                 <MudText>
-                    <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Prijava.k_ins.Substring(0,1)</MudAvatar>
-                    @Prijava.k_ins
+                    <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Prijava.k_name.Substring(0,1)</MudAvatar>
+                    @Prijava.k_name
                 </MudText>
             </MudItem>
         </MudGrid>
-        <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>
-        <MudDivider />
+        <MudItem>
+            <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>
+        </MudItem>
         <MudText Typo="Typo.body2" GutterBottom="true">@Prijava.Opis_Prijave</MudText>
         <MudDivider />
         <MudGrid>
@@ -57,6 +59,10 @@
         </MudGrid>
     </DialogContent>
     <DialogActions>
+        @if (User.Fk_Rola == 2 || Prijava.k_ins == User.Id)
+        {
+            <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
+        }
         <MudButton OnClick="Cancel">Cancel</MudButton>
         <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
     </DialogActions>

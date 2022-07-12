@@ -87,7 +87,7 @@
         </MudGrid>
         <MudGrid Class="d-flex justify-end flex-grow-1 gap-4">
             <MudItem>
-                <MudButton Color="Color.Primary" OnClick="Submit">Zatvori</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(async()=>await Submit())">Zatvori</MudButton>
             </MudItem>
         </MudGrid>
     </DialogContent>

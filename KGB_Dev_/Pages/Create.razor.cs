@@ -22,16 +22,14 @@ namespace KGB_Dev_.Pages
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         IList<IBrowserFile> files = new List<IBrowserFile>();
         protected override async Task OnInitializedAsync()
         {
             category = await IGetServices.GetCategory();
-            if (category.Count > 0)
-            {
-                subcategory = await IGetServices.GetSubcategory(category.Select(x => x.Id).First());
-            }
+            Category = new();
+            Subcategory = new();
             Category.Add(0, "Izaberite kategoriju");
             Subcategory.Add(0, "Izaberite potkategoriju");
             foreach (var p in category)
@@ -47,7 +45,12 @@ namespace KGB_Dev_.Pages
         }
         public async Task OpenCategoryDialog()
         {
-            DialogService.Show<CategoryDialog>("", dialogOptions);
+            bool dialogResult = await DialogService.Show<CategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
+            if (dialogResult)
+            {
+                await OnInitializedAsync();
+                await GetSubcategory(Model.Fk_Category);
+            }
         }
         public async Task GetSubcategory(int Id)
         {
@@ -67,6 +70,8 @@ namespace KGB_Dev_.Pages
                 }
                 else
                 {
+                    Subcategory = new();
+                    Subcategory.Add(0, "Izaberite potkategoriju");
                     foreach (var k in subcategory)
                     {
                         Subcategory.Add(k.Id, k.Naziv_Potkategorije);

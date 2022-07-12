@@ -9,5 +9,6 @@ namespace KGB_Dev_.Services
         Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory);
         Task<bool> CreateCategory(KGB_CategoryViewModel Category);
         Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile);
+        Task<bool> EditKGBKnowledge(KGB_Knowledge KGB_Knowledge, IList<IBrowserFile> ListOfFile);
     }
 }

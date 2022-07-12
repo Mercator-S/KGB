@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using MudBlazor;
 
 namespace KGB_Dev_.Areas.Identity.Pages.Account
 {
@@ -79,7 +81,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(Input);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(Input);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    SlanjeMaila(Input.Email, Input.Lozinka);
+                    //SentEmail(Input.Email, Input.Lozinka);
                     //await _signInManager.SignInAsync(Input, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
@@ -172,7 +174,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             }
             return User;
         }
-        public void SlanjeMaila(string Email, string Password)
+        public void SentEmail(string Email, string Password)
         {
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.agrokor.hr", 25);
