@@ -42,9 +42,7 @@
                 </MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudTooltip Text="Detalji prijave" Placement="Placement.Bottom" Arrow="true">
-                        <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
-                    </MudTooltip>
+                    <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

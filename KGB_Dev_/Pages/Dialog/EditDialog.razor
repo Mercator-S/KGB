@@ -114,10 +114,10 @@
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="3">
-                            <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+                            <MudTextField Label="Datum Unosa" Value="Model.d_ins.Date" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
                         </MudItem>
                         <MudItem xs="3">
-                            <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+                            <MudTextField Label="Datum Izmene" Value="Model.d_upd.Date" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
                         </MudItem>
                     </MudGrid>
                 </MudCardContent>

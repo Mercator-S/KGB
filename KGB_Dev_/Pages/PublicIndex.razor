@@ -52,9 +52,7 @@
                 <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudTooltip Text="Detalji prijave" Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
-                        <MudIconButton OnClick="@(() => Show(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
-                    </MudTooltip>
+                    <MudIconButton OnClick="@(() => Show(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

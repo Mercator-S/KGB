@@ -46,11 +46,11 @@ namespace KGB_Dev_.Data_Retrieving
             {
                 Directory.CreateDirectory(Path);
             }
-            else
-            {
-                Directory.Delete(Path, true);
-                Directory.CreateDirectory(Path);
-            }
+            //else
+            //{
+            //    Directory.Delete(Path, true);
+            //    Directory.CreateDirectory(Path);
+            //}
         }
         public async Task<List<string>> GetFile(string path)
         {

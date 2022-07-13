@@ -91,7 +91,6 @@ namespace KGB_Dev_.Pages
         }
         public async Task ResetFilter()
         {
-            //ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
             FilterModel = new KGB_TableFilter();
             DateIns = new DateRange(null, null);
             DateUpd = new DateRange(null, null);
