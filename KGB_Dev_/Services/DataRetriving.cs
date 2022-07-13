@@ -67,7 +67,7 @@ namespace KGB_Dev_.Data_Retrieving
             //string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
             var path = Path.Combine(LocationDev, user.Result.Naziv_Oj, NazivPrijave);
-            // var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
+            //var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
             foreach (var p in ListOfFile.ToList())

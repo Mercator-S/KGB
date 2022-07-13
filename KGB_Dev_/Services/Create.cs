@@ -35,13 +35,17 @@ namespace KGB_Dev_.Services
             result.k_name = User.Result.Ime + " " + User.Result.Prezime;
             result.k_upd = User.Result.Id;
             result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
+            result.Putanja_Fajl = null;
             if (result != null)
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
-                result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
-                _context.Update(result);
-                await _context.SaveChangesAsync();
+                if (ListOfFile.Count>=1)
+                {
+                    result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
+                    _context.Update(result);
+                    await _context.SaveChangesAsync();
+                }
                 await Task.Run(() => { _navigationManager.NavigateTo(""); });
                 return true;
             }
