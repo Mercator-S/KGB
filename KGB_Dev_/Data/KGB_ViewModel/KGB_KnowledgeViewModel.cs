@@ -4,6 +4,7 @@ namespace KGB_Dev_.Data.KGB_ViewModel
 {
     public class KGB_KnowledgeViewModel
     {
+        [Key]
         public long Id { get; set; }
         public string? Naziv_Oj { get; set; }
         public int Sifra_Oj { get; set; }

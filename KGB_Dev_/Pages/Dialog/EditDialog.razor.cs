@@ -29,6 +29,8 @@ namespace KGB_Dev_.Pages.Dialog
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
+        [Parameter]
+        public int CountFiles { get; set; }
         public string FilePath { get; set; }
         IList<IBrowserFile> files = new List<IBrowserFile>();
         List<string> FileNames = new List<string>();
@@ -38,6 +40,7 @@ namespace KGB_Dev_.Pages.Dialog
         {
             Model = await IGetServices.GetKnowledge(Sifra);
             FileNames = await IGetServices.GetFile(Model.Putanja_Fajl);
+            CountFiles = FileNames.Count();
             subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
             category = await IGetServices.GetCategory();
             FilePath = Model.Putanja_Fajl;
@@ -52,10 +55,6 @@ namespace KGB_Dev_.Pages.Dialog
         }
         private async Task EditKGB(KGB_Knowledge EditModel)
         {
-            if (Model.Naziv_Prijave==EditModel.Naziv_Prijave)
-            {
-                var a = "aa";
-            }
             var result = await ICreateServices.EditKGBKnowledge(Model, files);
             if (result == true)
             {
@@ -118,12 +117,20 @@ namespace KGB_Dev_.Pages.Dialog
         private async Task DownloadFile(string fileName)
         {
             string path = FilePath + fileName;
-            using FileStream fs = File.OpenRead(path);
-            using var streamRef = new DotNetStreamReference(stream: fs);
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            if (!File.Exists(path))
+            {
+                Snackbar.Add($"Ne mozete preuzeti dodati fajl", Severity.Error);
+            }
+            else
+            {
+                using FileStream fs = File.OpenRead(path);
+                using var streamRef = new DotNetStreamReference(stream: fs);
+                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
         }
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {
+
             foreach (var file in e.GetMultipleFiles())
             {
                 if (FileNames.Contains(file.Name) || files.Contains(file))

@@ -109,7 +109,7 @@ namespace KGB_Dev_.Pages
             if (Filter.Fk_Category != 0 && Filter.Fk_Subcategory != 0 && Filter.User != null && DateIns.Start != null && DateUpd.Start != null)
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category && x.Fk_Subcategory == Filter.Fk_Subcategory && x.k_upd == Filter.User &&
-                (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) && (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+                (x.d_ins.Date >= DateIns.Start && x.d_ins.Date <= DateIns.End) && (x.d_upd.Date >= DateUpd.Start && x.d_upd.Date <= DateUpd.End)).ToList();
             }
             else if (Filter.Fk_Category != 0)
             {
@@ -124,7 +124,7 @@ namespace KGB_Dev_.Pages
             else
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category || x.Fk_Subcategory == Filter.Fk_Subcategory || x.k_upd == Filter.User ||
-              (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) || (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+              (x.d_ins.Date >= DateIns.Start && x.d_ins.Date <= DateIns.End) || (x.d_upd.Date >= DateUpd.Start && x.d_upd.Date <= DateUpd.End)).ToList();
             }
         }
         public async Task CloseFilter()

@@ -35,10 +35,12 @@ namespace KGB_Dev_.Services
             result.k_name = User.Result.Ime + " " + User.Result.Prezime;
             result.k_upd = User.Result.Id;
             result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
-            result.Putanja_Fajl = await UploadFile(result.Naziv_Prijave, ListOfFile);
             if (result != null)
             {
                 _context.Add(result);
+                await _context.SaveChangesAsync();
+                result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
+                _context.Update(result);
                 await _context.SaveChangesAsync();
                 await Task.Run(() => { _navigationManager.NavigateTo(""); });
                 return true;
@@ -84,7 +86,7 @@ namespace KGB_Dev_.Services
                 {
                     if (ListOfFile.Count >= 1)
                     {
-                        KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Naziv_Prijave, ListOfFile);
+                        KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Id.ToString(), ListOfFile);
                     }
                     KGB_Knowledge.d_upd = DateTime.Now;
                     _context.Update(KGB_Knowledge);
@@ -96,7 +98,7 @@ namespace KGB_Dev_.Services
                     }
                     else
                     {
-                        await Task.Run(() => { _navigationManager.NavigateTo(""); });
+                        await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
                         return await Task.FromResult(true);
                     }
                 }
@@ -118,6 +120,5 @@ namespace KGB_Dev_.Services
         {
             return _context.KGB_Knowledge.Any(e => e.Id == id);
         }
-
     }
 }
