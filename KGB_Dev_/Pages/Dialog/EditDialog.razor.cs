@@ -161,6 +161,19 @@ namespace KGB_Dev_.Pages.Dialog
                 }
             }
         }
+        private async Task DeleteKGB(KGB_Knowledge Model) 
+        {
+            var result = await ICreateServices.DeleteKGBKnowledge(Model);
+            if (result == true)
+            {
+                Cancel();
+            }
+            else
+            {
+                Snackbar.Add($"Greska prilikom izmene prijave!", Severity.Error);
+            }
+
+        }
         void Cancel() => MudDialog.Cancel();
     }
 }

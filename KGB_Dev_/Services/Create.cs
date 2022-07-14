@@ -40,11 +40,16 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
-                if (ListOfFile.Count>=1)
+                if (ListOfFile.Count >= 1)
                 {
                     result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
                     _context.Update(result);
                     await _context.SaveChangesAsync();
+                }
+                if (result.Visibility == true)
+                {
+                    await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex"); });
+                    return true;
                 }
                 await Task.Run(() => { _navigationManager.NavigateTo(""); });
                 return true;
@@ -100,11 +105,40 @@ namespace KGB_Dev_.Services
                         await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
                         return await Task.FromResult(true);
                     }
+                    await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                    return await Task.FromResult(true);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ModelExist(KGB_Knowledge.Id))
+                    {
+                        return await Task.FromResult(false);
+                    }
                     else
                     {
-                        await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                        throw;
+                    }
+                }
+            }
+            return await Task.FromResult(false);
+        }
+        public async Task<bool> DeleteKGBKnowledge(KGB_Knowledge KGB_Knowledge)
+        {
+            if (KGB_Knowledge != null)
+            {
+                try
+                {
+                    KGB_Knowledge.d_upd = DateTime.Now;
+                    KGB_Knowledge.Active = false;
+                    _context.Update(KGB_Knowledge);
+                    await _context.SaveChangesAsync();
+                    if (KGB_Knowledge.Visibility == true)
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
                         return await Task.FromResult(true);
                     }
+                    await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                    return await Task.FromResult(true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -24,11 +24,11 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge>> GetPublicListOfKnowledge()
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
@@ -64,7 +64,7 @@ namespace KGB_Dev_.Data_Retrieving
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
             string LocationDev = @"C:\KGB_Dev";
-            //string Location = @"F:\KGB";
+            // string Location = @"F:\KGB";
             var user = GetCurrentUser().Result;
             var path = Path.Combine(LocationDev, user.Result.Naziv_Oj, NazivPrijave);
             //var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
