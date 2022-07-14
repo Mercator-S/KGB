@@ -18,7 +18,7 @@ namespace KGB_Dev_.Shared
         protected override async Task OnInitializedAsync()
         {
             var a = IGetServices.GetCurrentUser().Result;
-            Role = a.Result.Fk_Rola;
+            Role = a.Fk_Rola;
         }
 
     }

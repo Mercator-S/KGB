@@ -16,7 +16,7 @@ namespace KGB_Dev_.Pages
         private string searchString1 = "";
         private int UserSifraOj = 0;
         private KGB_TableFilter FilterModel = new KGB_TableFilter();
-        private Dictionary<string, string?> FilterUsers = new Dictionary<string, string?>();
+        private Dictionary<string, string> FilterUsers = new Dictionary<string, string>();
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionaryCategory = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionarySubcategory = new Dictionary<int, string?>();
@@ -29,7 +29,7 @@ namespace KGB_Dev_.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            UserSifraOj = IServices.GetCurrentUser().Result.Result.Sifra_Oj;
+            UserSifraOj = IServices.GetCurrentUser().Result.Sifra_Oj;
             FilterUsers = IServices.GetUsersFromOj(UserSifraOj).Result;
             category = await IServices.GetCategory();
             DictionaryCategory.Add(0, "Izaberite kategoriju");
@@ -52,9 +52,9 @@ namespace KGB_Dev_.Pages
             IdPrijave = SifraPrijave;
             await TableDetailsDialog();
         }
-        public async Task FilterDialog()
+        public void FilterDialog()
         {
-            HideFilter = !HideFilter;
+             HideFilter = !HideFilter;
         }
         private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
 

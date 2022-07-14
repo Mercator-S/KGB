@@ -23,19 +23,13 @@ namespace KGB_Dev_.Services
             _context = context;
             _navigationManager = navigationManager;
             _mapper = mapper;
-            User = GetCurrentUser().Result;
+            User = GetCurrentUser();
         }
 
         public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile)
         {
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
-            result.Naziv_Oj = User.Result.Naziv_Oj;
-            result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Id;
-            result.k_name = User.Result.Ime + " " + User.Result.Prezime;
-            result.k_upd = User.Result.Id;
-            result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
-            result.Putanja_Fajl = null;
+            _mapper.Map(User.Result, result);
             if (result != null)
             {
                 _context.Add(result);
@@ -129,6 +123,7 @@ namespace KGB_Dev_.Services
                 try
                 {
                     KGB_Knowledge.d_upd = DateTime.Now;
+                    KGB_Knowledge.k_upd = User.Result.Id;
                     KGB_Knowledge.Active = false;
                     _context.Update(KGB_Knowledge);
                     await _context.SaveChangesAsync();
