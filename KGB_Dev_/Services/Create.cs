@@ -53,33 +53,28 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
-            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == Category.Naziv_Kategorije).FirstOrDefault();
+            _mapper.Map(User.Result, result);
+            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == result.Naziv_Kategorije && x.Sifra_Oj==result.Sifra_Oj).FirstOrDefault();
             if (Contains != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(false);
             }
-            result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Id;
-            result.k_upd = User.Result.Id;
             _context.Add(result);
-            // Check if savechanges > 0 to return valid value
             await _context.SaveChangesAsync();
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
         public async Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory)
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
-            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == SubCategory.Naziv_Potkategorije && x.Fk_Kategorija == SubCategory.Fk_Kategorija).FirstOrDefault();
+            _mapper.Map(User.Result, result);
+            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == result.Naziv_Potkategorije && x.Fk_Kategorija == result.Fk_Kategorija).FirstOrDefault();
             if (Contains != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(false);
             }
-            result.k_ins = User.Result.Id;
-            result.k_upd = User.Result.Id;
             _context.Add(result);
-            //Check if savechanges > 0 to return valid value
             await _context.SaveChangesAsync();
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
         public async Task<bool> EditKGBKnowledge(KGB_Knowledge KGB_Knowledge, IList<IBrowserFile> ListOfFile)
         {

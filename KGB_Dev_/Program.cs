@@ -43,7 +43,6 @@ var mapperConfiguration = new MapperConfiguration(configuration =>
     configuration.AddProfile(new KGB_CategoryProfile());
     configuration.AddProfile(new KGB_SubCategoryProfile());
     configuration.AddProfile(new KGB_KnowledgeProfile());
-    configuration.AddProfile(new KGB_KnowledgeUserDataProfile());
 });
 
 var mapper = mapperConfiguration.CreateMapper();
