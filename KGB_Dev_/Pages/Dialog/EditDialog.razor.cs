@@ -14,13 +14,6 @@ namespace KGB_Dev_.Pages.Dialog
     {
         [CascadingParameter]
         MudDialogInstance MudDialog { get; set; }
-        [Parameter]
-        public long Sifra { get; set; }
-        public KGB_Knowledge Model { get; set; }
-        private List<KGB_Category> category;
-        private List<KGB_Subcategory> subcategory;
-        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
-        private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
         [Inject]
@@ -29,33 +22,38 @@ namespace KGB_Dev_.Pages.Dialog
         public ICreateServices ICreateServices { get; set; } = default!;
         [Inject]
         IJSRuntime JS { get; set; }
-        public DateTime? DatumUnosa { get; set; }
-        public DateTime? DatumIzmene { get; set; }
-        public string Korisnik { get; set; }
-        List<string> FileNames = new List<string>();
+        [Parameter]
+        public long Sifra { get; set; }
+        public KGB_Knowledge Model { get; set; }
+        private List<KGB_Category> category;
+        private List<KGB_Subcategory> subcategory;
+        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
+        private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
+        [Parameter]
+        public int CountFiles { get; set; }
         public string FilePath { get; set; }
-        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         IList<IBrowserFile> files = new List<IBrowserFile>();
+        List<string> FileNames = new List<string>();
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
+
         protected override async Task OnInitializedAsync()
         {
-            Model = IGetServices.GetKnowledge(Sifra).Result;
-            DatumUnosa = Model.d_ins.Date;
-            DatumIzmene = Model.d_upd.Date;
-            FileNames = IGetServices.GetFile(Model.Putanja_Fajl).Result;
-            FilePath = Model.Putanja_Fajl;
-            Korisnik = Model.k_ins;
+            Model = await IGetServices.GetKnowledge(Sifra);
+            FileNames = await IGetServices.GetFile(Model.Putanja_Fajl);
+            CountFiles = FileNames.Count();
+            subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
             category = await IGetServices.GetCategory();
+            FilePath = Model.Putanja_Fajl;
             foreach (var p in category)
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
             }
-            subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
             foreach (var k in subcategory)
             {
                 Subcategory.Add(k.Id, k.Naziv_Potkategorije);
             }
         }
-        private async Task EditKGB(KGB_Knowledge Model)
+        private async Task EditKGB(KGB_Knowledge EditModel)
         {
             var result = await ICreateServices.EditKGBKnowledge(Model, files);
             if (result == true)
@@ -73,13 +71,13 @@ namespace KGB_Dev_.Pages.Dialog
             if (dialogResult == true)
             {
                 category = await IGetServices.GetCategory();
+                subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
                 Category = new Dictionary<int, string?>();
                 Subcategory = new Dictionary<int, string?>();
                 foreach (var p in category)
                 {
                     Category.Add(p.Id, p.Naziv_Kategorije);
                 }
-                subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
                 foreach (var k in subcategory)
                 {
                     Subcategory.Add(k.Id, k.Naziv_Potkategorije);
@@ -119,15 +117,23 @@ namespace KGB_Dev_.Pages.Dialog
         private async Task DownloadFile(string fileName)
         {
             string path = FilePath + fileName;
-            using FileStream fs = File.OpenRead(path);
-            using var streamRef = new DotNetStreamReference(stream: fs);
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            if (!File.Exists(path))
+            {
+                Snackbar.Add($"Ne mozete preuzeti dodati fajl", Severity.Error);
+            }
+            else
+            {
+                using FileStream fs = File.OpenRead(path);
+                using var streamRef = new DotNetStreamReference(stream: fs);
+                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
         }
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {
+
             foreach (var file in e.GetMultipleFiles())
             {
-                if (FileNames.Contains(file.Name))
+                if (FileNames.Contains(file.Name) || files.Contains(file))
                 {
                     Snackbar.Add($"File sa nazivom {file.Name} vec postoji ", Severity.Error);
                 }
@@ -140,11 +146,34 @@ namespace KGB_Dev_.Pages.Dialog
         }
         private async Task DeleteFile(string fileName)
         {
-            string path = FilePath + fileName;
+            string[] Files = Directory.GetFiles(FilePath);
             FileNames.Remove(fileName);
-            File.Delete(path);
+            if (files.Count >= 1)
+            {
+                var deleteItem = files.Where(x => x.Name == fileName).FirstOrDefault();
+                files.Remove(deleteItem);
+            }
+            foreach (var item in Files)
+            {
+                if (item == FilePath + fileName)
+                {
+                    File.Delete(item);
+                }
+            }
         }
+        private async Task DeleteKGB(KGB_Knowledge Model) 
+        {
+            var result = await ICreateServices.DeleteKGBKnowledge(Model);
+            if (result == true)
+            {
+                Cancel();
+            }
+            else
+            {
+                Snackbar.Add($"Greska prilikom izmene prijave!", Severity.Error);
+            }
 
+        }
         void Cancel() => MudDialog.Cancel();
     }
 }

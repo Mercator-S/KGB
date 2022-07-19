@@ -78,7 +78,7 @@ namespace KGB_Dev_.Pages
             else
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Sifra_Oj == Filter.SifraOj ||
-                (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) || (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+                (x.d_ins.Date >= DateIns.Start && x.d_ins.Date <= DateIns.End) || (x.d_upd.Date >= DateUpd.Start && x.d_upd.Date <= DateUpd.End)).ToList();
             }
         }
         public async Task CloseFilter()
@@ -91,7 +91,6 @@ namespace KGB_Dev_.Pages
         }
         public async Task ResetFilter()
         {
-            //ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
             FilterModel = new KGB_TableFilter();
             DateIns = new DateRange(null, null);
             DateUpd = new DateRange(null, null);

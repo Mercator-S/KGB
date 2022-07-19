@@ -59,7 +59,11 @@
         </MudGrid>
     </DialogContent>
     <DialogActions>
-        @if (User.Fk_Rola == 2 || Prijava.k_ins == User.Id)
+        @if (User.Fk_Rola == 2 && Prijava.Sifra_Oj == User.Sifra_Oj)
+        {
+            <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
+        }
+        else if (Prijava.k_ins == User.Id)
         {
             <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
         }

@@ -15,7 +15,7 @@
                     <MudTextField @bind-Value="searchString1" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 </MudItem>
                 <MudSpacer />
-                <MudButton OnClick="@(async () => await FilterDialog())" Class="align-self-center" Variant="Variant.Text" IconColor="Color.Info" Size="Size.Small" StartIcon="@Icons.Filled.FilterAlt">Filter</MudButton>
+                <MudButton OnClick="@(() => FilterDialog())" Class="align-self-center" Variant="Variant.Text" IconColor="Color.Info" Size="Size.Small" StartIcon="@Icons.Filled.FilterAlt">Filter</MudButton>
             </ToolBarContent>
             <HeaderContent>
                 <MudTh Style="color:white;background-color:#dc3545">Naziv prijave</MudTh>
@@ -42,9 +42,7 @@
                 </MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudTooltip Text="Detalji prijave" Placement="Placement.Bottom" Arrow="true">
-                        <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
-                    </MudTooltip>
+                    <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

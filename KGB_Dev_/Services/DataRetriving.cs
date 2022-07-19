@@ -14,6 +14,7 @@ namespace KGB_Dev_.Data_Retrieving
         private readonly UserManager<KGB_User> _UserManager;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly NavigationManager _navigationManager;
+        private KGB_User User { get; set; }
 
         public DataRetriving(ApplicationDbContext? context, SignInManager<KGB_User> signInManager, UserManager<KGB_User> userManager, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
         {
@@ -21,34 +22,30 @@ namespace KGB_Dev_.Data_Retrieving
             _UserManager = userManager;
             _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
+            User = GetCurrentUser().Result;
         }
         public async Task<List<KGB_Knowledge>> GetPublicListOfKnowledge()
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
             return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault());
         }
-        public async Task<Task<KGB_User>> GetCurrentUser()
+        public async Task<KGB_User> GetCurrentUser()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            return _UserManager.GetUserAsync(authState.User);
+            return await Task.FromResult(_UserManager.GetUserAsync(authState.User).Result);
         }
 
         public void CheckFolder(string Path)
         {
             if (!Directory.Exists(Path))
             {
-                Directory.CreateDirectory(Path);
-            }
-            else
-            {
-                Directory.Delete(Path, true);
                 Directory.CreateDirectory(Path);
             }
         }
@@ -70,9 +67,8 @@ namespace KGB_Dev_.Data_Retrieving
         {
             string LocationDev = @"C:\KGB_Dev";
             //string Location = @"F:\KGB";
-            var user = GetCurrentUser().Result;
-            var path = Path.Combine(LocationDev, user.Result.Naziv_Oj, NazivPrijave);
-            // var path = Path.Combine(Location, user.Result.Naziv_Oj, NazivPrijave);
+            var path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
+            //var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
             foreach (var p in ListOfFile.ToList())
@@ -85,8 +81,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Category>> GetCategory()
         {
-            var User = GetCurrentUser().Result;
-            return await Task.FromResult(_context.KGB_Category.Where(x => x.Sifra_Oj == User.Result.Sifra_Oj).OrderByDescending(x => x.Id).ToList());
+            return await Task.FromResult(_context.KGB_Category.Where(x => x.Sifra_Oj == User.Sifra_Oj).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<List<KGB_Subcategory>> GetSubcategory(int category_id)
         {

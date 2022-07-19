@@ -21,7 +21,7 @@ namespace KGB_Dev_.Pages.Dialog
         {
             Model.Fk_Kategorija = Category.Id;
             var result = await ICreateServices.CreateSubCategory(Model);
-            if (!result)
+            if (result)
             {
                 Snackbar.Add($"Uspešno dodata kategorija {Model.Naziv_Potkategorije}", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));

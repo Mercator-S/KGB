@@ -16,7 +16,7 @@ namespace KGB_Dev_.Pages
         private string searchString1 = "";
         private int UserSifraOj = 0;
         private KGB_TableFilter FilterModel = new KGB_TableFilter();
-        private Dictionary<string, string?> FilterUsers = new Dictionary<string, string?>();
+        private Dictionary<string, string> FilterUsers = new Dictionary<string, string>();
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionaryCategory = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionarySubcategory = new Dictionary<int, string?>();
@@ -29,7 +29,7 @@ namespace KGB_Dev_.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            UserSifraOj = IServices.GetCurrentUser().Result.Result.Sifra_Oj;
+            UserSifraOj = IServices.GetCurrentUser().Result.Sifra_Oj;
             FilterUsers = IServices.GetUsersFromOj(UserSifraOj).Result;
             category = await IServices.GetCategory();
             DictionaryCategory.Add(0, "Izaberite kategoriju");
@@ -52,7 +52,7 @@ namespace KGB_Dev_.Pages
             IdPrijave = SifraPrijave;
             await TableDetailsDialog();
         }
-        public async Task FilterDialog()
+        public void FilterDialog()
         {
             HideFilter = !HideFilter;
         }
@@ -66,11 +66,15 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.Opis_Prijave.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
+            //Putanja fajla trenutno sadrzi samo id prijave tako da ne moze da se pretrazuje, nadji neko resenje ako moze ako ne videti kako raditi.
+            //if (element.Putanja_Fajl != "")
+            //{
+            //    if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            //        return true;
+            //}
             if (element.k_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.Putanja_Fajl} {element.k_name}".Contains(searchString))
+            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_name}".Contains(searchString))
                 return true;
             return false;
         }
@@ -109,7 +113,7 @@ namespace KGB_Dev_.Pages
             if (Filter.Fk_Category != 0 && Filter.Fk_Subcategory != 0 && Filter.User != null && DateIns.Start != null && DateUpd.Start != null)
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category && x.Fk_Subcategory == Filter.Fk_Subcategory && x.k_upd == Filter.User &&
-                (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) && (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+                (x.d_ins.Date >= DateIns.Start && x.d_ins.Date <= DateIns.End) && (x.d_upd.Date >= DateUpd.Start && x.d_upd.Date <= DateUpd.End)).ToList();
             }
             else if (Filter.Fk_Category != 0)
             {
@@ -124,7 +128,7 @@ namespace KGB_Dev_.Pages
             else
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category || x.Fk_Subcategory == Filter.Fk_Subcategory || x.k_upd == Filter.User ||
-              (x.d_ins >= DateIns.Start && x.d_ins <= DateIns.End) || (x.d_upd >= DateUpd.Start && x.d_upd <= DateUpd.End)).ToList();
+              (x.d_ins.Date >= DateIns.Start && x.d_ins.Date <= DateIns.End) || (x.d_upd.Date >= DateUpd.Start && x.d_upd.Date <= DateUpd.End)).ToList();
             }
         }
         public async Task CloseFilter()
