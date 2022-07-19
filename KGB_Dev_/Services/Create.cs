@@ -23,28 +23,27 @@ namespace KGB_Dev_.Services
             _context = context;
             _navigationManager = navigationManager;
             _mapper = mapper;
-            User = GetCurrentUser().Result;
+            User = GetCurrentUser();
         }
 
         public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile)
         {
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
-            result.Naziv_Oj = User.Result.Naziv_Oj;
-            result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Id;
-            result.k_name = User.Result.Ime + " " + User.Result.Prezime;
-            result.k_upd = User.Result.Id;
-            result.Sifra_Prijave = Model.Naziv_Prijave.Substring(0, 2) + User.Result.Ime.Substring(0, 2);
-            result.Putanja_Fajl = null;
+            _mapper.Map(User.Result, result);
             if (result != null)
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
-                if (ListOfFile.Count>=1)
+                if (ListOfFile.Count >= 1)
                 {
                     result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
                     _context.Update(result);
                     await _context.SaveChangesAsync();
+                }
+                if (result.Visibility == true)
+                {
+                    await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex"); });
+                    return true;
                 }
                 await Task.Run(() => { _navigationManager.NavigateTo(""); });
                 return true;
@@ -54,33 +53,28 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
-            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == Category.Naziv_Kategorije).FirstOrDefault();
+            _mapper.Map(User.Result, result);
+            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == result.Naziv_Kategorije && x.Sifra_Oj==result.Sifra_Oj).FirstOrDefault();
             if (Contains != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(false);
             }
-            result.Sifra_Oj = User.Result.Sifra_Oj;
-            result.k_ins = User.Result.Id;
-            result.k_upd = User.Result.Id;
             _context.Add(result);
-            // Check if savechanges > 0 to return valid value
             await _context.SaveChangesAsync();
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
         public async Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory)
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
-            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == SubCategory.Naziv_Potkategorije && x.Fk_Kategorija == SubCategory.Fk_Kategorija).FirstOrDefault();
+            _mapper.Map(User.Result, result);
+            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == result.Naziv_Potkategorije && x.Fk_Kategorija == result.Fk_Kategorija).FirstOrDefault();
             if (Contains != null)
             {
-                return await Task.FromResult(true);
+                return await Task.FromResult(false);
             }
-            result.k_ins = User.Result.Id;
-            result.k_upd = User.Result.Id;
             _context.Add(result);
-            //Check if savechanges > 0 to return valid value
             await _context.SaveChangesAsync();
-            return await Task.FromResult(false);
+            return await Task.FromResult(true);
         }
         public async Task<bool> EditKGBKnowledge(KGB_Knowledge KGB_Knowledge, IList<IBrowserFile> ListOfFile)
         {
@@ -100,11 +94,41 @@ namespace KGB_Dev_.Services
                         await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
                         return await Task.FromResult(true);
                     }
+                    await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                    return await Task.FromResult(true);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ModelExist(KGB_Knowledge.Id))
+                    {
+                        return await Task.FromResult(false);
+                    }
                     else
                     {
-                        await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                        throw;
+                    }
+                }
+            }
+            return await Task.FromResult(false);
+        }
+        public async Task<bool> DeleteKGBKnowledge(KGB_Knowledge KGB_Knowledge)
+        {
+            if (KGB_Knowledge != null)
+            {
+                try
+                {
+                    KGB_Knowledge.d_upd = DateTime.Now;
+                    KGB_Knowledge.k_upd = User.Result.Id;
+                    KGB_Knowledge.Active = false;
+                    _context.Update(KGB_Knowledge);
+                    await _context.SaveChangesAsync();
+                    if (KGB_Knowledge.Visibility == true)
+                    {
+                        await Task.Run(() => { _navigationManager.NavigateTo("PublicIndex", forceLoad: true); });
                         return await Task.FromResult(true);
                     }
+                    await Task.Run(() => { _navigationManager.NavigateTo("", forceLoad: true); });
+                    return await Task.FromResult(true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

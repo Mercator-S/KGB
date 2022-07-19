@@ -20,7 +20,7 @@ namespace KGB_Dev_.Pages.Dialog
         private async Task CreateCategory(KGB_CategoryViewModel Category)
         {
             var result = await ICreateServices.CreateCategory(Category);
-            if (!result)
+            if (result)
             {
                 Snackbar.Add($"Uspešno dodata potkategorija {Category.Naziv_Kategorije}", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));

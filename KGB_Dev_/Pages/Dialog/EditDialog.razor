@@ -6,11 +6,14 @@
             <MudCard Elevation="0">
                 <MudCardContent Style="max-height: 800px; overflow-y: scroll">
                     <MudGrid>
-                        <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
+                        <MudItem Class="py-8 d-flex flex-1">
                             <MudText>
                                 <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Model.k_name.Substring(0,1)</MudAvatar>
                                 @Model.k_name
                             </MudText>
+                        </MudItem>
+                        <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
+                            <MudButton OnClick="@(()=>DeleteKGB(Model))" Color="Color.Error" Size="Size.Small" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled">Izbrisi prijavu</MudButton>
                         </MudItem>
                     </MudGrid>
                     <MudItem>
@@ -124,8 +127,8 @@
                     </MudGrid>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" OnClick="@(()=>Cancel())" Size="Size.Large" Class="ml-auto">Zatvori</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" ButtonType="ButtonType.Submit" Class="ml-auto">Izmeni</MudButton>
+                    <MudButton Variant="Variant.Filled" Style="float:right" OnClick="@(()=>Cancel())" Color="Color.Error" Size="Size.Medium">Zatvori</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Medium" ButtonType="ButtonType.Submit" Class="ml-auto">Izmeni</MudButton>
                 </MudCardActions>
             </MudCard>
         </EditForm>

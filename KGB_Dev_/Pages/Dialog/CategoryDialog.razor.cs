@@ -22,7 +22,6 @@ namespace KGB_Dev_.Pages.Dialog
 
         protected override async Task OnInitializedAsync()
         {
-            var User = IGetServices.GetCurrentUser().Result;
             _CategoryViewModels = new List<KGB_CategoryViewModel>();
             _SubcategoryViewModels = new List<KGB_SubcategoryViewModel>();
             _categories = await IGetServices.GetCategory();

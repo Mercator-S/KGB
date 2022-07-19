@@ -28,7 +28,7 @@ namespace KGB_Dev_.Pages.Dialog
 
         protected override async Task OnInitializedAsync()
         {
-            User = await IGetServices.GetCurrentUser().Result;
+            User = await IGetServices.GetCurrentUser();
             Prijava = IGetServices.GetKnowledge(Sifra).Result;
             DatumUnosa = Prijava.d_ins.Date;
             DatumIzmene = Prijava.d_upd.Date;
