@@ -54,7 +54,7 @@ namespace KGB_Dev_.Pages
         }
         public void FilterDialog()
         {
-             HideFilter = !HideFilter;
+            HideFilter = !HideFilter;
         }
         private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
 
@@ -66,11 +66,15 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.Opis_Prijave.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
+            //Putanja fajla trenutno sadrzi samo id prijave tako da ne moze da se pretrazuje, nadji neko resenje ako moze ako ne videti kako raditi.
+            //if (element.Putanja_Fajl != "")
+            //{
+            //    if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            //        return true;
+            //}
             if (element.k_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.Putanja_Fajl} {element.k_name}".Contains(searchString))
+            if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_name}".Contains(searchString))
                 return true;
             return false;
         }
