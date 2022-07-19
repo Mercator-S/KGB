@@ -367,3 +367,5 @@ KGB_Dev_/Data/Migrations/20220614100916_UpdateRole.Designer.cs
 KGB_Dev_/Data/Migrations/20220614100916_UpdateRole.cs
 KGB_Dev_/Data/Migrations/20220614100634_MigrationRole.Designer.cs
 KGB_Dev_/Data/Migrations/20220614100634_MigrationRole.cs
+KGB_Dev_/Interfaces/ICreateServices.cs
+KGB_Dev_/Interfaces/IDataRetrivingServices.cs
