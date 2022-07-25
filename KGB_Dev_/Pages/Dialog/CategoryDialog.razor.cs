@@ -1,6 +1,6 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.DataRetrieving;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -10,7 +10,7 @@ namespace KGB_Dev_.Pages.Dialog
     partial class CategoryDialog
     {
         [CascadingParameter]
-        private MudDialogInstance MudDialog { get; set; }
+        private MudDialogInstance? MudDialog { get; set; }
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         private IEnumerable<KGB_Category> _categories;
@@ -26,13 +26,13 @@ namespace KGB_Dev_.Pages.Dialog
             _SubcategoryViewModels = new List<KGB_SubcategoryViewModel>();
             _categories = await IGetServices.GetCategory();
             _subCategory = await IGetServices.GetSubcategory();
-            foreach (var l in _subCategory)
+            foreach (KGB_Subcategory SubCat in _subCategory)
             {
-                _SubcategoryViewModels.Add(new KGB_SubcategoryViewModel { Id = l.Id, Naziv_Potkategorije = l.Naziv_Potkategorije, Fk_Kategorija = l.Fk_Kategorija });
+                _SubcategoryViewModels.Add(new KGB_SubcategoryViewModel { Id = SubCat.Id, Naziv_Potkategorije = SubCat.Naziv_Potkategorije, Fk_Kategorija = SubCat.Fk_Kategorija });
             }
-            foreach (var p in _categories)
+            foreach (KGB_Category Cat in _categories)
             {
-                _CategoryViewModels.Add(new KGB_CategoryViewModel { Id = p.Id, Naziv_Kategorije = p.Naziv_Kategorije, Subcategory = _SubcategoryViewModels.Where(x => x.Fk_Kategorija == p.Id).ToList() });
+                _CategoryViewModels.Add(new KGB_CategoryViewModel { Id = Cat.Id, Naziv_Kategorije = Cat.Naziv_Kategorije, Subcategory = _SubcategoryViewModels.Where(x => x.Fk_Kategorija == Cat.Id).ToList() });
             }
 
         }
@@ -43,7 +43,7 @@ namespace KGB_Dev_.Pages.Dialog
         }
         public async Task OpenDialogForSubcategory(KGB_CategoryViewModel model)
         {
-            var parameter = new DialogParameters { ["Category"] = model };
+            DialogParameters parameter = new DialogParameters { ["Category"] = model };
             bool result = await DialogService.Show<CreateSubcategoryDialog>("", parameter, dialogOptions).GetReturnValueAsync<bool>();
             if (result)
             {

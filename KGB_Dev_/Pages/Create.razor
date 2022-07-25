@@ -36,6 +36,30 @@
                     </MudGrid>
                     <MudGrid>
                         <MudItem xs="6" sm="6">
+                            <MudSelect ValueChanged="@(async (int k) => await GetListOfOrgJed(k))" Label="Organizacione jedinice prijave" Style="margin-top:20px;" AnchorOrigin="Origin.BottomCenter" Required="true">
+                                @foreach (KeyValuePair<int, string> a in OrganizacioneJedinice)
+                                {
+                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6" sm="6">
+                            @if (OrgJed != null)
+                            {
+                                <MudList>
+                                    @foreach (KeyValuePair<int, string> a in OrgJed)
+                                    {
+                                        <MudListItem Value="a.Key">
+                                            @a.Value
+                                            <MudIconButton OnClick="@(() => RemoveOrgJed(a.Key))" Icon="@Icons.Filled.Cancel" Color="@Color.Error"></MudIconButton>
+                                        </MudListItem>
+                                    }
+                                </MudList>
+                            }
+                        </MudItem>
+                    </MudGrid>
+                    <MudGrid>
+                        <MudItem xs="6" sm="6">
                             <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Label="Kategorija KGB prijave" Required="true" For="@(()=>Model.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                                 @foreach (KeyValuePair<int, string> a in Category)
                                 {

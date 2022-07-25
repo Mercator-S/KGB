@@ -1,5 +1,5 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.DataRetrieving;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -10,20 +10,20 @@ namespace KGB_Dev_.Pages.Dialog
     partial class IndexDialog
     {
         [CascadingParameter]
-        MudDialogInstance MudDialog { get; set; }
+        MudDialogInstance? MudDialog { get; set; }
         [Parameter]
         public long Sifra { get; set; }
-        public KGB_Knowledge Prijava { get; set; }
-        public KGB_User User { get; set; }
+        public KGB_Knowledge? Prijava { get; set; }
+        public KGB_User? User { get; set; }
         public DateTime? DatumUnosa { get; set; }
         public DateTime? DatumIzmene { get; set; }
-        public string Korisnik { get; set; }
+        public string? Korisnik { get; set; }
         List<string> FileNames = new List<string>();
-        public string FilePath { get; set; }
+        public string? FilePath { get; set; }
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Inject]
-        IJSRuntime JS { get; set; }
+        IJSRuntime? JS { get; set; }
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
 
         protected override async Task OnInitializedAsync()
@@ -56,7 +56,7 @@ namespace KGB_Dev_.Pages.Dialog
         }
         public async Task ShowEditDialog()
         {
-            var parameteres = new DialogParameters();
+            DialogParameters parameteres = new DialogParameters();
             parameteres.Add("Sifra", Sifra);
             DialogService.Show<EditDialog>("", parameteres, dialogOptions);
         }

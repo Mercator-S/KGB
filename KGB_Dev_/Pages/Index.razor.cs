@@ -1,9 +1,9 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.DataRetrieving;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using KGB_Dev_.Pages.Dialog;
 using KGB_Dev_.Data.KGB_ViewModel;
+using KGB_Dev_.Interfaces;
 
 namespace KGB_Dev_.Pages
 {
@@ -43,7 +43,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task TableDetailsDialog()
         {
-            var parameteres = new DialogParameters();
+            DialogParameters parameteres = new DialogParameters();
             parameteres.Add("Sifra", IdPrijave);
             DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
         }
