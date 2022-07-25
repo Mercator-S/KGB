@@ -1,5 +1,5 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.DataRetrieving;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;

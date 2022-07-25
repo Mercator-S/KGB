@@ -1,6 +1,6 @@
 ﻿using KGB_Dev_.Data;
 using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.DataRetrieving;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
@@ -16,7 +16,7 @@ namespace KGB_Dev_.Data_Retrieving
         private readonly NavigationManager _navigationManager;
         private KGB_User User { get; set; }
 
-        public DataRetriving(ApplicationDbContext? context, SignInManager<KGB_User> signInManager, UserManager<KGB_User> userManager, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
+        public DataRetriving(ApplicationDbContext? context, UserManager<KGB_User> userManager, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
         {
             _context = context;
             _UserManager = userManager;
@@ -34,7 +34,7 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Id == id).FirstOrDefault());
+            return await Task.FromResult(_context.KGB_Knowledge.FirstOrDefault(x => x.Id == id));
         }
         public async Task<KGB_User> GetCurrentUser()
         {
@@ -67,7 +67,7 @@ namespace KGB_Dev_.Data_Retrieving
         {
             string LocationDev = @"C:\KGB_Dev";
             //string Location = @"F:\KGB";
-            var path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
+            string path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
             //var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
@@ -94,12 +94,16 @@ namespace KGB_Dev_.Data_Retrieving
         public async Task<Dictionary<string, string>> GetUsersFromOj(int SifraOj)
         {
             Dictionary<string, string> users = new Dictionary<string, string>();
-            var result = await Task.FromResult(_context.KGB_Users.Where(x => x.Sifra_Oj == SifraOj).OrderBy(x => x.Ime).ToList());
-            foreach (var k in result)
+            List<KGB_User> result = await Task.FromResult(_context.KGB_Users.Where(x => x.Sifra_Oj == SifraOj).OrderBy(x => x.Ime).ToList());
+            foreach (KGB_User k in result)
             {
                 users.Add(k.Id, k.Ime + " " + k.Prezime);
             }
             return users;
+        }
+        public async Task<List<KGB_Oj>> GetListOfOrgJed()
+        {
+            return _context.KGB_OrgJed.ToList();
         }
 
         public async Task NavigationManager(string nav) => await Task.Run(() => { _navigationManager.NavigateTo(nav, forceLoad: true); });

@@ -1,7 +1,6 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.DataRetrieving;
-using KGB_Dev_.Services;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
@@ -13,7 +12,7 @@ namespace KGB_Dev_.Pages.Dialog
     partial class EditDialog
     {
         [CascadingParameter]
-        MudDialogInstance MudDialog { get; set; }
+        MudDialogInstance? MudDialog { get; set; }
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
         [Inject]
@@ -24,14 +23,14 @@ namespace KGB_Dev_.Pages.Dialog
         IJSRuntime JS { get; set; }
         [Parameter]
         public long Sifra { get; set; }
-        public KGB_Knowledge Model { get; set; }
+        public KGB_Knowledge? Model { get; set; }
         private List<KGB_Category> category;
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
         [Parameter]
         public int CountFiles { get; set; }
-        public string FilePath { get; set; }
+        public string? FilePath { get; set; }
         IList<IBrowserFile> files = new List<IBrowserFile>();
         List<string> FileNames = new List<string>();
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
@@ -44,18 +43,18 @@ namespace KGB_Dev_.Pages.Dialog
             subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
             category = await IGetServices.GetCategory();
             FilePath = Model.Putanja_Fajl;
-            foreach (var p in category)
+            foreach (KGB_Category Cat in category)
             {
-                Category.Add(p.Id, p.Naziv_Kategorije);
+                Category.Add(Cat.Id, Cat.Naziv_Kategorije);
             }
-            foreach (var k in subcategory)
+            foreach (KGB_Subcategory SubCat in subcategory)
             {
-                Subcategory.Add(k.Id, k.Naziv_Potkategorije);
+                Subcategory.Add(SubCat.Id, SubCat.Naziv_Potkategorije);
             }
         }
         private async Task EditKGB(KGB_Knowledge EditModel)
         {
-            var result = await ICreateServices.EditKGBKnowledge(Model, files);
+            bool result = await ICreateServices.EditKGBKnowledge(EditModel, files);
             if (result == true)
             {
                 Cancel();
@@ -67,20 +66,20 @@ namespace KGB_Dev_.Pages.Dialog
         }
         public async Task OpenCategoryDialog()
         {
-            var dialogResult = await DialogService.Show<CategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
+            bool dialogResult = await DialogService.Show<CategoryDialog>("", dialogOptions).GetReturnValueAsync<bool>();
             if (dialogResult == true)
             {
                 category = await IGetServices.GetCategory();
                 subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
                 Category = new Dictionary<int, string?>();
                 Subcategory = new Dictionary<int, string?>();
-                foreach (var p in category)
+                foreach (KGB_Category Cat in category)
                 {
-                    Category.Add(p.Id, p.Naziv_Kategorije);
+                    Category.Add(Cat.Id, Cat.Naziv_Kategorije);
                 }
-                foreach (var k in subcategory)
+                foreach (KGB_Subcategory SubCat in subcategory)
                 {
-                    Subcategory.Add(k.Id, k.Naziv_Potkategorije);
+                    Subcategory.Add(SubCat.Id, SubCat.Naziv_Potkategorije);
                 }
             }
         }
@@ -131,7 +130,7 @@ namespace KGB_Dev_.Pages.Dialog
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {
 
-            foreach (var file in e.GetMultipleFiles())
+            foreach (IBrowserFile file in e.GetMultipleFiles())
             {
                 if (FileNames.Contains(file.Name) || files.Contains(file))
                 {
@@ -150,7 +149,7 @@ namespace KGB_Dev_.Pages.Dialog
             FileNames.Remove(fileName);
             if (files.Count >= 1)
             {
-                var deleteItem = files.Where(x => x.Name == fileName).FirstOrDefault();
+                IBrowserFile? deleteItem = files.Where(x => x.Name == fileName).FirstOrDefault();
                 files.Remove(deleteItem);
             }
             foreach (var item in Files)
@@ -161,9 +160,9 @@ namespace KGB_Dev_.Pages.Dialog
                 }
             }
         }
-        private async Task DeleteKGB(KGB_Knowledge Model) 
+        private async Task DeleteKGB(KGB_Knowledge Model)
         {
-            var result = await ICreateServices.DeleteKGBKnowledge(Model);
+            bool result = await ICreateServices.DeleteKGBKnowledge(Model);
             if (result == true)
             {
                 Cancel();

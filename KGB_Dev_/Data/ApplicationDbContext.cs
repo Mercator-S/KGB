@@ -16,5 +16,6 @@ namespace KGB_Dev_.Data
         public DbSet<KGB_Role> KGB_Role => Set<KGB_Role>();
         public DbSet<KGB_Category> KGB_Category => Set<KGB_Category>();
         public DbSet<KGB_Subcategory> KGB_Subcategory => Set<KGB_Subcategory>();
+        public DbSet<KGB_OJKnowledge> KGB_OJKnowledge => Set<KGB_OJKnowledge>();
     }
 }

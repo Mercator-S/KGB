@@ -1,5 +1,5 @@
 ﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.DataRetrieving;
+using KGB_Dev_.Interfaces;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -22,7 +22,7 @@ namespace KGB_Dev_.Pages.Dialog
         protected override async Task OnInitializedAsync()
         {
             category = await IGetServices.GetCategory();
-            var UserOrg = category.Select(x => x.Sifra_Oj).FirstOrDefault();
+            int UserOrg = category.Select(x => x.Sifra_Oj).FirstOrDefault();
             Users = IGetServices.GetUsersFromOj(UserOrg).Result;
             DictionaryCategory.Add(0, "Izaberite kategoriju");
             DictionarySubcategory.Add(0, "Izaberite potkategoriju");

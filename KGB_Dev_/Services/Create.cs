@@ -8,25 +8,28 @@ using Microsoft.AspNetCore.Identity;
 using KGB_Dev_.Data_Retrieving;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using KGB_Dev_.Interfaces;
 
 namespace KGB_Dev_.Services
 {
-    public class Create : DataRetriving, ICreateServices
+    public class Create : ICreateServices
     {
         private readonly ApplicationDbContext? _context;
         private readonly NavigationManager _navigationManager;
         private readonly IMapper _mapper;
+        private IDataRetrivingServices _dataRetrivingServices;
         public Task<KGB_User> User { get; set; }
 
-        public Create(ApplicationDbContext? context, SignInManager<KGB_User> signInManager, UserManager<KGB_User> userManager, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager, IMapper mapper) : base(context, signInManager, userManager, authenticationStateProvider, navigationManager)
+        public Create(ApplicationDbContext? context, NavigationManager navigationManager, IMapper mapper, IDataRetrivingServices dataRetrivingServices)
         {
             _context = context;
             _navigationManager = navigationManager;
             _mapper = mapper;
-            User = GetCurrentUser();
+            _dataRetrivingServices = dataRetrivingServices;
+            User = _dataRetrivingServices.GetCurrentUser();
         }
 
-        public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile)
+        public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile, Dictionary<int, string?> OrgJed)
         {
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
             _mapper.Map(User.Result, result);
@@ -34,9 +37,20 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
+                if (OrgJed.Count >= 1)
+                {
+                    foreach (var item in OrgJed)
+                    {
+                        KGB_OJKnowledge oJKnowledge = new KGB_OJKnowledge();
+                        oJKnowledge.IdPrijave = result.Id;
+                        oJKnowledge.Sifra_Oj = item.Key;
+                        _context.KGB_OJKnowledge.Add(oJKnowledge);
+                        _context.SaveChanges();
+                    }
+                }
                 if (ListOfFile.Count >= 1)
                 {
-                    result.Putanja_Fajl = await UploadFile(result.Id.ToString(), ListOfFile);
+                    result.Putanja_Fajl = await _dataRetrivingServices.UploadFile(result.Id.ToString(), ListOfFile);
                     _context.Update(result);
                     await _context.SaveChangesAsync();
                 }
@@ -54,7 +68,7 @@ namespace KGB_Dev_.Services
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
             _mapper.Map(User.Result, result);
-            var Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == result.Naziv_Kategorije && x.Sifra_Oj==result.Sifra_Oj).FirstOrDefault();
+            KGB_Category? Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == result.Naziv_Kategorije && x.Sifra_Oj == result.Sifra_Oj).FirstOrDefault();
             if (Contains != null)
             {
                 return await Task.FromResult(false);
@@ -67,7 +81,7 @@ namespace KGB_Dev_.Services
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
             _mapper.Map(User.Result, result);
-            var Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == result.Naziv_Potkategorije && x.Fk_Kategorija == result.Fk_Kategorija).FirstOrDefault();
+            KGB_Subcategory? Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == result.Naziv_Potkategorije && x.Fk_Kategorija == result.Fk_Kategorija).FirstOrDefault();
             if (Contains != null)
             {
                 return await Task.FromResult(false);
@@ -84,7 +98,7 @@ namespace KGB_Dev_.Services
                 {
                     if (ListOfFile.Count >= 1)
                     {
-                        KGB_Knowledge.Putanja_Fajl = await UploadFile(KGB_Knowledge.Id.ToString(), ListOfFile);
+                        KGB_Knowledge.Putanja_Fajl = await _dataRetrivingServices.UploadFile(KGB_Knowledge.Id.ToString(), ListOfFile);
                     }
                     KGB_Knowledge.d_upd = DateTime.Now;
                     _context.Update(KGB_Knowledge);
