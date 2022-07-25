@@ -19,7 +19,7 @@ namespace KGB_Dev_.Pages
         ISnackbar Snackbar { get; set; } = default!;
         private List<KGB_Category> category;
         private List<KGB_Subcategory> subcategory;
-        private List<KGB_Oj> organizacioneJedinice;
+        private List<KGB_Oj?> organizacioneJedinice;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
         private Dictionary<int, string?> OrganizacioneJedinice = new Dictionary<int, string?>();
