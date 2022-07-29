@@ -1,9 +1,8 @@
-﻿using KGB_Dev_.Data.KGB_Model;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using KGB_Dev_.Pages.Dialog;
-using KGB_Dev_.Data.KGB_ViewModel;
 using KGB_Dev_.Interfaces;
+using KGB_Models.KGB_Model;
 
 namespace KGB_Dev_.Pages
 {

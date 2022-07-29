@@ -1,7 +1,6 @@
-﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.Interfaces;
+﻿using KGB_Dev_.Interfaces;
 using KGB_Dev_.Pages.Dialog;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
