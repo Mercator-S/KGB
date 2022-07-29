@@ -27,28 +27,31 @@ namespace KGB_Dev_.Pages
         KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         IList<IBrowserFile> files = new List<IBrowserFile>();
         Dictionary<int, string?> OrgJed = new Dictionary<int, string?>();
+        string OrgJedSearchValue;
         protected override async Task OnInitializedAsync()
         {
             category = await IGetServices.GetCategory();
-            organizacioneJedinice = await IGetServices.GetListOfOrgJed();
+            if (OrganizacioneJedinice.Count == 0)
+            {
+                organizacioneJedinice = await IGetServices.GetListOfOrgJed();
+                foreach (KGB_Oj orgJed in organizacioneJedinice)
+                {
+                    OrganizacioneJedinice.Add(orgJed.SifraOj, orgJed.NazivOj);
+                }
+            }
             Category = new();
             Subcategory = new();
             Category.Add(0, "Izaberite kategoriju");
             Subcategory.Add(0, "Izaberite potkategoriju");
-            OrganizacioneJedinice.Add(0, "Izaberite organizacionu jedinicu");
             foreach (var p in category)
             {
                 Category.Add(p.Id, p.Naziv_Kategorije);
-            }
-            foreach (KGB_Oj orgJed in organizacioneJedinice)
-            {
-                OrganizacioneJedinice.Add(orgJed.SifraOj, orgJed.NazivOj);
             }
         }
 
         private async Task CreateKGB(KGB_KnowledgeViewModel Model)
         {
-            await ICreateServices.CreateKGB(Model, files,OrgJed);
+            await ICreateServices.CreateKGB(Model, files, OrgJed);
             Snackbar.Add($"Uspešno dodata KGB prijava pod nazivom {Model.Naziv_Prijave}", Severity.Success);
         }
         public async Task OpenCategoryDialog()
@@ -96,11 +99,18 @@ namespace KGB_Dev_.Pages
                 files.Add(file);
             }
         }
-        public async Task GetListOfOrgJed(int SifraOrgJed)
+        private async Task<IEnumerable<string>> Search1(string value)
         {
-            if (SifraOrgJed >= 1 && !OrgJed.ContainsKey(SifraOrgJed))
+            if (string.IsNullOrEmpty(value))
+                return new string[0];
+            return (IEnumerable<string>)OrganizacioneJedinice.Values.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        }
+        public async Task GetListOfOrgJedString(string NazivOrgJed)
+        {
+            int SifraOrgJed = OrganizacioneJedinice.FirstOrDefault(x => x.Value == NazivOrgJed).Key;
+            if (!OrgJed.ContainsValue(NazivOrgJed))
             {
-                OrgJed.Add(SifraOrgJed, OrganizacioneJedinice[SifraOrgJed]);
+                OrgJed.Add(SifraOrgJed, NazivOrgJed);
             }
         }
         private async Task RemoveUploadFile(IBrowserFile file) => files.Remove(file);

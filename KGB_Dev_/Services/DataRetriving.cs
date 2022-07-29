@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace KGB_Dev_.Data_Retrieving
 {
@@ -28,9 +29,20 @@ namespace KGB_Dev_.Data_Retrieving
         {
             return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
-        public async Task<List<KGB_Knowledge>> GetListOfKnowledge(int OrgJed)
+        public async Task<List<KGB_Knowledge?>> GetListOfKnowledge(int OrgJed)
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Sifra_Oj == OrgJed && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
+            List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).ToList();
+            List<KGB_Knowledge?> result = new List<KGB_Knowledge?>();
+            foreach (KGB_OJKnowledge item in KGBoJKnowledge)
+            {
+                var newKGB = _context.KGB_Knowledge.Where(x => x.Id == item.IdPrijave && x.Visibility == false && x.Active == true).FirstOrDefault();
+                if (newKGB != null)
+                {
+                    result.Add(newKGB);
+                }
+            }
+            //return await Task.FromResult(_context.KGB_Knowledge.Where(x => KGBoJKnowledg && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
+            return result;
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {

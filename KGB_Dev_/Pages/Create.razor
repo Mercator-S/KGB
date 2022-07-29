@@ -4,7 +4,7 @@
 <PageTitle>Kreiranje KGB-a</PageTitle>
 
 <MudGrid Class="d-flex align-center justify-center">
-    <MudItem xs="8">
+    <MudItem xs="12" sm="12" lg="8">
         <EditForm Model="@Model" OnValidSubmit="(async () => await CreateKGB(Model))">
             <DataAnnotationsValidator />
             <MudCard>
@@ -16,7 +16,7 @@
                 <MudDivider />
                 <MudCardContent>
                     <MudGrid>
-                        <MudItem xs="6" sm="6">
+                        <MudItem xs="12" sm="12" lg="6">
                             <MudText Typo="@Typo.body2" Style="margin-left:10px;">Vidljivost prijave: </MudText>
                             <MudCheckBox For="@(() => Model.Visibility)" @bind-Checked=Model.Visibility Label="Javna prijava" Color="Color.Success" UnCheckedColor="Color.Default">
                                 <MudTooltip Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
@@ -35,26 +35,35 @@
                         </MudItem>
                     </MudGrid>
                     <MudGrid>
-                        <MudItem xs="6" sm="6">
-                            <MudSelect ValueChanged="@(async (int k) => await GetListOfOrgJed(k))" Label="Organizacione jedinice prijave" Style="margin-top:20px;" AnchorOrigin="Origin.BottomCenter" Required="true">
-                                @foreach (KeyValuePair<int, string> a in OrganizacioneJedinice)
-                                {
-                                    <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
-                                }
-                            </MudSelect>
+                        <MudItem xs="11" sm="11" lg="6">
+                            <MudAutocomplete Disabled="Model.Visibility" T="string" Label="Izabeite organizacionu jedinicu prijave" Value="OrgJedSearchValue" ValueChanged="@(async (string value) => await GetListOfOrgJedString(value))" SearchFunc="@Search1" AdornmentIcon="@Icons.Material.Filled.Search" />
                         </MudItem>
-                        <MudItem xs="6" sm="6">
+                        <MudItem xs="1" sm="1" lg="1" Style="padding-left:0px;padding-top:40px">
+                            <MudTooltip Delay="800" Duration="1000" Placement="Placement.Bottom" Arrow="true">
+                                <ChildContent>
+                                    <MudIcon Icon="@Icons.Outlined.Info" Style="margin-left:10px" Size="Size.Small" Color="Color.Warning" />
+                                </ChildContent>
+                                <TooltipContent>
+                                    <MudText Typo="Typo.body1">Javna prijava</MudText>
+                                    <MudText Typo="Typo.body2">
+                                        Selektovanjem "Javna prijava" omogucavate pristup prijavi svim korisnicima u drugim sektorima.
+                                        <br /> Takodje prijava je vidljiva i u internoj listi prijava.
+                                    </MudText>
+                                </TooltipContent>
+                            </MudTooltip>
+                        </MudItem>
+                        <MudItem Class="d-flex align-content-start flex-wrap flex-grow-1 gap-4" xs="12" sm="12" lg="5">
                             @if (OrgJed != null)
                             {
-                                <MudList>
-                                    @foreach (KeyValuePair<int, string> a in OrgJed)
-                                    {
-                                        <MudListItem Value="a.Key">
+                                @foreach (KeyValuePair<int, string> a in OrgJed)
+                                {
+                                    <MudText Class="mb-n3" Typo="Typo.body2">
+                                        <MudChip>
                                             @a.Value
-                                            <MudIconButton OnClick="@(() => RemoveOrgJed(a.Key))" Icon="@Icons.Filled.Cancel" Color="@Color.Error"></MudIconButton>
-                                        </MudListItem>
-                                    }
-                                </MudList>
+                                            <MudIconButton Disabled="Model.Visibility" OnClick="@(() => RemoveOrgJed(a.Key))" Size="Size.Small" Icon="@Icons.Filled.Cancel" Color="@Color.Error" />
+                                        </MudChip>
+                                    </MudText>
+                                }
                             }
                         </MudItem>
                     </MudGrid>

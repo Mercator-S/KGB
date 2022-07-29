@@ -11,7 +11,7 @@ namespace KGB_Dev_.Pages
     {
         [Inject]
         public IDataRetrivingServices IServices { get; set; } = default!;
-        private IEnumerable<KGB_Knowledge> ListOfKGB;
+        private IEnumerable<KGB_Knowledge?> ListOfKGB;
         private List<KGB_Category> category;
         private string searchString1 = "";
         private int UserSifraOj = 0;

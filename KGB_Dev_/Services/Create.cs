@@ -37,7 +37,7 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
-                if (OrgJed.Count >= 1)
+                if (OrgJed.Count >= 1 && result.Visibility == false)
                 {
                     foreach (var item in OrgJed)
                     {
