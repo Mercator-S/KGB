@@ -13,7 +13,6 @@ namespace KGB_Dev_.Pages
         public ICreateServices ICreateServices { get; set; } = default!;
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
-
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
         private List<KGB_Category> category;
@@ -50,6 +49,8 @@ namespace KGB_Dev_.Pages
 
         private async Task CreateKGB(KGB_KnowledgeViewModel Model)
         {
+            Model.Naziv_Kategorije = Category[Model.Fk_Category];
+            Model.Naziv_Potkategorije = Subcategory[Model.Fk_Subcategory];
             await ICreateServices.CreateKGB(Model, files, OrgJed);
             Snackbar.Add($"Uspešno dodata KGB prijava pod nazivom {Model.Naziv_Prijave}", Severity.Success);
         }

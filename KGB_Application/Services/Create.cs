@@ -33,6 +33,10 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
+                if (OrgJed.Count < 1)
+                {
+                    OrgJed.Add(result.Sifra_Oj, result.Naziv_Oj);
+                }
                 if (OrgJed.Count >= 1 && result.Visibility == false)
                 {
                     foreach (var item in OrgJed)

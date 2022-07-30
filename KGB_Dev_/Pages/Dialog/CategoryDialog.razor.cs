@@ -17,7 +17,6 @@ namespace KGB_Dev_.Pages.Dialog
         private IList<KGB_CategoryViewModel> _CategoryViewModels;
         private IList<KGB_SubcategoryViewModel> _SubcategoryViewModels;
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
-        public bool ShowSubcategory { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -60,10 +59,6 @@ namespace KGB_Dev_.Pages.Dialog
         public async Task Submit()
         {
             MudDialog.Close(DialogResult.Ok(true));
-        }
-        void Cancel()
-        {
-            MudDialog.Close(DialogResult.Ok(false));
         }
     }
 }

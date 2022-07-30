@@ -27,7 +27,6 @@ namespace KGB_Dev_.Pages.Dialog
         private List<KGB_Subcategory> subcategory;
         private Dictionary<int, string?> Category = new Dictionary<int, string?>();
         private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
-        [Parameter]
         public int CountFiles { get; set; }
         public string? FilePath { get; set; }
         IList<IBrowserFile> files = new List<IBrowserFile>();
@@ -38,7 +37,6 @@ namespace KGB_Dev_.Pages.Dialog
         {
             Model = await IGetServices.GetKnowledge(Sifra);
             FileNames = await IGetServices.GetFile(Model.Putanja_Fajl);
-            CountFiles = FileNames.Count();
             subcategory = await IGetServices.GetSubcategory(Model.Fk_Category);
             category = await IGetServices.GetCategory();
             FilePath = Model.Putanja_Fajl;

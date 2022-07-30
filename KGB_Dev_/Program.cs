@@ -24,7 +24,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowCloseIcon = true;
     config.SnackbarConfiguration.VisibleStateDuration = 3000;
     config.SnackbarConfiguration.HideTransitionDuration = 500;
-    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 2;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 }); ;
 

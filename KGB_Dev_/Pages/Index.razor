@@ -41,7 +41,7 @@
                 </MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
+                    <MudIconButton OnClick="@(() => TableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

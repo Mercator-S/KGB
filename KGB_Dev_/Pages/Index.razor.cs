@@ -13,43 +13,39 @@ namespace KGB_Dev_.Pages
         private IEnumerable<KGB_Knowledge?> ListOfKGB;
         private List<KGB_Category> category;
         private string searchString1 = "";
-        private int UserSifraOj = 0;
+        private KGB_User UserSifraOj;
         private KGB_TableFilter FilterModel = new KGB_TableFilter();
-        private Dictionary<string, string> FilterUsers = new Dictionary<string, string>();
-        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
+        private Dictionary<string, string?> FilterUsers = new Dictionary<string, string?>();
         private Dictionary<int, string?> DictionaryCategory = new Dictionary<int, string?>();
         private Dictionary<int, string?> DictionarySubcategory = new Dictionary<int, string?>();
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
-        [Parameter]
-        public long IdPrijave { get; set; }
         private bool HideFilter { get; set; } = true;
         DateRange DateIns = new DateRange(null, null);
         DateRange DateUpd = new DateRange(null, null);
 
         protected override async Task OnInitializedAsync()
         {
-            UserSifraOj = IServices.GetCurrentUser().Result.Sifra_Oj;
-            FilterUsers = IServices.GetUsersFromOj(UserSifraOj).Result;
-            category = await IServices.GetCategory();
+            UserSifraOj = await IServices.GetCurrentUser();
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             DictionaryCategory.Add(0, "Izaberite kategoriju");
             DictionarySubcategory.Add(0, "Izaberite potkategoriju");
-            foreach (var p in category)
+            foreach (KGB_Knowledge Kgb in ListOfKGB)
             {
-                Category.Add(p.Id, p.Naziv_Kategorije);
-                DictionaryCategory.Add(p.Id, p.Naziv_Kategorije);
+                if (!FilterUsers.ContainsKey(Kgb.k_ins))
+                {
+                    FilterUsers.Add(Kgb.k_ins, Kgb.k_name);
+                }
+                if (!DictionaryCategory.ContainsKey(Kgb.Fk_Category))
+                {
+                    DictionaryCategory.Add(Kgb.Fk_Category, Kgb.Naziv_Kategorije);
+                }
             }
-            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
         }
-        public async Task TableDetailsDialog()
+        public async Task TableDetailsDialog(long IdPrijave)
         {
             DialogParameters parameteres = new DialogParameters();
             parameteres.Add("Sifra", IdPrijave);
             DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
-        }
-        public async void ShowTableDetailsDialog(long SifraPrijave)
-        {
-            IdPrijave = SifraPrijave;
-            await TableDetailsDialog();
         }
         public void FilterDialog()
         {
@@ -65,12 +61,6 @@ namespace KGB_Dev_.Pages
                 return true;
             if (element.Opis_Prijave.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            //Putanja fajla trenutno sadrzi samo id prijave tako da ne moze da se pretrazuje, nadji neko resenje ako moze ako ne videti kako raditi.
-            //if (element.Putanja_Fajl != "")
-            //{
-            //    if (element.Putanja_Fajl.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            //        return true;
-            //}
             if (element.k_name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
             if ($"{element.Naziv_Prijave} {element.Opis_Prijave} {element.k_name}".Contains(searchString))
@@ -108,7 +98,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task Filter(KGB_TableFilter Filter)
         {
-            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             if (Filter.Fk_Category != 0 && Filter.Fk_Subcategory != 0 && Filter.User != null && DateIns.Start != null && DateUpd.Start != null)
             {
                 ListOfKGB = ListOfKGB.Where(x => x.Fk_Category == Filter.Fk_Category && x.Fk_Subcategory == Filter.Fk_Subcategory && x.k_upd == Filter.User &&
@@ -132,7 +122,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task CloseFilter()
         {
-            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             FilterModel = new KGB_TableFilter();
             DateIns = new DateRange(null, null);
             DateUpd = new DateRange(null, null);

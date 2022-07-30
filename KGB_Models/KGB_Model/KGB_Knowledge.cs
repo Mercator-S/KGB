@@ -14,6 +14,8 @@ namespace KGB_Models.KGB_Model
         public int Fk_Category { get; set; }
         [Range(1, 100000, ErrorMessage = "Izaberite potkategoriju prijave!")]
         public int Fk_Subcategory { get; set; }
+        public string? Naziv_Kategorije { get; set; }
+        public string? Naziv_Potkategorije { get; set; }
         public string? Sifra_Prijave { get; set; }
         [Required(ErrorMessage = "Unesite naziv prijave!")]
         public string? Naziv_Prijave { get; set; }
