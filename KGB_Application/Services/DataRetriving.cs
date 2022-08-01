@@ -30,18 +30,16 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge?>> GetListOfKnowledge(int OrgJed)
         {
-            List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).ToList();
-            List<KGB_Knowledge?> result = new List<KGB_Knowledge?>();
-            foreach (KGB_OJKnowledge item in KGBoJKnowledge)
+            List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
+            if (KGBoJKnowledge.Count >= 1)
             {
-                var newKGB = _context.KGB_Knowledge.Where(x => x.Id == item.IdPrijave && x.Visibility == false && x.Active == true).FirstOrDefault();
-                if (newKGB != null)
-                {
-                    result.Add(newKGB);
-                }
+                long MaxId = KGBoJKnowledge.Select(x => x.IdPrijave).Max();
+                long MinId = KGBoJKnowledge.Select(x => x.IdPrijave).Min();
+                List<KGB_Knowledge?> result = _context.KGB_Knowledge.Where(x => x.Id <= MaxId && x.Id >= MinId && x.Visibility == false && x.Active == true).ToList();
+                return result;
             }
-            //return await Task.FromResult(_context.KGB_Knowledge.Where(x => KGBoJKnowledg && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
-            return result;
+            return new List<KGB_Knowledge>();
+            //return await Task.FromResult(_context.KGB_Knowledge.Where(x => KGBoJKnowledge && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
@@ -94,13 +92,13 @@ namespace KGB_Dev_.Data_Retrieving
         {
             return await Task.FromResult(_context.KGB_Category.Where(x => x.Sifra_Oj == User.Sifra_Oj).OrderByDescending(x => x.Id).ToList());
         }
+        public async Task<List<KGB_Subcategory>> GetSubcategory()
+        {
+            return await Task.FromResult(_context.KGB_Subcategory.Where(x => x.Sifra_Oj == User.Sifra_Oj).OrderBy(x => x.Id).ToList());
+        }
         public async Task<List<KGB_Subcategory>> GetSubcategory(int category_id)
         {
             return await Task.FromResult(_context.KGB_Subcategory.Where(x => x.Fk_Kategorija == category_id).OrderByDescending(x => x.Id).ToList());
-        }
-        public async Task<List<KGB_Subcategory>> GetSubcategory()
-        {
-            return await Task.FromResult(_context.KGB_Subcategory.OrderBy(x => x.Id).ToList());
         }
         public async Task<Dictionary<string, string>> GetUsersFromOj(int SifraOj)
         {

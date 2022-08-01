@@ -10,6 +10,7 @@ namespace KGB_Models.KGB_Model
         public int Id { get; set; }
         public int Fk_Kategorija { get; set; }
         public string? Naziv_Potkategorije { get; set; }
+        public int Sifra_Oj { get; set; }
         public DateTime d_upd { get; set; } = DateTime.Now;
         public DateTime d_ins { get; set; }
         public string? k_ins { get; set; }

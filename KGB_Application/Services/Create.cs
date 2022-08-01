@@ -33,21 +33,7 @@ namespace KGB_Dev_.Services
             {
                 _context.Add(result);
                 await _context.SaveChangesAsync();
-                if (OrgJed.Count < 1)
-                {
-                    OrgJed.Add(result.Sifra_Oj, result.Naziv_Oj);
-                }
-                if (OrgJed.Count >= 1 && result.Visibility == false)
-                {
-                    foreach (var item in OrgJed)
-                    {
-                        KGB_OJKnowledge oJKnowledge = new KGB_OJKnowledge();
-                        oJKnowledge.IdPrijave = result.Id;
-                        oJKnowledge.Sifra_Oj = item.Key;
-                        _context.KGB_OJKnowledge.Add(oJKnowledge);
-                        _context.SaveChanges();
-                    }
-                }
+                await ValidationForOrgJed(OrgJed, result);
                 if (ListOfFile.Count >= 1)
                 {
                     result.Putanja_Fajl = await _dataRetrivingServices.UploadFile(result.Id.ToString(), ListOfFile);
@@ -64,6 +50,7 @@ namespace KGB_Dev_.Services
             }
             return false;
         }
+
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
@@ -113,7 +100,7 @@ namespace KGB_Dev_.Services
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModelExist(KGB_Knowledge.Id))
+                    if (!await ModelExist(KGB_Knowledge.Id))
                     {
                         return await Task.FromResult(false);
                     }
@@ -146,7 +133,7 @@ namespace KGB_Dev_.Services
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModelExist(KGB_Knowledge.Id))
+                    if (!await ModelExist(KGB_Knowledge.Id))
                     {
                         return await Task.FromResult(false);
                     }
@@ -158,9 +145,27 @@ namespace KGB_Dev_.Services
             }
             return await Task.FromResult(false);
         }
-        private bool ModelExist(long id)
+        private async Task<bool> ModelExist(long id)
         {
             return _context.KGB_Knowledge.Any(e => e.Id == id);
+        }
+        public async Task ValidationForOrgJed(Dictionary<int, string?> OrgJed, KGB_Knowledge result)
+        {
+            if (OrgJed.Count < 1)
+            {
+                OrgJed.Add(result.Sifra_Oj, result.Naziv_Oj);
+            }
+            if (OrgJed.Count >= 1 && result.Visibility == false)
+            {
+                foreach (var item in OrgJed)
+                {
+                    KGB_OJKnowledge oJKnowledge = new KGB_OJKnowledge();
+                    oJKnowledge.IdPrijave = result.Id;
+                    oJKnowledge.Sifra_Oj = item.Key;
+                    _context.KGB_OJKnowledge.Add(oJKnowledge);
+                    _context.SaveChanges();
+                }
+            }
         }
     }
 }
