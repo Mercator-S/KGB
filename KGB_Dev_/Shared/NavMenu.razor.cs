@@ -1,5 +1,7 @@
 ﻿using KGB_Dev_.Interfaces;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 
 namespace KGB_Dev_.Shared
 {
@@ -12,8 +14,8 @@ namespace KGB_Dev_.Shared
         public int Role { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            var a = IGetServices.GetCurrentUser().Result;
-            Role = a.Fk_Rola;
+            KGB_User User = IGetServices.GetCurrentUser().Result;
+            Role = User.Fk_Rola;
         }
 
     }

@@ -96,11 +96,14 @@ namespace KGB_Dev_.Pages
         {
             foreach (IBrowserFile file in e.GetMultipleFiles())
             {
-                if (file.Size <= 512000)
+                if ((file.Size/1024) <= 512000)
                 {
                     files.Add(file);
                 }
-                Snackbar.Add($"Nije moguce dodati file veci od 512 MB {file.Name}", Severity.Error);
+                else
+                {
+                    Snackbar.Add($"Nije moguce dodati file veci od 512 MB {file.Name}", Severity.Error);
+                }
             }
         }
         private async Task<IEnumerable<string>> Search1(string value)
