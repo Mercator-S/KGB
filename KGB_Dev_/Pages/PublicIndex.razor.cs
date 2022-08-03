@@ -1,8 +1,8 @@
-﻿using KGB_Dev_.Data.KGB_Model;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using KGB_Dev_.Pages.Dialog;
 using KGB_Dev_.Interfaces;
+using KGB_Models.KGB_Model;
 
 namespace KGB_Dev_.Pages
 {
@@ -13,8 +13,6 @@ namespace KGB_Dev_.Pages
         private IEnumerable<KGB_Knowledge> ListOfKGB;
         private string searchString1 = "";
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
-        [Parameter]
-        public long IdPrijave { get; set; }
         private KGB_TableFilter FilterModel = new KGB_TableFilter();
         private bool HideFilter { get; set; } = true;
         private Dictionary<int, string?> DictionarySifraOj = new Dictionary<int, string?>();
@@ -32,12 +30,7 @@ namespace KGB_Dev_.Pages
                 }
             }
         }
-        public async void Show(long SifraPrijave)
-        {
-            IdPrijave = SifraPrijave;
-            await ShowKGB();
-        }
-        public async Task ShowKGB()
+        public async Task TableDetailsDialog(long IdPrijave)
         {
             DialogParameters parameteres = new DialogParameters();
             parameteres.Add("Sifra", IdPrijave);

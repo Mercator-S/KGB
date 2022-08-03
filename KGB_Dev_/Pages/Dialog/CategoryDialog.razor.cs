@@ -1,6 +1,5 @@
-﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.Data.KGB_ViewModel;
-using KGB_Dev_.Interfaces;
+﻿using KGB_Dev_.Interfaces;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -18,7 +17,6 @@ namespace KGB_Dev_.Pages.Dialog
         private IList<KGB_CategoryViewModel> _CategoryViewModels;
         private IList<KGB_SubcategoryViewModel> _SubcategoryViewModels;
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
-        public bool ShowSubcategory { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -61,10 +59,6 @@ namespace KGB_Dev_.Pages.Dialog
         public async Task Submit()
         {
             MudDialog.Close(DialogResult.Ok(true));
-        }
-        void Cancel()
-        {
-            MudDialog.Close(DialogResult.Ok(false));
         }
     }
 }

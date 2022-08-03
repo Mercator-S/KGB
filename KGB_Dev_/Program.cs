@@ -1,13 +1,13 @@
 using AutoMapper;
 using KGB_Dev_.Areas.Identity;
 using KGB_Dev_.Data;
-using KGB_Dev_.Data.KGB_Model;
 using KGB_Dev_.Data.Profiles;
 using KGB_Dev_.Data_Retrieving;
 using KGB_Dev_.Interfaces;
 using KGB_Dev_.Services;
+using KGB_Models;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
@@ -24,7 +24,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowCloseIcon = true;
     config.SnackbarConfiguration.VisibleStateDuration = 3000;
     config.SnackbarConfiguration.HideTransitionDuration = 500;
-    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 2;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 }); ;
 

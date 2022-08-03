@@ -3,9 +3,9 @@
 #nullable disable
 using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;
 using KGB_Dev_.Data;
-using KGB_Dev_.Data.KGB_Model;
+using KGB_Models;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;

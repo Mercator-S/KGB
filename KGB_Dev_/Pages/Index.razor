@@ -1,6 +1,6 @@
 ﻿@inject IDialogService DialogService
 @page "/"
-@using KGB_Dev_.Data.KGB_Model
+@using KGB_Models.KGB_Model
 @using static System.Net.WebRequestMethods
 
 <PageTitle>KGB List</PageTitle>
@@ -41,7 +41,7 @@
                 </MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudIconButton OnClick="@(() => ShowTableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
+                    <MudIconButton OnClick="@(() => TableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

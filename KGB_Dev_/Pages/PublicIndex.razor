@@ -1,6 +1,6 @@
 ﻿@inject IDialogService DialogService
 @page "/PublicIndex"
-@using KGB_Dev_.Data.KGB_Model
+@using KGB_Models.KGB_Model
 @using static System.Net.WebRequestMethods
 
 <PageTitle>KGB Javna lista</PageTitle>
@@ -52,7 +52,7 @@
                 <MudTd DataLabel="Datum unosa">@context.d_ins.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Korisnik">@context.k_name</MudTd>
                 <MudTd>
-                    <MudIconButton OnClick="@(() => Show(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
+                    <MudIconButton OnClick="@(() => TableDetailsDialog(context.Id))" Icon="@Icons.Filled.MoreHoriz" Color="@Color.Success"></MudIconButton>
                 </MudTd>
             </RowTemplate>
             <PagerContent>

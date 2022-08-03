@@ -1,5 +1,5 @@
-﻿using KGB_Dev_.Data.KGB_Model;
-using KGB_Dev_.Interfaces;
+﻿using KGB_Dev_.Interfaces;
+using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
