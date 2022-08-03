@@ -30,16 +30,15 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<List<KGB_Knowledge?>> GetListOfKnowledge(int OrgJed)
         {
-            List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).OrderByDescending(x => x.Id).ToList();
+            List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).ToList();
             if (KGBoJKnowledge.Count >= 1)
             {
                 long MaxId = KGBoJKnowledge.Select(x => x.IdPrijave).Max();
                 long MinId = KGBoJKnowledge.Select(x => x.IdPrijave).Min();
-                List<KGB_Knowledge?> result = _context.KGB_Knowledge.Where(x => x.Id <= MaxId && x.Id >= MinId && x.Visibility == false && x.Active == true).ToList();
+                List<KGB_Knowledge?> result = _context.KGB_Knowledge.Where(x => x.Id <= MaxId && x.Id >= MinId && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList();
                 return result;
             }
             return new List<KGB_Knowledge>();
-            //return await Task.FromResult(_context.KGB_Knowledge.Where(x => KGBoJKnowledge && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList());
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
@@ -77,7 +76,7 @@ namespace KGB_Dev_.Data_Retrieving
             string LocationDev = @"C:\KGB_Dev";
             //string Location = @"F:\KGB";
             string path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
-            //var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
+            var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
             foreach (var p in ListOfFile.ToList())
