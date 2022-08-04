@@ -73,10 +73,10 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            string LocationDev = @"C:\KGB_Dev";
-           // string Location = @"F:\KGB";
-           string path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
-            //var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
+            //string LocationDev = @"C:\KGB_Dev";
+           string Location = @"F:\KGB";
+           //string path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
+            var path = Path.Combine(Location,  User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
             foreach (var p in ListOfFile.ToList())
