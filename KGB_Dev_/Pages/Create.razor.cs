@@ -94,13 +94,23 @@ namespace KGB_Dev_.Pages
         }
         private async Task UploadFiles(InputFileChangeEventArgs e)
         {
-            foreach (IBrowserFile file in e.GetMultipleFiles())
+            if (e.FileCount > 10 || files.Count >= 10)
             {
-                if (file.Size <= 512000)
+                Snackbar.Add($"Nije moguće dodati više 10 file-ova", Severity.Error);
+            }
+            else
+            {
+                foreach (IBrowserFile file in e.GetMultipleFiles())
                 {
-                    files.Add(file);
+                    if ((file.Size / 1024) <= 512000)
+                    {
+                        files.Add(file);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Nije moguće dodati file veći od 512 MB {file.Name}", Severity.Error);
+                    }
                 }
-                Snackbar.Add($"Nije moguce dodati file veci od 512 MB {file.Name}", Severity.Error);
             }
         }
         private async Task<IEnumerable<string>> Search1(string value)
@@ -112,9 +122,17 @@ namespace KGB_Dev_.Pages
         public async Task GetListOfOrgJedString(string NazivOrgJed)
         {
             int SifraOrgJed = OrganizacioneJedinice.FirstOrDefault(x => x.Value == NazivOrgJed).Key;
-            if (!OrgJed.ContainsValue(NazivOrgJed))
+            if (!OrgJed.ContainsValue(NazivOrgJed) && OrgJed.Count <= 10)
             {
                 OrgJed.Add(SifraOrgJed, NazivOrgJed);
+            }
+            else if (OrgJed.Count >= 10)
+            {
+                Snackbar.Add($"Nije moguće dodati više od 10 organizacionih jedinica!", Severity.Error);
+            }
+            else
+            {
+                Snackbar.Add($"Organizaciona jedinica {NazivOrgJed} već dodata", Severity.Error);
             }
         }
         private async Task RemoveUploadFile(IBrowserFile file) => files.Remove(file);
