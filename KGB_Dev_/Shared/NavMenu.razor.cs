@@ -11,11 +11,10 @@ namespace KGB_Dev_.Shared
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Parameter]
-        public int Role { get; set; }
+        public KGB_User User { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            KGB_User User = IGetServices.GetCurrentUser().Result;
-            Role = User.Fk_Rola;
+             User = IGetServices.GetCurrentUser().Result;
         }
 
     }

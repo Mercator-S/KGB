@@ -1,9 +1,14 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">KGB Dev</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="container">
+        <div class="col">
+            <a class="navbar-brand" style="color:white;" href="">
+                <img src="/Mercator.png" width="30px" height="30px" />
+                KBase beta
+            </a>
+            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -20,7 +25,7 @@
         </div>
         <AuthorizeView>
             <Authorized>
-                @if (Role == 3)
+                @if (User.Fk_Rola == 3 || User.Id == "9508f023-5a3b-4c54-ab5c-a338d2c4a000")
                 {
                     <div class="nav-item px-3">
                         <MudNavLink Href="register" Icon="@Icons.Filled.PersonAdd" IconColor="Color.Inherit">Register</MudNavLink>

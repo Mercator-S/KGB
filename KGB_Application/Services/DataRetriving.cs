@@ -1,4 +1,5 @@
-﻿using KGB_Dev_.Interfaces;
+﻿using AutoMapper;
+using KGB_Dev_.Interfaces;
 using KGB_Models;
 using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
@@ -14,21 +15,24 @@ namespace KGB_Dev_.Data_Retrieving
         private readonly UserManager<KGB_User> _UserManager;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly NavigationManager _navigationManager;
+        private readonly IMapper _mapper;
         private KGB_User User { get; set; }
 
-        public DataRetriving(ApplicationDbContext? context, UserManager<KGB_User> userManager, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
+        public DataRetriving(ApplicationDbContext? context, UserManager<KGB_User> userManager, IMapper mapper, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
         {
             _context = context;
             _UserManager = userManager;
             _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
             User = GetCurrentUser().Result;
+            _mapper = mapper;
         }
-        public async Task<List<KGB_Knowledge>> GetPublicListOfKnowledge()
+        public async Task<List<KGB_KnowledgeViewModel>> GetPublicListOfKnowledge()
         {
-            return await Task.FromResult(_context.KGB_Knowledge.Where(x => x.Visibility == true && x.Active == true).OrderByDescending(x => x.Id).ToList());
+            List<KGB_Knowledge> result = _context.KGB_Knowledge.Where(x => x.Visibility == true && x.Active == true).OrderByDescending(x => x.Id).ToList();
+            return _mapper.Map<List<KGB_Knowledge?>, List<KGB_KnowledgeViewModel>>(result);
         }
-        public async Task<List<KGB_Knowledge?>> GetListOfKnowledge(int OrgJed)
+        public async Task<List<KGB_KnowledgeViewModel?>> GetListOfKnowledge(int OrgJed)
         {
             List<KGB_OJKnowledge> KGBoJKnowledge = _context.KGB_OJKnowledge.Where(x => x.Sifra_Oj == OrgJed).ToList();
             if (KGBoJKnowledge.Count >= 1)
@@ -36,9 +40,9 @@ namespace KGB_Dev_.Data_Retrieving
                 long MaxId = KGBoJKnowledge.Select(x => x.IdPrijave).Max();
                 long MinId = KGBoJKnowledge.Select(x => x.IdPrijave).Min();
                 List<KGB_Knowledge?> result = _context.KGB_Knowledge.Where(x => x.Id <= MaxId && x.Id >= MinId && x.Visibility == false && x.Active == true).OrderByDescending(x => x.Id).ToList();
-                return result;
+                return _mapper.Map<List<KGB_Knowledge?>, List<KGB_KnowledgeViewModel>>(result);
             }
-            return new List<KGB_Knowledge>();
+            return new List<KGB_KnowledgeViewModel>();
         }
         public async Task<KGB_Knowledge> GetKnowledge(long id)
         {
