@@ -1,18 +1,13 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 using System.Net.Mail;
 using System.Text;
-using KGB_Dev_.Data;
 using KGB_Models;
 using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using MudBlazor;
 
 namespace KGB_Dev_.Areas.Identity.Pages.Account
 {
@@ -41,23 +36,25 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
         }
         [BindProperty]
         public KGB_User Input { get; set; }
-        public Dictionary<int, string> ListOfOrg { get; set; }
-        public Dictionary<int, string> ListOfRola { get; set; }
+        public Dictionary<int, string> ListOfOrg = new Dictionary<int, string>();
+        public Dictionary<int, string> ListOfRola = new Dictionary<int, string>();
+        public List<KGB_Oj> OrgJed { get; set; }
+        public List<KGB_Role> Rola { get; set; }
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
-            ListOfOrg = new Dictionary<int, string>();
-            ListOfRola = new Dictionary<int, string>();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            foreach (var a in _context.KGB_OrgJed)
+            OrgJed = _context.KGB_OrgJed.ToList();
+            Rola = _context.KGB_Role.ToList();
+            for (int i = 0; i < OrgJed.Count; i++)
             {
-                ListOfOrg.Add(a.SifraOj, a.NazivOj);
+                ListOfOrg.Add(OrgJed[i].SifraOj, OrgJed[i].NazivOj);
             }
-            foreach (var role in _context.KGB_Role)
+            for (int i = 0; i < Rola.Count; i++)
             {
-                ListOfRola.Add(role.Sifra_Role, role.Naziv_Role);
+                ListOfRola.Add(Rola[i].Sifra_Role, Rola[i].Naziv_Role);
 
             }
         }
@@ -93,15 +90,15 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             else
             {
                 ModelState.AddModelError(string.Empty, "Neispravna ili vec korišćena email adresa!");
-                ListOfOrg = new Dictionary<int, string>();
-                ListOfRola = new Dictionary<int, string>();
-                foreach (var a in _context.KGB_OrgJed)
+                OrgJed = _context.KGB_OrgJed.ToList();
+                Rola = _context.KGB_Role.ToList();
+                for (int i = 0; i < OrgJed.Count; i++)
                 {
-                    ListOfOrg.Add(a.SifraOj, a.NazivOj);
+                    ListOfOrg.Add(OrgJed[i].SifraOj, OrgJed[i].NazivOj);
                 }
-                foreach (var role in _context.KGB_Role)
+                for (int i = 0; i < Rola.Count; i++)
                 {
-                    ListOfRola.Add(role.Sifra_Role, role.Naziv_Role);
+                    ListOfRola.Add(Rola[i].Sifra_Role, Rola[i].Naziv_Role);
 
                 }
                 return Page();
@@ -180,7 +177,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             SmtpClient SmtpServer = new SmtpClient("smtp.agrokor.hr", 25);
 
             mail.From = new MailAddress("Kbase@mercator.rs");
-            //mail.CC.Add("it.centralne.aplikacije@mercator.rs");
+            mail.CC.Add("it.centralne.aplikacije@mercator.rs");
             //mail.Bcc.Add("");
             mail.To.Add(Email);
             mail.Subject = "Otvaranje naloga za KBase";

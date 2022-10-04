@@ -122,16 +122,14 @@ namespace KGB_Dev_.Pages
         }
         public async Task CloseFilter()
         {
-            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
-            FilterModel = new KGB_TableFilter();
-            DateIns = new DateRange(null, null);
-            DateUpd = new DateRange(null, null);
             HideFilter = !HideFilter;
         }
         public async Task ResetFilter()
         {
-            //ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             FilterModel = new KGB_TableFilter();
+            DictionarySubcategory = new();
+            DictionarySubcategory.Add(0, "Izaberite potkategoriju");
             DateIns = new DateRange(null, null);
             DateUpd = new DateRange(null, null);
         }

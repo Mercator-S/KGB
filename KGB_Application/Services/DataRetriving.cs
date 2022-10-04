@@ -68,9 +68,9 @@ namespace KGB_Dev_.Data_Retrieving
             if (exist)
             {
                 string[] FileName = Directory.GetFiles(path);
-                foreach (string name in FileName)
+                for(int i = 0; i < FileName.Length; i++)
                 {
-                    FileNames.Add(Path.GetFileName(name));
+                    FileNames.Add(Path.GetFileName(FileName[i]));
                 }
             }
             return await Task.FromResult(FileNames);
@@ -83,11 +83,11 @@ namespace KGB_Dev_.Data_Retrieving
             var path = Path.Combine(Location, User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";
-            foreach (var p in ListOfFile.ToList())
+            for (int i = 0; i < ListOfFile.ToList().Count; i++)
             {
-                await using FileStream fs = new(path + "\\\\" + p.Name, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-                pathName = await Task.FromResult(fs.Name.Remove((fs.Name.Length - p.Name.Length), p.Name.Length));
-                await p.OpenReadStream().CopyToAsync(fs);
+                await using FileStream fs = new(path + "\\\\" + ListOfFile[i].Name, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                pathName = await Task.FromResult(fs.Name.Remove((fs.Name.Length - ListOfFile[i].Name.Length), ListOfFile[i].Name.Length));
+                await ListOfFile[i].OpenReadStream().CopyToAsync(fs);
             }
             return pathName;
         }
@@ -107,9 +107,9 @@ namespace KGB_Dev_.Data_Retrieving
         {
             Dictionary<string, string> users = new Dictionary<string, string>();
             List<KGB_User> result = await Task.FromResult(_context.KGB_Users.Where(x => x.Sifra_Oj == SifraOj).OrderBy(x => x.Ime).ToList());
-            foreach (KGB_User k in result)
+            for (int i = 0; i < result.Count; i++)
             {
-                users.Add(k.Id, k.Ime + " " + k.Prezime);
+                users.Add(result[i].Id, result[i].Ime + " " + result[i].Prezime);
             }
             return users;
         }
