@@ -3,11 +3,11 @@
 @using KGB_Models.KGB_Model
 @using static System.Net.WebRequestMethods
 
-<PageTitle>KGB List</PageTitle>
+<PageTitle>KBase Interna lista</PageTitle>
 
 <MudGrid Class="d-flex justify-center">
     <MudItem xs="9">
-        <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_Knowledge,bool>(SearchTable1)">
+        <MudTable Items="@ListOfKGB" Dense="true" Hover="true" Striped="true" Filter="new Func<KGB_KnowledgeViewModel,bool>(SearchTable1)">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Interna lista</MudText>
                 <MudSpacer />
@@ -19,7 +19,8 @@
             </ToolBarContent>
             <HeaderContent>
                 <MudTh Style="color:white;background-color:#dc3545">Naziv prijave</MudTh>
-                <MudTh Style="color:white;background-color:#dc3545"><MudTableSortLabel SortBy="new Func<KGB_Knowledge, object>(x=>x.d_ins)">Datum unosa</MudTableSortLabel></MudTh>
+                <MudTh Style="color:white;background-color:#dc3545">Kategorija prijave</MudTh>
+                <MudTh Style="color:white;background-color:#dc3545"><MudTableSortLabel SortBy="new Func<KGB_KnowledgeViewModel, object>(x=>x.d_ins)">Datum unosa</MudTableSortLabel></MudTh>
                 <MudTh Style="color:white;background-color:#dc3545">Korisnik</MudTh>
                 <MudTh Style="color:white;background-color:#dc3545"></MudTh>
             </HeaderContent>
@@ -36,6 +37,9 @@
                         @context.Naziv_Prijave
                     }
                 </MudTd>
+                <MudTd DataLabel="Kategorija prijave">
+                    @context.Naziv_Kategorije
+                </MudTd>
                 <MudTd DataLabel="Datum unosa">
                     @context.d_ins.ToString("dd/MM/yyyy")
                 </MudTd>
@@ -49,7 +53,6 @@
             </PagerContent>
         </MudTable>
     </MudItem>
-
     <MudItem xs="3" hidden="@HideFilter">
         <MudCard>
             <MudCardHeader>
@@ -68,17 +71,17 @@
                         <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Value="FilterModel.Fk_Category" Label="Kategorija KGB prijave" For="@(()=>FilterModel.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                             @foreach (KeyValuePair<int, string> a in DictionaryCategory)
                             {
-                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                <MudSelectItem T="int" Value="a.Key" Disabled="(a.Key==0?true:false)">@a.Value</MudSelectItem>
                             }
                         </MudSelect>
                     </MudItem>
                 </MudGrid>
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                        <MudSelect T="int" Label="Potkategorija KGB prijave" Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                             @foreach (KeyValuePair<int, string> a in DictionarySubcategory)
                             {
-                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                <MudSelectItem T="int" Value="a.Key" Disabled="(a.Key==0?true:false)">@a.Value</MudSelectItem>
                             }
                         </MudSelect>
                     </MudItem>

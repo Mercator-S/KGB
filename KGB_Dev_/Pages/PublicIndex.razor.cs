@@ -10,7 +10,7 @@ namespace KGB_Dev_.Pages
     {
         [Inject]
         public IDataRetrivingServices IServices { get; set; } = default!;
-        private IEnumerable<KGB_Knowledge> ListOfKGB;
+        private IEnumerable<KGB_KnowledgeViewModel> ListOfKGB;
         private string searchString1 = "";
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         private KGB_TableFilter FilterModel = new KGB_TableFilter();
@@ -36,9 +36,9 @@ namespace KGB_Dev_.Pages
             parameteres.Add("Sifra", IdPrijave);
             DialogService.Show<IndexDialog>("", parameteres, dialogOptions);
         }
-        private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
+        private bool SearchTable1(KGB_KnowledgeViewModel element) => SearchTable(element, searchString1);
 
-        private bool SearchTable(KGB_Knowledge element, string searchString)
+        private bool SearchTable(KGB_KnowledgeViewModel element, string searchString)
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;

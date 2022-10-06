@@ -1,26 +1,41 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>KGB_Dev_</PageTitle>
+<PageTitle>KBaseBeta</PageTitle>
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-<div class="page">
-    <AuthorizeView>
-        <Authorized>
-            <div class="sidebar">
+
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="4" Style="@($"color:{Colors.Grey.Lighten5}; background:#dc3545;")">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Style="@($"color:{Colors.Grey.Lighten5};")" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <MudText Typo="Typo.h6" Class="ml-3">
+                    KBase Beta
+                </MudText>
+                   <MudSpacer />
+                <MudForm method="post" action="Identity/Account/LogOut">
+                    <MudFab  Size="Size.Small" StartIcon="@Icons.Filled.Logout" Label="Odjava"  Color="Color.Warning" ButtonType="ButtonType.Submit"/>
+                </MudForm>
+            </MudAppBar>
+            <MudDrawer @bind-Open="_drawerOpen" Style="background-color:#F6F6F6 !important" ClipMode="DrawerClipMode.Always" Elevation="4">
                 <NavMenu />
-            </div>
-            <main>
-                <div class="top-row px-4 auth">
-                    <LoginDisplay />
-                </div>
-                <article class="content px-4">
-                    @Body
-                </article>
-            </main>
-        </Authorized>
-        <NotAuthorized>
-            <KGB_Dev_.Pages.LoginRedirect/>
-        </NotAuthorized>
-    </AuthorizeView>
-</div>
+            </MudDrawer>
+            <MudMainContent>
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        <KGB_Dev_.Pages.LoginRedirect/>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

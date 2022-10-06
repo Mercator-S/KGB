@@ -1,73 +1,72 @@
 ﻿@inject IDialogService DialogService
 <MudDialog>
     <DialogContent>
-        <MudGrid>
-            <MudItem Class="py-8 d-flex flex-1">
-                <MudText Typo="Typo.h5">@Prijava.Naziv_Prijave</MudText>
-            </MudItem>
-            <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
-                <MudText>
-                    <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Prijava.k_name.Substring(0,1)</MudAvatar>
-                    @Prijava.k_name
-                </MudText>
-            </MudItem>
-        </MudGrid>
-        <MudItem>
-            <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>
-        </MudItem>
-        <MudGrid>
-            <MudItem>
-                <MudText Typo="Typo.body2" GutterBottom="true">@Prijava.Opis_Prijave</MudText>
-            </MudItem>
-        </MudGrid>
-        <MudDivider />
-        <MudGrid>
-            <MudItem xs="9">
-                <MudList Dense="true" DisableGutters="true">
-                    @if (FileNames.Count < 1)
-                    {
-                        <MudListSubheader DisableGutters="true">
-                            <MudItem xs="6">
-                                <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema file-ova za ovu prijavu!</MudAlert>
-                            </MudItem>
-                        </MudListSubheader>
-                    }
-                    else
-                    {
-                        <MudListSubheader DisableGutters="true" Style="color:#424242ff">
-                            Lista fajlova:
-                        </MudListSubheader>
-                        @foreach (string name in FileNames)
+        <MudContainer Style="max-height: 800px;  overflow-y: scroll">
+            <MudGrid>
+                <MudItem Class="py-8 d-flex flex-1">
+                    <MudText Typo="Typo.h5">@Prijava.Naziv_Prijave</MudText>
+                </MudItem>
+                <MudItem Class="py-8 d-flex" Style="align-items:flex-end">
+                    <MudText>
+                        <MudAvatar Size="Size.Small" Style="background-color:#dc3545">@Prijava.k_name.Substring(0,1)</MudAvatar>
+                        @Prijava.k_name
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+            <MudGrid Class="d-flex justify-center">
+                <MudItem>
+                    <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField T="string" ReadOnly="true" Value="@Prijava.Opis_Prijave" Lines="@Lines" Counter="1500" MaxLength="1500">
+                        @Prijava.Opis_Prijave
+                    </MudTextField>
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem>
+                    <MudList Dense="true" DisableGutters="true">
+                        @if (FileNames.Count < 1)
                         {
-                            <MudListItem>
-                                <MudText>
-                                    <MudIcon Icon="@Icons.Filled.AttachFile" Color="Color.Info" />
-                                    <MudLink Color="Color.Inherit" Href="" @onclick="@(() => Open(name))">
-                                        @name
-                                    </MudLink>
-                                    <MudIconButton Icon="@Icons.Filled.Download" OnClick="@(() => DownloadFile(name))" Color="Color.Success" Size="Size.Small" />
-                                </MudText>
-                            </MudListItem>
+                            <MudListSubheader DisableGutters="true">
+                                <MudItem>
+                                    <MudAlert Severity="Severity.Info" Dense="true" Class="my-2">Trenutno nema file-ova za ovu prijavu!</MudAlert>
+                                </MudItem>
+                            </MudListSubheader>
                         }
-                    }
-                </MudList>
-            </MudItem>
-        </MudGrid>
-        <MudGrid>
-            <MudItem xs="3">
-                <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
-            </MudItem>
-            <MudItem xs="3">
-                <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
-            </MudItem>
-        </MudGrid>
+                        else
+                        {
+                            <MudListSubheader DisableGutters="true" Style="color:#424242ff">
+                                Lista fajlova:
+                            </MudListSubheader>
+                            @foreach (string name in FileNames)
+                            {
+                                <MudListItem>
+                                    <MudText Typo="Typo.body2">
+                                        <MudIcon Size="Size.Small" Icon="@Icons.Filled.AttachFile" Color="Color.Info" />
+                                        @name
+                                        <MudIconButton Icon="@Icons.Filled.Download" OnClick="@(() => DownloadFile(name))" Color="Color.Success" Size="Size.Small" />
+                                    </MudText>
+                                </MudListItem>
+                            }
+                        }
+                    </MudList>
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="3">
+                    <MudTextField Label="Datum Unosa" @bind-Value="DatumUnosa" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+                </MudItem>
+                <MudItem xs="3">
+                    <MudTextField Label="Datum Izmene" @bind-Value="DatumIzmene" ReadOnly="true" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CalendarMonth" />
+                </MudItem>
+            </MudGrid>
+        </MudContainer>
     </DialogContent>
     <DialogActions>
-        @if (User.Fk_Rola == 2 && Prijava.Sifra_Oj == User.Sifra_Oj)
-        {
-            <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
-        }
-        else if (Prijava.k_ins == User.Id)
+        @if (User.Fk_Rola == 2 && Prijava.Sifra_Oj == User.Sifra_Oj || Prijava.k_ins == User.Id)
         {
             <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
         }

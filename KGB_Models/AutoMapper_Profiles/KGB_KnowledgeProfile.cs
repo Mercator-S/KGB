@@ -14,7 +14,9 @@ namespace KGB_Dev_.Data.Profiles
         .ForMember(dest => dest.d_upd,
                opt => opt.MapFrom(src => DateTime.Now))
         .ForMember(dest => dest.Sifra_Prijave,
-               opt => opt.MapFrom(src => src.Naziv_Prijave.Substring(0, 2)+rd.Next(100,999)));
+               opt => opt.MapFrom(src => src.Naziv_Prijave.Substring(0, 2) + rd.Next(100, 999)));
+
+            CreateMap<KGB_Knowledge, KGB_KnowledgeViewModel>();
 
             CreateMap<KGB_User, KGB_Knowledge>()
             .ForMember(dest => dest.Id,

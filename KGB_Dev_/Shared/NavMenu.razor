@@ -1,46 +1,34 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">KGB Dev</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using KGB_Dev_.Interfaces;
+@using KGB_Models.KGB_Model;
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Filled.ViewList" IconColor="Color.Inherit">Interna lista</MudNavLink>
-        </div>
-        <div class="nav-item px-3">
-            <MudNavLink Href="PublicIndex" Match="NavLinkMatch.All" Icon="@Icons.Filled.ListAlt" IconColor="Color.Inherit">Javna lista</MudNavLink>
-        </div>
-        <div class="nav-item px-3">
-            <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
-        </div>
-        <AuthorizeView>
-            <Authorized>
-                @if (Role == 3)
-                {
-                    <div class="nav-item px-3">
-                        <MudNavLink Href="register" Icon="@Icons.Filled.PersonAdd" IconColor="Color.Inherit">Register</MudNavLink>
-                    </div>
-                }
-                @* @if (Role == 1)
-                {
-                <div class="nav-item px-3">
-                <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
-                </div>
-                }*@
-            </Authorized>
-        </AuthorizeView>
-    </nav>
-</div>
+<MudNavMenu Rounded="true" Margin="Margin.Dense" Color=Color.Inherit Class="pa-2">
+    <MudDivider Class="my-2" />
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Filled.ViewList" IconColor="Color.Inherit">Interna lista</MudNavLink>
+    <MudNavLink Href="PublicIndex" Match="NavLinkMatch.All" Icon="@Icons.Filled.ListAlt" IconColor="Color.Inherit">Javna lista</MudNavLink>
+    <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
+    @if (User.Fk_Rola == 3 || User.Id == "9508f023-5a3b-4c54-ab5c-a338d2c4a000")
+    {
+        <MudNavLink Href="register" Icon="@Icons.Filled.PersonAdd" IconColor="Color.Inherit">Register</MudNavLink>
+    }
+    @* @if (Role == 1)
+    {
+    <div class="nav-item px-3">
+    <MudNavLink Href="Create" Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircleOutline" IconColor="Color.Inherit">Kreiraj</MudNavLink>
+    </div>
+    }*@
+</MudNavMenu>
 
 @code {
     private bool collapseNavMenu = true;
+    [Inject]
+    public IDataRetrivingServices IServices { get; set; } = default!;
+    public KGB_User User { get; set; }
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    protected override async Task OnInitializedAsync()
+    {
+        User = IServices.GetCurrentUser().Result;
+    }
 
     private void ToggleNavMenu()
     {

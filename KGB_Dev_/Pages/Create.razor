@@ -1,9 +1,9 @@
 ﻿@inject IDialogService DialogService
 @page "/Create"
 
-<PageTitle>Kreiranje KGB-a</PageTitle>
-
-<MudGrid Class="d-flex align-center justify-center">
+<PageTitle>Kreiranje KBase prijave</PageTitle>
+<MudContainer Style="max-height: 100%;">
+    <MudGrid Class="d-flex align-center justify-center">
     <MudItem xs="12" sm="12" lg="8">
         <EditForm Model="@Model" OnValidSubmit="(async () => await CreateKGB(Model))">
             <DataAnnotationsValidator />
@@ -139,3 +139,4 @@
         </EditForm>
     </MudItem>
 </MudGrid>
+</MudContainer>

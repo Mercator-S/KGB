@@ -20,6 +20,7 @@ namespace KGB_Dev_.Pages.Dialog
         public string? Korisnik { get; set; }
         List<string> FileNames = new List<string>();
         public string? FilePath { get; set; }
+        public int Lines { get; set; }
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Inject]
@@ -35,6 +36,7 @@ namespace KGB_Dev_.Pages.Dialog
             FileNames = IGetServices.GetFile(Prijava.Putanja_Fajl).Result;
             FilePath = Prijava.Putanja_Fajl;
             Korisnik = Prijava.k_ins;
+            Lines = CalculateLine(Prijava.Opis_Prijave).Result;
         }
 
         private async Task DownloadFile(string fileName)
@@ -60,6 +62,17 @@ namespace KGB_Dev_.Pages.Dialog
             parameteres.Add("Sifra", Sifra);
             DialogService.Show<EditDialog>("", parameteres, dialogOptions);
         }
+        public async Task<int> CalculateLine(string Prijava)
+        {
+            int counterN = Prijava.Count(x => x == '\n');
+            int result = (Prijava.Length - counterN) / 96;
+            if (result == 0)
+            {
+                counterN += 1;
+            }
+            return result + counterN;
+        }
+
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel() => MudDialog.Cancel();
     }

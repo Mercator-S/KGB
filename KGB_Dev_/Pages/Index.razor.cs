@@ -10,7 +10,7 @@ namespace KGB_Dev_.Pages
     {
         [Inject]
         public IDataRetrivingServices IServices { get; set; } = default!;
-        private IEnumerable<KGB_Knowledge?> ListOfKGB;
+        private IEnumerable<KGB_KnowledgeViewModel?> ListOfKGB;
         private List<KGB_Category> category;
         private string searchString1 = "";
         private KGB_User UserSifraOj;
@@ -29,7 +29,7 @@ namespace KGB_Dev_.Pages
             ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             DictionaryCategory.Add(0, "Izaberite kategoriju");
             DictionarySubcategory.Add(0, "Izaberite potkategoriju");
-            foreach (KGB_Knowledge Kgb in ListOfKGB)
+            foreach (KGB_KnowledgeViewModel Kgb in ListOfKGB)
             {
                 if (!FilterUsers.ContainsKey(Kgb.k_ins))
                 {
@@ -51,9 +51,9 @@ namespace KGB_Dev_.Pages
         {
             HideFilter = !HideFilter;
         }
-        private bool SearchTable1(KGB_Knowledge element) => SearchTable(element, searchString1);
+        private bool SearchTable1(KGB_KnowledgeViewModel element) => SearchTable(element, searchString1);
 
-        private bool SearchTable(KGB_Knowledge element, string searchString)
+        private bool SearchTable(KGB_KnowledgeViewModel element, string searchString)
         {
             if (string.IsNullOrWhiteSpace(searchString))
                 return true;
@@ -122,16 +122,14 @@ namespace KGB_Dev_.Pages
         }
         public async Task CloseFilter()
         {
-            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
-            FilterModel = new KGB_TableFilter();
-            DateIns = new DateRange(null, null);
-            DateUpd = new DateRange(null, null);
             HideFilter = !HideFilter;
         }
         public async Task ResetFilter()
         {
-            //ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj);
+            ListOfKGB = await IServices.GetListOfKnowledge(UserSifraOj.Sifra_Oj);
             FilterModel = new KGB_TableFilter();
+            DictionarySubcategory = new();
+            DictionarySubcategory.Add(0, "Izaberite potkategoriju");
             DateIns = new DateRange(null, null);
             DateUpd = new DateRange(null, null);
         }
