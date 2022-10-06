@@ -71,17 +71,17 @@
                         <MudSelect ValueChanged="@(async (int s) => await GetSubcategory(s))" Value="FilterModel.Fk_Category" Label="Kategorija KGB prijave" For="@(()=>FilterModel.Fk_Category)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                             @foreach (KeyValuePair<int, string> a in DictionaryCategory)
                             {
-                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                <MudSelectItem T="int" Value="a.Key" Disabled="(a.Key==0?true:false)">@a.Value</MudSelectItem>
                             }
                         </MudSelect>
                     </MudItem>
                 </MudGrid>
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudSelect T="int" Label="Potkategorija KGB prijave" @bind-Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
+                        <MudSelect T="int" Label="Potkategorija KGB prijave" Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                             @foreach (KeyValuePair<int, string> a in DictionarySubcategory)
                             {
-                                <MudSelectItem T="int" Value="a.Key">@a.Value</MudSelectItem>
+                                <MudSelectItem T="int" Value="a.Key" Disabled="(a.Key==0?true:false)">@a.Value</MudSelectItem>
                             }
                         </MudSelect>
                     </MudItem>

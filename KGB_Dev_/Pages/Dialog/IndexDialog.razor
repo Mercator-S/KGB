@@ -1,7 +1,7 @@
 ﻿@inject IDialogService DialogService
 <MudDialog>
     <DialogContent>
-        <MudContainer Fixed="true" Style="max-height: 800px;  overflow-y: auto">
+        <MudContainer Style="max-height: 800px;  overflow-y: scroll">
             <MudGrid>
                 <MudItem Class="py-8 d-flex flex-1">
                     <MudText Typo="Typo.h5">@Prijava.Naziv_Prijave</MudText>
@@ -25,7 +25,6 @@
                     </MudTextField>
                 </MudItem>
             </MudGrid>
-            <MudDivider />
             <MudGrid>
                 <MudItem>
                     <MudList Dense="true" DisableGutters="true">
@@ -67,11 +66,7 @@
         </MudContainer>
     </DialogContent>
     <DialogActions>
-        @if (User.Fk_Rola == 2 && Prijava.Sifra_Oj == User.Sifra_Oj)
-        {
-            <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
-        }
-        else if (Prijava.k_ins == User.Id)
+        @if (User.Fk_Rola == 2 && Prijava.Sifra_Oj == User.Sifra_Oj || Prijava.k_ins == User.Id)
         {
             <MudButton OnClick="@(() => EditDialog(Prijava.Id))" StartIcon="@Icons.Filled.Edit" Size="Size.Small" Color="@Color.Warning">Izmeni</MudButton>
         }
