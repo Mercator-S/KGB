@@ -6,6 +6,7 @@ using KGB_Dev_.Interfaces;
 using KGB_Models.KGB_Model;
 using KGB_Models;
 using System.Text;
+using KGB_Application.Interfaces;
 
 namespace KGB_Dev_.Services
 {
@@ -15,21 +16,23 @@ namespace KGB_Dev_.Services
         private readonly NavigationManager _navigationManager;
         private readonly IMapper _mapper;
         private IDataRetrivingServices _dataRetrivingServices;
-        public Task<KGB_User> User { get; set; }
+        private IUserRepository _userRepository;
+        public KGB_User User { get; set; }
 
-        public Create(ApplicationDbContext? context, NavigationManager navigationManager, IMapper mapper, IDataRetrivingServices dataRetrivingServices)
+        public Create(ApplicationDbContext? context, NavigationManager navigationManager, IMapper mapper, IDataRetrivingServices dataRetrivingServices, IUserRepository userRepository)
         {
             _context = context;
             _navigationManager = navigationManager;
             _mapper = mapper;
             _dataRetrivingServices = dataRetrivingServices;
-            User = _dataRetrivingServices.GetCurrentUser();
+            _userRepository = userRepository;
+            User = _userRepository.GetCurrentUser().Result;
         }
 
         public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile, Dictionary<int, string?> OrgJed)
         {
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
-            _mapper.Map(User.Result, result);
+            _mapper.Map(User, result);
             if (result != null)
             {
                 _context.Add(result);
@@ -55,7 +58,7 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateCategory(KGB_CategoryViewModel Category)
         {
             KGB_Category result = _mapper.Map<KGB_Category>(Category);
-            _mapper.Map(User.Result, result);
+            _mapper.Map(User, result);
             KGB_Category? Contains = _context.KGB_Category.Where(x => x.Naziv_Kategorije == result.Naziv_Kategorije && x.Sifra_Oj == result.Sifra_Oj).FirstOrDefault();
             if (Contains != null)
             {
@@ -68,7 +71,7 @@ namespace KGB_Dev_.Services
         public async Task<bool> CreateSubCategory(KGB_SubcategoryViewModel SubCategory)
         {
             KGB_Subcategory result = _mapper.Map<KGB_Subcategory>(SubCategory);
-            _mapper.Map(User.Result, result);
+            _mapper.Map(User, result);
             KGB_Subcategory? Contains = _context.KGB_Subcategory.Where(x => x.Naziv_Potkategorije == result.Naziv_Potkategorije && x.Fk_Kategorija == result.Fk_Kategorija).FirstOrDefault();
             if (Contains != null)
             {
@@ -120,7 +123,7 @@ namespace KGB_Dev_.Services
                 try
                 {
                     KGB_Knowledge.d_upd = DateTime.Now;
-                    KGB_Knowledge.k_upd = User.Result.Id;
+                    KGB_Knowledge.k_upd = User.Id;
                     KGB_Knowledge.Active = false;
                     _context.Update(KGB_Knowledge);
                     await _context.SaveChangesAsync();

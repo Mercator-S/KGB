@@ -177,7 +177,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
             SmtpClient SmtpServer = new SmtpClient("smtp.agrokor.hr", 25);
 
             mail.From = new MailAddress("Kbase@mercator.rs");
-            mail.CC.Add("it.centralne.aplikacije@mercator.rs");
+            mail.CC.Add("obrad.zivanovic@mercator.rs");
             //mail.Bcc.Add("");
             mail.To.Add(Email);
             mail.Subject = "Otvaranje naloga za KBase";

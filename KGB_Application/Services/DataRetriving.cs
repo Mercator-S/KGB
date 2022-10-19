@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KGB_Application.Interfaces;
 using KGB_Dev_.Interfaces;
 using KGB_Models;
 using KGB_Models.KGB_Model;
@@ -12,19 +13,17 @@ namespace KGB_Dev_.Data_Retrieving
     public class DataRetriving : IDataRetrivingServices
     {
         private readonly ApplicationDbContext? _context;
-        private readonly UserManager<KGB_User> _UserManager;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly NavigationManager _navigationManager;
         private readonly IMapper _mapper;
+        private IUserRepository _userRepository;
         private KGB_User User { get; set; }
 
-        public DataRetriving(ApplicationDbContext? context, UserManager<KGB_User> userManager, IMapper mapper, AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
+        public DataRetriving(ApplicationDbContext? context, IMapper mapper, NavigationManager navigationManager, IUserRepository userRepository)
         {
             _context = context;
-            _UserManager = userManager;
-            _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
-            User = GetCurrentUser().Result;
+            _userRepository = userRepository;
+            User = _userRepository.GetCurrentUser().Result;
             _mapper = mapper;
         }
         public async Task<List<KGB_KnowledgeViewModel>> GetPublicListOfKnowledge()
@@ -48,11 +47,7 @@ namespace KGB_Dev_.Data_Retrieving
         {
             return await Task.FromResult(_context.KGB_Knowledge.FirstOrDefault(x => x.Id == id));
         }
-        public async Task<KGB_User> GetCurrentUser()
-        {
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            return await Task.FromResult(_UserManager.GetUserAsync(authState.User).Result);
-        }
+
 
         public void CheckFolder(string Path)
         {
@@ -68,7 +63,7 @@ namespace KGB_Dev_.Data_Retrieving
             if (exist)
             {
                 string[] FileName = Directory.GetFiles(path);
-                for(int i = 0; i < FileName.Length; i++)
+                for (int i = 0; i < FileName.Length; i++)
                 {
                     FileNames.Add(Path.GetFileName(FileName[i]));
                 }
@@ -77,9 +72,11 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            //string LocationDev = @"C:\KGB_Dev";
-            string Location = @"F:\KGB";
-            //string path = Path.Combine(LocationDev, User.Naziv_Oj, NazivPrijave);
+            var Location = Directory.GetCurrentDirectory().Split('\\')[0] + @"\KGB";
+            if (Location.Contains('D'))
+            {
+                Location = Location.Replace('D', 'F');
+            }
             var path = Path.Combine(Location, User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
             string pathName = "";

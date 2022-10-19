@@ -1,4 +1,5 @@
-﻿using KGB_Dev_.Interfaces;
+﻿using KGB_Application.Interfaces;
+using KGB_Dev_.Interfaces;
 using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -24,12 +25,14 @@ namespace KGB_Dev_.Pages.Dialog
         [Inject]
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Inject]
+        public IUserRepository IUserService { get; set; } = default!;
+        [Inject]
         IJSRuntime? JS { get; set; }
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
 
         protected override async Task OnInitializedAsync()
         {
-            User = await IGetServices.GetCurrentUser();
+            User = await IUserService.GetCurrentUser();
             Prijava = IGetServices.GetKnowledge(Sifra).Result;
             DatumUnosa = Prijava.d_ins.Date;
             DatumIzmene = Prijava.d_upd.Date;

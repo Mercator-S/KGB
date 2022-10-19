@@ -1,4 +1,4 @@
-﻿@using KGB_Dev_.Interfaces;
+﻿@using KGB_Application.Interfaces
 @using KGB_Models.KGB_Model;
 
 <MudNavMenu Rounded="true" Margin="Margin.Dense" Color=Color.Inherit Class="pa-2">
@@ -21,13 +21,13 @@
 @code {
     private bool collapseNavMenu = true;
     [Inject]
-    public IDataRetrivingServices IServices { get; set; } = default!;
+    public IUserRepository IUserService { get; set; } = default!;
     public KGB_User User { get; set; }
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     protected override async Task OnInitializedAsync()
     {
-        User = IServices.GetCurrentUser().Result;
+        User = IUserService.GetCurrentUser().Result;
     }
 
     private void ToggleNavMenu()

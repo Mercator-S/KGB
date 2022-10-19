@@ -8,7 +8,6 @@ namespace KGB_Dev_.Interfaces
         Task<List<KGB_KnowledgeViewModel>> GetListOfKnowledge(int OrgJed);
         Task<List<KGB_KnowledgeViewModel>> GetPublicListOfKnowledge();
         Task<KGB_Knowledge> GetKnowledge(long id);
-        Task<KGB_User> GetCurrentUser();
         Task<List<KGB_Category>> GetCategory();
         Task<List<string>> GetFile(string Path);
         Task NavigationManager(string nav);

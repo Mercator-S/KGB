@@ -1,4 +1,6 @@
 using AutoMapper;
+using KGB_Application.Interfaces;
+using KGB_Application.Services;
 using KGB_Dev_.Areas.Identity;
 using KGB_Dev_.Data;
 using KGB_Dev_.Data.Profiles;
@@ -36,8 +38,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<KGB_User>>();
-builder.Services.AddScoped<IDataRetrivingServices, DataRetriving>();
-builder.Services.AddScoped<ICreateServices, Create>();
+builder.Services.AddTransient<IDataRetrivingServices, DataRetriving>();
+builder.Services.AddTransient<ICreateServices, Create>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 var mapperConfiguration = new MapperConfiguration(configuration =>
 {
     configuration.AddProfile(new KGB_CategoryProfile());
