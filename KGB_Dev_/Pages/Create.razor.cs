@@ -1,5 +1,6 @@
 ﻿using KGB_Dev_.Interfaces;
 using KGB_Dev_.Pages.Dialog;
+using KGB_Domain.KGB_SpecificDataType;
 using KGB_Models.KGB_Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -15,42 +16,43 @@ namespace KGB_Dev_.Pages
         public IDataRetrivingServices IGetServices { get; set; } = default!;
         [Inject]
         ISnackbar Snackbar { get; set; } = default!;
-        private List<KGB_Category> category;
-        private List<KGB_Subcategory> subcategory;
-        private List<KGB_Oj?> organizacioneJedinice;
-        private Dictionary<int, string?> Category = new Dictionary<int, string?>();
-        private Dictionary<int, string?> Subcategory = new Dictionary<int, string?>();
-        private Dictionary<int, string?> OrganizacioneJedinice = new Dictionary<int, string?>();
+        private List<KGB_Category> Category;
+        private List<KGB_Subcategory> Subcategory;
+        private List<KGB_Oj> organizacioneJedinice;
+        private List<KGB_CategoryTypeModel> CategoryModel { get; set; }
+        private List<KGB_SubCategoryTypeModel> SubCategoryModel = new List<KGB_SubCategoryTypeModel>();
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.Center, NoHeader = true, DisableBackdropClick = true };
         KGB_KnowledgeViewModel Model = new KGB_KnowledgeViewModel();
         IList<IBrowserFile> files = new List<IBrowserFile>();
-        Dictionary<int, string?> OrgJed = new Dictionary<int, string?>();
+        List<KGB_OrgJed> OrganizacioneJedinice = new List<KGB_OrgJed>();
+        List<KGB_OrgJed> OrgJed { get; set; }
         string OrgJedSearchValue;
         protected override async Task OnInitializedAsync()
         {
-            category = await IGetServices.GetCategory();
-            if (OrganizacioneJedinice.Count == 0)
+            OrgJed = new List<KGB_OrgJed>();
+            Category = await IGetServices.GetCategory();
+            Subcategory = await IGetServices.GetSubcategory();
+            if (OrgJed.Count == 0)
             {
                 organizacioneJedinice = await IGetServices.GetListOfOrgJed();
                 foreach (KGB_Oj orgJed in organizacioneJedinice)
                 {
-                    OrganizacioneJedinice.Add(orgJed.SifraOj, orgJed.NazivOj);
+                    OrganizacioneJedinice.Add(new KGB_OrgJed(orgJed.SifraOj, orgJed.NazivOj));
                 }
             }
-            Category = new();
-            Subcategory = new();
-            Category.Add(0, "Izaberite kategoriju");
-            Subcategory.Add(0, "Izaberite potkategoriju");
-            foreach (var p in category)
+            CategoryModel = new List<KGB_CategoryTypeModel>();
+            CategoryModel.Add(new KGB_CategoryTypeModel(0, "Izaberite kategoriju"));
+            SubCategoryModel.Add(new KGB_SubCategoryTypeModel(0, "Izaberite potkategoriju"));
+            foreach (var category in Category)
             {
-                Category.Add(p.Id, p.Naziv_Kategorije);
+                CategoryModel.Add(new KGB_CategoryTypeModel(category.Id, category.Naziv_Kategorije));
             }
         }
 
         private async Task CreateKGB(KGB_KnowledgeViewModel Model)
         {
-            Model.Naziv_Kategorije = Category[Model.Fk_Category];
-            Model.Naziv_Potkategorije = Subcategory[Model.Fk_Subcategory];
+            Model.Naziv_Kategorije = CategoryModel.Where(x => x.SifraKategorije == Model.Fk_Category).First().NazivKategorije;
+            Model.Naziv_Potkategorije = SubCategoryModel.Where(x => x.SifraPotkategorije == Model.Fk_Subcategory).First().NazivPotkategorije;
             await ICreateServices.CreateKGB(Model, files, OrgJed);
             Snackbar.Add($"Uspešno dodata KGB prijava pod nazivom {Model.Naziv_Prijave}", Severity.Success);
         }
@@ -65,28 +67,14 @@ namespace KGB_Dev_.Pages
         }
         public async Task GetSubcategory(int Id)
         {
-            if (Id == 0)
+            List<KGB_Subcategory> ListOfSubCategory = new List<KGB_Subcategory>(Subcategory.Where(x => x.Fk_Kategorija == Id).ToList());
+            SubCategoryModel = new List<KGB_SubCategoryTypeModel>();
+            SubCategoryModel.Add(new KGB_SubCategoryTypeModel(0, "Izaberite potkategoriju"));
+            if (ListOfSubCategory.Count >= 1)
             {
-                Subcategory = new();
-                Subcategory.Add(0, "Izaberite potkategoriju");
-                Model.Fk_Subcategory = 0;
-            }
-            else
-            {
-                subcategory = await IGetServices.GetSubcategory(Id);
-                if (subcategory.Count == 0)
+                foreach (var subCat in ListOfSubCategory)
                 {
-                    Subcategory = new();
-                    Subcategory.Add(0, "Izaberite potkategoriju");
-                }
-                else
-                {
-                    Subcategory = new();
-                    Subcategory.Add(0, "Izaberite potkategoriju");
-                    foreach (var k in subcategory)
-                    {
-                        Subcategory.Add(k.Id, k.Naziv_Potkategorije);
-                    }
+                    SubCategoryModel.Add(new KGB_SubCategoryTypeModel(subCat.Id, subCat.Naziv_Potkategorije));
                 }
                 Model.Fk_Category = Id;
                 Model.Fk_Subcategory = 0;
@@ -117,14 +105,14 @@ namespace KGB_Dev_.Pages
         {
             if (string.IsNullOrEmpty(value))
                 return new string[0];
-            return (IEnumerable<string>)OrganizacioneJedinice.Values.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+            return OrganizacioneJedinice.Select(x => x.NazivOj).Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
         public async Task GetListOfOrgJedString(string NazivOrgJed)
         {
-            int SifraOrgJed = OrganizacioneJedinice.FirstOrDefault(x => x.Value == NazivOrgJed).Key;
-            if (!OrgJed.ContainsValue(NazivOrgJed) && OrgJed.Count <= 10)
+            int SifraOrgJed = OrganizacioneJedinice.FirstOrDefault(x => x.NazivOj == NazivOrgJed).SifraOj;
+            if (!OrgJed.Contains(new KGB_OrgJed(SifraOrgJed, NazivOrgJed)) && OrgJed.Count <= 10)
             {
-                OrgJed.Add(SifraOrgJed, NazivOrgJed);
+                OrgJed.Add(new KGB_OrgJed(SifraOrgJed, NazivOrgJed));
             }
             else if (OrgJed.Count >= 10)
             {
@@ -136,6 +124,6 @@ namespace KGB_Dev_.Pages
             }
         }
         private async Task RemoveUploadFile(IBrowserFile file) => files.Remove(file);
-        private async Task RemoveOrgJed(int Org) => OrgJed.Remove(Org);
+        private async Task RemoveOrgJed(int Org) => OrgJed.Remove(OrgJed.Where(x => x.SifraOj == Org).FirstOrDefault());
     }
 }

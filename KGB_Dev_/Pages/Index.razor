@@ -41,7 +41,7 @@
                 <MudTd DataLabel="Kategorija prijave">
                     @context.Naziv_Kategorije
                 </MudTd>
-                 <MudTd DataLabel="Potkategorija prijave">
+                <MudTd DataLabel="Potkategorija prijave">
                     @context.Naziv_Potkategorije
                 </MudTd>
                 <MudTd DataLabel="Datum unosa">
@@ -81,7 +81,7 @@
                     </MudItem>
                 </MudGrid>
                 <MudGrid>
-                     <MudItem xs="12">
+                    <MudItem xs="12">
                         <MudSelect Label="Potkategorija KGB prijave" @bind-Value="FilterModel.Fk_Subcategory" For="@(()=>FilterModel.Fk_Subcategory)" AnchorOrigin="Origin.BottomCenter" Style="margin-top:20px;">
                             @foreach (var potkategorija in SubCategoryModel)
                             {

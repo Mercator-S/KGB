@@ -7,6 +7,7 @@ using KGB_Models.KGB_Model;
 using KGB_Models;
 using System.Text;
 using KGB_Application.Interfaces;
+using KGB_Domain.KGB_SpecificDataType;
 
 namespace KGB_Dev_.Services
 {
@@ -29,7 +30,7 @@ namespace KGB_Dev_.Services
             User = _userRepository.GetCurrentUser().Result;
         }
 
-        public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile, Dictionary<int, string?> OrgJed)
+        public async Task<bool> CreateKGB(KGB_KnowledgeViewModel Model, IList<IBrowserFile> ListOfFile, List<KGB_OrgJed> OrgJed)
         {
             KGB_Knowledge result = _mapper.Map<KGB_Knowledge>(Model);
             _mapper.Map(User, result);
@@ -153,11 +154,11 @@ namespace KGB_Dev_.Services
         {
             return _context.KGB_Knowledge.Any(e => e.Id == id);
         }
-        public async Task ValidationForOrgJed(Dictionary<int, string?> OrgJed, KGB_Knowledge result)
+        public async Task ValidationForOrgJed(List<KGB_OrgJed> OrgJed, KGB_Knowledge result)
         {
             if (OrgJed.Count < 1)
             {
-                OrgJed.Add(result.Sifra_Oj, result.Naziv_Oj);
+                OrgJed.Add(new KGB_OrgJed(result.Sifra_Oj, result.Naziv_Oj));
             }
             if (OrgJed.Count >= 1 && result.Visibility == false)
             {
@@ -165,7 +166,7 @@ namespace KGB_Dev_.Services
                 {
                     KGB_OJKnowledge oJKnowledge = new KGB_OJKnowledge();
                     oJKnowledge.IdPrijave = result.Id;
-                    oJKnowledge.Sifra_Oj = item.Key;
+                    oJKnowledge.Sifra_Oj = item.SifraOj;
                     _context.KGB_OJKnowledge.Add(oJKnowledge);
                     _context.SaveChanges();
                 }
