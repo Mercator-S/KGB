@@ -26,6 +26,7 @@ namespace KGB_Dev_.Pages
         private bool HideFilter { get; set; } = true;
         DateRange DateIns = new DateRange(null, null);
         DateRange DateUpd = new DateRange(null, null);
+        public int TableSize = 12;
 
         protected override async Task OnInitializedAsync()
         {
@@ -54,6 +55,7 @@ namespace KGB_Dev_.Pages
         }
         public void FilterDialog()
         {
+            TableSize = 9;
             HideFilter = !HideFilter;
         }
         private bool SearchTable1(KGB_KnowledgeViewModel element) => SearchTable(element, searchString1);
@@ -115,6 +117,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task CloseFilter()
         {
+            TableSize = 12;
             HideFilter = !HideFilter;
         }
         public async Task ResetFilter()

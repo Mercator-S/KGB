@@ -49,11 +49,6 @@ namespace KGB_Dev_.Pages.Dialog
             using var streamRef = new DotNetStreamReference(stream: fs);
             await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
-        void Open(string path)
-        {
-            path = Prijava.Putanja_Fajl + path;
-            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
-        }
         public async void EditDialog(long SifraPrijave)
         {
             Sifra = SifraPrijave;

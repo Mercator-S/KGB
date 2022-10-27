@@ -13,6 +13,14 @@
                     </MudText>
                 </MudItem>
             </MudGrid>
+            <MudGrid Class="d-flex justify-space-between">
+                <MudItem xs="4">
+                    <MudTextField @bind-Value="Prijava.Naziv_Kategorije" Label="Naziv kategorije" ReadOnly="true" Variant="Variant.Text" />
+                </MudItem>
+                <MudItem xs="4">
+                    <MudTextField @bind-Value="Prijava.Naziv_Potkategorije" Label="Naziv potkategorije" ReadOnly="true" Variant="Variant.Text" />
+                </MudItem>
+            </MudGrid>
             <MudGrid Class="d-flex justify-center">
                 <MudItem>
                     <MudText Typo="Typo.h5" Align="Align.Center">Opis prijave</MudText>

@@ -18,6 +18,7 @@ namespace KGB_Dev_.Pages
         private Dictionary<int, string?> DictionarySifraOj = new Dictionary<int, string?>();
         DateRange DateIns = new DateRange(null, null);
         DateRange DateUpd = new DateRange(null, null);
+        public int TableSize = 12;
         protected override async Task OnInitializedAsync()
         {
             ListOfKGB = await IServices.GetPublicListOfKnowledge();
@@ -58,6 +59,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task FilterDialog()
         {
+            TableSize = 9;
             HideFilter = !HideFilter;
         }
         public async Task Filter(KGB_TableFilter Filter, DateRange DateIns, DateRange DateUpd)
@@ -76,6 +78,7 @@ namespace KGB_Dev_.Pages
         }
         public async Task CloseFilter()
         {
+            TableSize = 12;
             ListOfKGB = await IServices.GetPublicListOfKnowledge();
             FilterModel = new KGB_TableFilter();
             DateIns = new DateRange(null, null);
