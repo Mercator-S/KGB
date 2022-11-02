@@ -72,10 +72,11 @@ namespace KGB_Dev_.Data_Retrieving
         }
         public async Task<string> UploadFile(string NazivPrijave, IList<IBrowserFile> ListOfFile)
         {
-            var Location = Directory.GetCurrentDirectory().Split('\\')[0] + @"\KGB";
+            var Location = Directory.GetCurrentDirectory();
+            Location = Location.Split(':')[0] + @"\KGB\";
             if (Location.Contains('D'))
             {
-                Location = Location.Replace('D', 'F');
+                Location = Location.Replace("D", "F:");
             }
             var path = Path.Combine(Location, User.Naziv_Oj, NazivPrijave);
             CheckFolder(path);
