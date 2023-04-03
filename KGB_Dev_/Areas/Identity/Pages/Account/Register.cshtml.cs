@@ -78,7 +78,7 @@ namespace KGB_Dev_.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(Input);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(Input);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //SentEmail(Input.Email, Input.Lozinka);
+                    SentEmail(Input.Email, Input.Lozinka);
                     //await _signInManager.SignInAsync(Input, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
